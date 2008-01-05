@@ -53,6 +53,18 @@
 [def _determinant_          [funcref boost::units_blas::determinant `determinant<>`]]
 [def _inverse__             [funcref boost::units_blas::inverse `inverse`]]
 [def _inverse_              [funcref boost::units_blas::inverse `inverse<>`]]
+[def _sum__                 [funcref boost::units_blas::sum `sum`]]
+[def _sum_                  [funcref boost::units_blas::sum `sum<>`]]
+[def _norm_1__              [funcref boost::units_blas::norm_1 `norm_1`]]
+[def _norm_1_               [funcref boost::units_blas::norm_1 `norm_1<>`]]
+[def _norm_2__              [funcref boost::units_blas::norm_2 `norm_2`]]
+[def _norm_2_               [funcref boost::units_blas::norm_2 `norm_2<>`]]
+[def _norm_inf__            [funcref boost::units_blas::norm_inf `norm_inf`]]
+[def _norm_inf_             [funcref boost::units_blas::norm_inf `norm_inf<>`]]
+[def _norm_inf_index__      [funcref boost::units_blas::norm_inf_index `norm_inf_index`]]
+[def _norm_inf_index_       [funcref boost::units_blas::norm_inf_index `norm_inf_index<>`]]
+[def _solve__               [funcref boost::units_blas::solve `solve`]]
+[def _solve_                [funcref boost::units_blas::solve `solve<>`]]
 [def _value_                `quantity::value()`]
 [def _from_value_           `quantity::from_value()`]
 
@@ -66,7 +78,7 @@
 
 [heading Conventions]
 
-All matrix dimensions are given as ROWSxCOLUMNS, so a 1x3 matrix has one row and 3 columns.
+All matrix dimensions are given as ROWSxCOLUMNS, so a 1x3 matrix has 1 row and 3 columns.
 
 Except where otherwise noted, it is assumed that all example code is preceded by:
 
@@ -74,100 +86,7 @@ Except where otherwise noted, it is assumed that all example code is preceded by
     
     using namespace boost;
 
-[section:quick_start Quick Start]
-
-[heading Matrices]
-
-Matrices are declared in the form:
-
-    unts_blas::matrix<
-        units_blas::all_rows<
-            units_blas::row< ... >,
-            units_blas::row< ... >
-            ...
-        >
-    > MyMatrix;
-
-For example, assuming there exist three `quantity` types `length`, `time`, and `frequency`, these are all valid matrices:
-
-    // a 1x3 matrix
-    unts_blas::matrix<
-        units_blas::all_rows<
-            units_blas::row<length, time, frequency>
-        >
-    > MatrixType1;
-    
-    // a 3x1 matrix
-    unts_blas::matrix<
-        units_blas::all_rows<
-            units_blas::row<length>,
-            units_blas::row<time>,
-            units_blas::row<frequency>
-        >
-    > MatrixType2;
-    
-    // a 2x2 matrix
-    unts_blas::matrix<
-        units_blas::all_rows<
-            units_blas::row<length, time>,
-            units_blas::row<frequency, time>
-        >
-    > MatrixType3;
-
-Note that the size of a _matrix_ is limited by the maximum number of elements allowed in an _all_rows_ object, and by
-the maximum number of elements in a _row_ object.  By default, the max for each is 10.  To increase it, you must define
-`FUSION_MAX_VECTOR_SIZE` before including any UnitsBlas or Fusion header.  For example:
-
-    #define FUSION_MAX_VECTOR_SIZE 20
-
-[heading Operations On Matrices]
-
-By default, UnitsBlas provides operator overloads where they make sense.  So, to multiply two matrices `m1` and `m2`,
-write:
-
-    m1 * m2
-
-To multiply matrix `m` by a scalar `s`, write:
-
-    m * s
-
-or:
-
-    s * m
-
-Here is a summary of the operations on matrices.  In the table below, `M1` and `M2` are _matrix_ objects, and `s`
-is a scalar, `Rows` and `Columns` are _mpl_ type sequences containing integral constants, and `ei` is an element of
-_matrix_ `Mi`.
-
-[table Matrix Operations
-    [[Operation] [Description] [Notes]]
-    [[`M1 += M2`]                      [ Elementwise addition. ]                    []]
-    [[`M1 -= M2`]                      [ Elementwise subtraction. ]                 []]
-    [[`M1 *= s`]                       [ Matrix-scalar product. ]                   [ Won't compile if `e1 = typeof(e1 * s)` doesn't compile. ]]
-    [[`M1 /= s`]                       [ Matrix-scalar division. ]                  [ Won't compile if `e1 = typeof(e1 / s)` doesn't compile. ]]
-    [[`-M1`]                           [ Elementwise negation. ]                    []]
-    [[`M1 - M2`]                       [ Elementwise subtraction. ]                 []]
-    [[`M1 + M2`]                       [ Elementwise addition. ]                    []]
-    [[`M1 * M2`]                       [ Matrix-matrix product. ]                   []]
-    [[`M1 * s`]                        [ Matrix-scalar product. ]                   []]
-    [[`s * M1`]                        [ Matrix-scalar product. ]                   []]
-    [[_slice__`<Rows, Columns>(M1)`]   [ Rows and columns of original matrix. ]     []]
-    [[_transpose__`(M1)`]              [ Matrix transpose. ]                        []]
-    [[_element_prod__`(M1, M2)`]       [ Elementwise product. ]                     []]
-    [[_element_div__`(M1, M2)`]        [ Elementwise division. ]                    []]
-    [[_determinant__`(M1)`]            [ Matrix determinant. ]                      []]
-    [[_inverse__`(M1)`]                [ Matrix inverse. ]                          [ Throws if `M1` is singular. ]]
-]
-
-[heading Vectors]
-
-There are no vector types in UnitsBlas.  Vectors are merely degenerate matrices.  All the UnitsBlas vector operations
-accept _matrix_ parameters of the appropriate dimensions (either 1xN or Nx1).  Overloads are provided for both
-orientations where approprate.  Two vector predicate metafunctions are provided, _is_vector_ and _is_transpose_vector_.
-The first evaluates to true iff its given argument is a _matrix_ and has one row.  The second evaluates to true iff its
-given argument is a _matrix_ and has one column.
-
-[endsect]
+[include quick_start.qbk]
 
 [section:tutorial Tutorial]
 
