@@ -37,8 +37,7 @@
 [/ Links ]
 
 [def _matrix_               [classref boost::units_blas::matrix `matrix<>`]]
-[def _all_rows_             [classref boost::units_blas::all_rows `all_rows<>`]]
-[def _row_                  [classref boost::units_blas::row `row<>`]]
+[def _fus_vec_              [classref boost::fusion::vector `fusion_vector<>`]]
 [def _is_vector_            [classref boost::units_blas::is_vector `is_vector<>`]]
 [def _is_transpose_vector_  [classref boost::units_blas::is_transpose_vector `is_transpose_vector<>`]]
 [def _slice__               [funcref boost::units_blas::slice `slice`]]
@@ -53,8 +52,18 @@
 [def _determinant_          [funcref boost::units_blas::determinant `determinant<>`]]
 [def _inverse__             [funcref boost::units_blas::inverse `inverse`]]
 [def _inverse_              [funcref boost::units_blas::inverse `inverse<>`]]
+[def _prod__                [funcref boost::units_blas::prod `prod`]]
+[def _prod_                 [funcref boost::units_blas::prod `prod<>`]]
 [def _sum__                 [funcref boost::units_blas::sum `sum`]]
 [def _sum_                  [funcref boost::units_blas::sum `sum<>`]]
+[def _diff__                [funcref boost::units_blas::diff `diff`]]
+[def _diff_                 [funcref boost::units_blas::diff `diff<>`]]
+[def _neg__                 [funcref boost::units_blas::neg `neg`]]
+[def _neg_                  [funcref boost::units_blas::neg `neg<>`]]
+[def _dot__                 [funcref boost::units_blas::dot `dot`]]
+[def _dot_                  [funcref boost::units_blas::dot `dot<>`]]
+[def _cross__               [funcref boost::units_blas::cross `cross`]]
+[def _cross_                [funcref boost::units_blas::cross `cross<>`]]
 [def _norm_1__              [funcref boost::units_blas::norm_1 `norm_1`]]
 [def _norm_1_               [funcref boost::units_blas::norm_1 `norm_1<>`]]
 [def _norm_2__              [funcref boost::units_blas::norm_2 `norm_2`]]
@@ -67,6 +76,8 @@
 [def _solve_                [funcref boost::units_blas::solve `solve<>`]]
 [def _value_                `quantity::value()`]
 [def _from_value_           `quantity::from_value()`]
+
+
 
 [/ External Links ]
 
@@ -96,9 +107,37 @@ Except where otherwise noted, it is assumed that all example code is preceded by
 
 [endsect]
 
-[section:adapting Adapting UnitsBlas To Other Units Libraries]
+[section:configuration Configuration]
+
+
 
 [endsect]
+
+[endsect]
+
+[section:adapting Adapting UnitsBlas To Other Units Libraries]
+
+zero_value
+one_value
+matrix_to_temp_assign
+assign_from_value_type
+matrix_to_temp_vector_assign
+value_quotient
+value_inverse
+
+[endsect]
+
+[section:rationale Rationale]
+
+This is an overridable configuration macro controlling whether compile-time
+assertions should be used to enforce that the boost::units_blas::matrix template
+parameter \a Rows is a boost::fusion::vector of boost::fusion::vector's.  It is
+turned off by default.  If this is not set, consider a matrix<A>, where A is
+fusion vectors as stated before, and matrix<B>, where B is a boost::mpl::vector
+of boost::mpl::vector's.  Both matrices will function exactly the same, and in
+fact have the same \a value_types type, but are different types.  To prevent
+accidental code bloat due to this effect, define this macro to a nonzero value
+before including any library header.
 
 [endsect]
 

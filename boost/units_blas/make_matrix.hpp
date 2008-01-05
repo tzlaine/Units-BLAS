@@ -19,7 +19,7 @@
 namespace boost { namespace units_blas {
 
     template <typename Rows>
-    struct canonical_matrix
+    struct make_matrix
     {
         typedef matrix<typename detail::deep_as_vector<Rows>::type> type;
     };

@@ -32,16 +32,6 @@
 
 namespace boost { namespace units_blas {
 
-    template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename T)>
-    struct row :
-        fusion::vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>
-    {};
-
-    template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename T)>
-    struct all_rows :
-        fusion::vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>
-    {};
-
     namespace detail {
         template <typename Rows>
         struct deep_as_vector
@@ -203,12 +193,13 @@ namespace boost { namespace units_blas {
         BOOST_MPL_ASSERT((mpl::less<size_t_<0>, num_rows_t>));
         BOOST_MPL_ASSERT((mpl::less<size_t_<0>, num_columns_t>));
 
-#if BOOST_UNITS_BLAS_ENFORCE_FUSION_VECTOR_MATRIX_TEMPLATE_PARAMETERS
-        // If you're seeing an error here, it's because someone defined the
-        // above macro to be nonzero, and you used some type sequence besides
-        // boost::fusion::vector in your Rows template parameter.
+        // If you're seeing an error here, it's because you used some type
+        // sequence besides boost::fusion::vector in your Rows template
+        // parameter.  Rows. is supposed to be a boost::fusion::vector of
+        // boost::fusion::vector *only*.  If you want to use something else, you
+        // must use the metafunction make_matrix<> instead of supplying the Rows
+        // parameter directly to this template.
         BOOST_MPL_ASSERT((is_same<Rows, value_types>));
-#endif
 
         template <typename T>
         void assign_data (T const & rhs)

@@ -15,5 +15,7 @@ int test_main (int, char *[])
         boost::fusion::vector<>
     > failure_type;
 
+    failure_type ft;
+
     return 0;
 }

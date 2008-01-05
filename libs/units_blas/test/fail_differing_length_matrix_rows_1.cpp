@@ -18,5 +18,7 @@ int test_main (int, char *[])
         >
     > failure_type;
 
+    failure_type ft;
+
     return 0;
 }

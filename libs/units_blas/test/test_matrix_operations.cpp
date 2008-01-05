@@ -12,11 +12,11 @@
 
 
 typedef boost::units_blas::matrix<
-    boost::units_blas::all_rows<
-        boost::units_blas::row<double>,
-        boost::units_blas::row<double>,
-        boost::units_blas::row<double>,
-        boost::units_blas::row<double>
+    boost::fusion::vector<
+        boost::fusion::vector<double>,
+        boost::fusion::vector<double>,
+        boost::fusion::vector<double>,
+        boost::fusion::vector<double>
     >
 > x_vector_type;
 

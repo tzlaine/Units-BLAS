@@ -36,11 +36,11 @@ typedef bub::matrix<
 > B_matrix_1x3_fundamentals_type;
 
 typedef boost::units_blas::matrix<
-    boost::units_blas::all_rows<
-        boost::units_blas::row<double, double, double, double>,
-        boost::units_blas::row<double, double, double, double>,
-        boost::units_blas::row<double, double, double, double>,
-        boost::units_blas::row<double, double, double, double>
+    boost::fusion::vector<
+        boost::fusion::vector<double, double, double, double>,
+        boost::fusion::vector<double, double, double, double>,
+        boost::fusion::vector<double, double, double, double>,
+        boost::fusion::vector<double, double, double, double>
     >
 > D_matrix_4x4_fundamentals_type;
 
@@ -94,11 +94,11 @@ typedef bub::matrix<
 > C_matrix_3x1_units_type;
 
 typedef boost::units_blas::matrix<
-    boost::units_blas::all_rows<
-        boost::units_blas::row<length, length, length, length>,
-        boost::units_blas::row<length, length, length, length>,
-        boost::units_blas::row<length, length, length, length>,
-        boost::units_blas::row<length, length, length, length>
+    boost::fusion::vector<
+        boost::fusion::vector<length, length, length, length>,
+        boost::fusion::vector<length, length, length, length>,
+        boost::fusion::vector<length, length, length, length>,
+        boost::fusion::vector<length, length, length, length>
     >
 > D_matrix_4x4_units_type;
 

@@ -9,44 +9,54 @@
 
 [heading Motivation]
 
-Quantity types in Boost.Units use the type system to do checking (e.g. dimensional analysis and unit conversions) that
-otherwise would need to be done by inspection.  Linear algebra libraries often allow users to select from a broad array
-of value types, but they always require the value type to be the same in each vector/matrix position.  For those of us
-that work with units and matrices together, this can present a problem.  We are forced to populate matrices using values
-pulled out of individual quantities, perform our matrix calculations, then read individual elements out of our results
-and place them back into Boost.Units quantities, using _from_value_.
+Quantity types in Boost.Units use the type system to do checking
+(e.g. dimensional analysis and unit conversions) that otherwise would need to be
+done by inspection.  Linear algebra libraries often allow users to select from a
+broad array of value types, but they always require the value type to be the
+same in each vector/matrix position.  For those of us that work with units and
+matrices together, this can present a problem.  We are forced to populate
+matrices using values pulled out of individual quantities, perform our matrix
+calculations, then read individual elements out of our results and place them
+back into Boost.Units quantities, using _from_value_.
 
-This intoduces a typesafety "hole" in the use of Boost.Units.  One must check that the types from which the matrix
-calulation inputs are read, and those to which its outputs are written, are correct.  This reintroduces the sort of
-by-inspection dimensional analysis and unit conversions that we were trying to avoid by using Boost.Units in the first
-place.
+This intoduces a typesafety "hole" in the use of Boost.Units.  One must check
+that the types from which the matrix calulation inputs are read, and those to
+which its outputs are written, are correct.  This reintroduces the sort of
+by-inspection dimensional analysis and unit conversions that we were trying to
+avoid by using Boost.Units in the first place.
 
 For instance, what type results from the determinant of this matrix?
 
 __bad_determinant__
 
-In fact, this matrix has no determinant, and we would like for this to fail to compile, since the subtraction operation
-above makes no sense.  If not caught by inspection, such calculations can fall into the typesafety hole, appearing to be
+In fact, this matrix has no determinant, and we would like for this to fail to
+compile, since the subtraction operation above makes no sense.  If not caught by
+inspection, such calculations can fall into the typesafety hole, appearing to be
 correct.
 
-Thanks to the efforts of the authors of Boost.Units and Boost.Fusion, it is a relatively simple matter to create
-matrices whose elements have heterogenous types.  This library does exactly that.
+Thanks to the efforts of the authors of Boost.Units and Boost.Fusion, it is a
+relatively simple matter to create matrices whose elements have heterogenous
+types.  This library does exactly that.
 
 [heading Description]
 
-UnitsBlas enables the uniform use of Boost.Units, even if used in linear algebra operations.  Specifically its goals are to:
+UnitsBlas enables the uniform use of Boost.Units, even if used in linear algebra
+operations.  Specifically its goals are to:
 
 * fail to compile malformed linear algebra operations involving Boost.Units;
 * eliminate the need to remove and then re-stuff raw values from/into Boost.Units quantities via _value_ and _from_value_; and
 * provide linear algebra operations as efficient as hand-written code.
 
-A secondary goal is for UnitsBlas to work equally well with any units library (i.e. not just Boost.Units), or none at
-all (i.e. using only fundamental types, std::complex, etc.).
+A secondary goal is for UnitsBlas to work equally well with any units library
+(i.e. not just Boost.Units), or none at all (i.e. using only fundamental types,
+std::complex, etc.).
 
 [heading What This Library Does Not Do]
 
-Currently, there are no provisions made anywhere in the code for complex operations.  Specifically, there are no
-`herm()`, `real()`, `imag()`, or `conj()` operations.  This is planned for future work, but is unimplemented as of now.
-Also, there is no use of template expression optimizations.  This is also planned for the future.
+Currently, there are no provisions made anywhere in the code for complex
+operations.  Specifically, there are no `herm()`, `real()`, `imag()`, or
+`conj()` operations.  This is planned for future work, but is unimplemented as
+of now.  Also, there is no use of template expression optimizations.  This is
+also planned for the future.
 
 [endsect]
