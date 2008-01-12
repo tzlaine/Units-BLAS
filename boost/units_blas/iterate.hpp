@@ -15,11 +15,16 @@
 
 namespace boost { namespace units_blas {
 
+    /** This struct has one member, call().  call() calls several iterations of
+        F::call(), then recursively calls itself, until all iterations have been
+        invoked.  Note that the order of iteration is descending, from N - 1 to
+        0.  \see See also boost::units_blas::iterate(). */
     template <std::size_t N>
     struct iterate_unrolled
     {
         template <typename Operands, typename F>
-        static void call (Operands const & operands, F const & f)
+        static BOOST_UNITS_BLAS_INLINE
+        void call (Operands const & operands, F const & f)
             {
                 F::template call<N - 1>(operands);
                 F::template call<N - 2>(operands);
@@ -29,11 +34,13 @@ namespace boost { namespace units_blas {
             }
     };
 
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
     template <>
     struct iterate_unrolled<3>
     {
         template <typename Operands, typename F>
-        static void call (Operands const & operands, F const & f)
+        static BOOST_UNITS_BLAS_INLINE
+        void call (Operands const & operands, F const & f)
             {
                 F::template call<2>(operands);
                 F::template call<1>(operands);
@@ -45,7 +52,8 @@ namespace boost { namespace units_blas {
     struct iterate_unrolled<2>
     {
         template <typename Operands, typename F>
-        static void call (Operands const & operands, F const & f)
+        static BOOST_UNITS_BLAS_INLINE
+        void call (Operands const & operands, F const & f)
             {
                 F::template call<1>(operands);
                 F::template call<0>(operands);
@@ -56,7 +64,8 @@ namespace boost { namespace units_blas {
     struct iterate_unrolled<1>
     {
         template <typename Operands, typename F>
-        static void call (Operands const & operands, F const & f)
+        static BOOST_UNITS_BLAS_INLINE
+        void call (Operands const & operands, F const & f)
             { F::template call<0>(operands); }
     };
 
@@ -64,11 +73,21 @@ namespace boost { namespace units_blas {
     struct iterate_unrolled<0>
     {
         template <typename Operands, typename F>
-        static void call (Operands const &, F const &) {}
+        static BOOST_UNITS_BLAS_INLINE
+        void call (Operands const &, F const &)
+            {}
     };
+#endif
 
+    /** This function can be used as a generic mechanism for unrolling loops at
+        compile time.  Given a number of iterations \a N, an arbitrary Fusion
+        vector of operands \a Operands, and a functor type \a F as template
+        parameters, it calls iterate_unrolled<>::call().
+        iterate_unrolled<>::call() calls several iterations of F::call(), then
+        recursively calls itself, until all iterations have been invoked.  Note
+        that the order of iteration is descending, from N - 1 to 0. */
     template <typename N, typename Operands, typename F>
-    void iterate (Operands const & operands, F const & f)
+    BOOST_UNITS_BLAS_INLINE void iterate (Operands const & operands, F const & f)
     { iterate_unrolled<N::value>::call(operands, f); }
 
     namespace detail {

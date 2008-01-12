@@ -18,8 +18,7 @@ doxygen $(target)
     $(files)
   :
         <doxygen:param>EXTRACT_ALL=YES
-        <doxygen:param>"PREDEFINED=\"BOOST_PREVENT_MACRO_SUBSTITUTION=\" \\
-                                   \"BOOST_UNITS_BLAS_DOXYGEN=1\""
+        <doxygen:param>"PREDEFINED=\"BOOST_UNITS_BLAS_DOXYGEN=1\""
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES

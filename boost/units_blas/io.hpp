@@ -54,6 +54,7 @@ namespace boost { namespace units_blas {
         return os;
     }
 
+    /** Writes matrix<> \a m to stream \a os, using matrix<>::print(). */
     template <typename T>
     std::ostream & operator<< (std::ostream & os, matrix<T> const & m)
     {

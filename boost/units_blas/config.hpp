@@ -29,4 +29,25 @@
     #define BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE 0
 #endif
 
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
+
+#define BOOST_UNITS_BLAS_INLINE inline
+#ifdef NDEBUG
+    #if defined(_MSC_VER)
+        #undef BOOST_UNITS_BLAS_INLINE
+        #define BOOST_UNITS_BLAS_INLINE __forceinline
+    #elif defined(__GNUC__) && __GNUC__ > 3
+        #undef BOOST_UNITS_BLAS_INLINE
+        #define BOOST_UNITS_BLAS_INLINE inline __attribute__ ((always_inline))
+    #endif
+#endif
+
+#endif
+
+#ifdef BOOST_UNITS_BLAS_DOXYGEN
+namespace detail {
+    struct unspecified {};
+}
+#endif
+
 #endif // BOOST_UNITS_BLAS_CONFIG_HPP

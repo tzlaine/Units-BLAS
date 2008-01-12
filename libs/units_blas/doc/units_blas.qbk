@@ -101,6 +101,12 @@ Except where otherwise noted, it is assumed that all example code is preceded by
 
 [section:tutorial Tutorial]
 
+note that it is usually an error to create an identity matrix whose types are not dimensionless
+
+note that cross products of vectors in a space S are in space S^2
+
+note that zero elements of matrices often have units.
+
 [endsect]
 
 [section:header_organization Header Organization]
@@ -138,6 +144,8 @@ of boost::mpl::vector's.  Both matrices will function exactly the same, and in
 fact have the same \a value_types type, but are different types.  To prevent
 accidental code bloat due to this effect, define this macro to a nonzero value
 before including any library header.
+
+uniform_matrix name selection (vs. homogeneous_matrix)
 
 [endsect]
 

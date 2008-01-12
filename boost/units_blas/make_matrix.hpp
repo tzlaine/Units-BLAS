@@ -18,6 +18,8 @@
 
 namespace boost { namespace units_blas {
 
+    /** Convenience metafunction that returns matrix<X>, where X is the template
+        parameter \a Rows, converted to a fusion::vector of fusion::vectors. */
     template <typename Rows>
     struct make_matrix
     {
@@ -38,6 +40,8 @@ namespace boost { namespace units_blas {
 
     } // namespace detail
 
+    /** Convenience metafunction that returns a matrix<> of dimension \a Rows x
+        \a Columns, in which each element is of type \a T. */
     template <typename T, std::size_t Rows, std::size_t Columns>
     struct uniform_matrix
     {
@@ -71,6 +75,10 @@ namespace boost { namespace units_blas {
 
     } // namespace detail
 
+    /** Convenience metafunction that returns a "vector" -- a matrix<> of
+        dimension N x 1.  Specifically, the resulting matrix<>'s dimensions are
+        \a size(Elements) x 1, and each element (i, 0) is the ith type in
+        Elements. */
     template <typename Elements>
     struct vector
     {
@@ -97,6 +105,10 @@ namespace boost { namespace units_blas {
 
     } // namespace detail
 
+    /** Convenience metafunction that returns a "transpose vector" -- a matrix<>
+        of dimension 1 x N.  Specifically, the resulting matrix<>'s dimensions
+        are 1 x \a size(Elements) 1, and each element (0, i) is the ith type in
+        Elements. */
     template <typename Elements>
     struct transpose_vector
     {
@@ -110,12 +122,16 @@ namespace boost { namespace units_blas {
         typedef matrix<fusion::vector<elements_as_fusion_vector> > type;
     };
 
+    /** Convenience metafunction that returns a "vector" -- a matrix<> of
+        dimension N x 1, in which each element is of type T. */
     template <typename T, std::size_t N>
     struct uniform_vector
     {
         typedef typename uniform_matrix<T, N, 1>::type type;
     };
 
+    /** Convenience metafunction that returns a "transpose vector" -- a matrix<>
+        of dimension 1 x N, in which each element is of type T. */
     template <typename T, std::size_t N>
     struct uniform_transpose_vector
     {

@@ -43,36 +43,53 @@ namespace boost { namespace units_blas {
                 >::type
             >::type type;
         };
+
+        template <typename ValueTypes>
+        struct num_rows
+        {
+            typedef size_t_<
+                fusion::result_of::size<ValueTypes>::type::value
+            > type;
+        };
+
+        template <typename ValueTypes>
+        struct num_columns
+        {
+            typedef size_t_<
+                fusion::result_of::size<
+                    typename fusion::result_of::value_at_c<
+                        ValueTypes,
+                        0
+                    >::type
+                >::type::value
+            > type;
+        };
     }
 
+    /** Note that in the member documentation that follows, the notation m(i, j)
+        is used to refer to the element of matrix m at row i, column j, even
+        though there is no operator() defined for matrix<>. */
     template <typename Rows>
     class matrix
     {
     public:
         typedef std::size_t size_type;
         typedef typename detail::deep_as_vector<Rows>::type value_types;
-        typedef mpl::true_ is_matrix;
+        typedef typename detail::num_rows<value_types>::type num_rows_t;
+        typedef typename detail::num_columns<value_types>::type num_columns_t;
 
-        typedef size_t_<
-            fusion::result_of::size<value_types>::type::value
-        > num_rows_t;
-        typedef size_t_<
-            fusion::result_of::size<
-                typename fusion::result_of::value_at_c<
-                    value_types,
-                    0
-                >::type
-            >::type::value
-        > num_columns_t;
-
+        /** Default ctor.  Each element of *this is default constructed. */
         matrix () :
             data_ ()
             {}
 
+        /** Copy ctor. */
         matrix (matrix const & m) :
             data_ (m.data_)
             {}
 
+        /** Copy ctor.  *this and \a m must have the same dimensions, and every
+            \a m(i, j) must be convertible to the type of (*this)(i, j). */
         template <typename T>
         matrix (matrix<T> const & m) :
             data_ ()
@@ -83,12 +100,16 @@ namespace boost { namespace units_blas {
                 assign_data(m);
             }
 
+        /** Assignment operator. */
         matrix & operator= (matrix const & rhs)
             {
                 data_ = rhs.data_;
                 return *this;
             }
 
+        /** Assignment operator ctor.  *this and \a m must have the same
+            dimensions, and every \a m(i, j) must be convertible to the type of
+            (*this)(i, j). */
         template <typename T>
         matrix & operator= (matrix<T> const & rhs)
             {
@@ -99,28 +120,41 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
+        /** Returns the number of elements in *this. */
         size_type size () const
             { return mpl::times<num_rows_t, num_columns_t>::value; }
 
+        /** Returns the number of rows in *this. */
         size_type rows () const
             { return num_rows_t::value; }
 
+        /** Returns the number of columns in *this. */
         size_type columns () const
             { return num_columns_t::value; }
 
+        /** Returns a const reference to the element at row \a I, column \a
+            J. */
         template <size_type I, size_type J>
         typename result_of::at_c<matrix const, I, J>::type
         at () const
             { return fusion::at_c<J>(fusion::at_c<I>(data_)); }
 
+        /** Prints *this to stream \os.  Note that this function remains
+            unimplemented unless io.hpp is also included. */
         std::ostream & print (std::ostream & os) const;
 
 
+        /** Returns a non-const reference to the element at row \a I, column \a
+            J. */
         template <size_type I, size_type J>
         typename result_of::at_c<matrix, I, J>::type
         at ()
             { return fusion::at_c<J>(fusion::at_c<I>(data_)); }
 
+        /** Adds the values in \a rhs to *this, element-by-element.  *this and
+            *\a m must have the same dimensions, and every sum rhs(i, j) +
+            (*this)(i, j) \a m must be convertible to the type of (*this)(i,
+            j). */
         template <typename T>
         matrix & operator+= (matrix<T> const & rhs)
             {
@@ -134,6 +168,10 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
+        /** Subtracts the values in \a rhs from *this, element-by-element. *this
+            and \a m must have the same dimensions, and every difference
+            rhs(i, j) - (*this)(i, j) \a m must be convertible to the type of
+            (*this)(i, j). */
         template <typename T>
         matrix & operator-= (matrix<T> const & rhs)
             {
@@ -147,22 +185,27 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
+        /** Multiplies each element of *this by \a rhs.  Every product
+            (*this)(i, j) * \a val must be convertible to the type of (*this)(i,
+            j). */
         template <typename T>
-        matrix & operator*= (T const & rhs)
+        matrix & operator*= (T const & val)
             {
                 typedef fusion::vector<matrix &, matrix const &, T const &> ops;
                 iterate<mpl::times<num_rows_t, num_columns_t> >(
-                    ops(*this, *this, rhs), detail::matrix_scalar_mul_assign()
+                    ops(*this, *this, val), detail::matrix_scalar_mul_assign()
                 );
                 return *this;
             }
 
+        /** Divides each element of *this by \a rhs.  Every quotient (*this)(i,
+         j) / \a val must be convertible to the type of (*this)(i, j). */
         template <typename T>
-        matrix & operator/= (T const & rhs)
+        matrix & operator/= (T const & val)
             {
                 typedef fusion::vector<matrix &, matrix const &, T const &> ops;
                 iterate<mpl::times<num_rows_t, num_columns_t> >(
-                    ops(*this, *this, rhs), detail::matrix_scalar_div_assign()
+                    ops(*this, *this, val), detail::matrix_scalar_div_assign()
                 );
                 return *this;
             }
@@ -171,6 +214,7 @@ namespace boost { namespace units_blas {
         template <typename T>
         friend class matrix;
 
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         struct column_lengths_equal :
             fusion::result_of::equal_to<
                 typename fusion::result_of::find_if<
@@ -209,10 +253,13 @@ namespace boost { namespace units_blas {
                     ops(*this, rhs), detail::assign()
                 );
             }
+#endif
 
         value_types data_;
     };
 
+    /** Returns a \a Matrix whose diagonal elements are 1, and whose nondiagonal
+        elements are 0. */
     template <typename Matrix>
     typename enable_if<
         mpl::equal_to<

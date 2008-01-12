@@ -14,6 +14,8 @@
 
 namespace boost { namespace units_blas {
 
+    /** Thrown when operations involving matrix inversion encounter a singular
+        matrix. */
     class singular_matrix :
         public std::exception
     {
