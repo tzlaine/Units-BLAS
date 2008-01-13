@@ -18,11 +18,16 @@
 
 namespace boost { namespace units_blas { namespace result_of {
 
+    /** Returns the type of the element at row \a I, column \a J of Matrix.
+        Matrix must be a matrix<>. */
     template <typename Matrix, typename I, typename J>
     struct value_at
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         BOOST_MPL_ASSERT((mpl::less<I, typename Matrix::num_rows_t>));
         BOOST_MPL_ASSERT((mpl::less<J, typename Matrix::num_columns_t>));
+#endif
+
         typedef typename fusion::result_of::value_at<
             typename fusion::result_of::value_at<
                 typename Matrix::value_types,
@@ -32,6 +37,8 @@ namespace boost { namespace units_blas { namespace result_of {
         >::type type;
     };
 
+    /** Returns the type of the element at row \a I, column \a J of Matrix.
+        Matrix must be a matrix<>. */
     template <typename Matrix, std::size_t I, std::size_t J>
     struct value_at_c
     {

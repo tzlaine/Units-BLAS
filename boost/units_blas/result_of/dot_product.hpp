@@ -15,9 +15,14 @@
 
 namespace boost { namespace units_blas { namespace result_of {
 
+    /** Returns the type of the dot product of \a MatrixL and \a MatrixR.  \a
+        MatrixL and \a MatrixR must be matrix<>s, and must have the same
+        dimensions.  Additionally, both matrix<>s must be "vectors", or
+        "transpose vectors". */
     template <typename MatrixL, typename MatrixR>
     struct dot_product
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         BOOST_MPL_ASSERT((mpl::equal_to<typename MatrixL::num_rows_t,
                                         typename MatrixR::num_rows_t>));
         BOOST_MPL_ASSERT((mpl::equal_to<typename MatrixL::num_columns_t,
@@ -28,6 +33,7 @@ namespace boost { namespace units_blas { namespace result_of {
                 mpl::equal_to<typename MatrixL::num_columns_t, size_t_<1> >
             >
         ));
+#endif
 
         typedef typename mpl::eval_if<
             mpl::equal_to<typename MatrixL::num_columns_t, size_t_<1> >,

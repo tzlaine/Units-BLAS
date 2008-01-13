@@ -18,16 +18,20 @@
 
 namespace boost { namespace units_blas { namespace result_of {
 
+    /** Returns the type of the sum of all elements in \a Matrix.  \a Matrix
+        must be a "vector" or "transpose vector" matrix<>.  Also, a sum type must
+        exist for \a Matrix (some otherwise-suitable matrix<>s do not have a sum
+        that makes sense when their elements are unit types). */
     template <typename Matrix>
     struct sum
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         BOOST_MPL_ASSERT((
             mpl::or_<
                 mpl::equal_to<typename Matrix::num_rows_t, size_t_<1> >,
                 mpl::equal_to<typename Matrix::num_columns_t, size_t_<1> >
             >
         ));
-
         typedef typename mpl::eval_if<
             mpl::equal_to<typename Matrix::num_columns_t, size_t_<1> >,
             fusion::result_of::value_at_c<typename result_of::transpose<Matrix>::type::value_types, 0>,
@@ -39,6 +43,8 @@ namespace boost { namespace units_blas { namespace result_of {
             1
         >::type begin;
         typedef typename mpl::end<element_types>::type end;
+
+#endif
         typedef typename mpl::fold<
             mpl::iterator_range<begin, end>,
             typename mpl::front<element_types>::type,

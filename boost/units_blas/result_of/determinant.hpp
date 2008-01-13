@@ -103,12 +103,17 @@ namespace boost { namespace units_blas { namespace result_of {
 
 #else
 
-    // Note that this is (compile-time) O(n!) in the number of rows!  Users
-    // may wish to use the simpler but less exact product-of-diagonals
-    // implementation above when compiling large matrices.
+    /** Returns the type that results from taking the determinant of \a Matrix.
+        \a Matrix must be a matrix<>, and must be square.  Also, a determinant type
+        must exist for \a Matrix (some otherwise-suitable matrix<>s do not have
+        a determinant that makes sense when their elements are unit types).
+        Note that the default implementation of this metafunction is
+        (compile-time) O(n!) in the number of rows.  See the Configuration
+        section of the documentation for a discussion of alternatives. */
     template <typename Matrix, std::size_t Size>
     struct determinant
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         BOOST_MPL_ASSERT((mpl::equal_to<typename Matrix::num_rows_t,
                                         typename Matrix::num_columns_t>));
         typedef typename mpl::transform_view<
@@ -121,6 +126,8 @@ namespace boost { namespace units_blas { namespace result_of {
             1
         >::type begin;
         typedef typename mpl::end<top_row_element_subdeterminants>::type end;
+#endif
+
         typedef typename mpl::fold<
             mpl::iterator_range<begin, end>,
             typename mpl::front<top_row_element_subdeterminants>::type,
@@ -128,6 +135,7 @@ namespace boost { namespace units_blas { namespace result_of {
         >::type type;
     };
 
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
     template <typename Matrix>
     struct determinant<Matrix, 1>
     {
@@ -164,6 +172,7 @@ namespace boost { namespace units_blas { namespace result_of {
              typename value_at_c<Matrix, 1, 1>::type() * typename value_at_c<Matrix, 2, 0>::type())
         )) type;
     };
+#endif
 
 #endif
 

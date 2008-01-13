@@ -43,11 +43,18 @@ namespace boost { namespace units_blas { namespace result_of {
 
     } // namespace detail
 
+    /** Returns the type of inverting \A Matrix.  \a Matrix must be a matrix<>,
+        and must be square.  Also, an inverse type must exist for \a Matrix
+        (some otherwise-suitable matrix<>s do not have an inverse that makes
+        sense when their elements are unit types).  */
     template <typename Matrix>
     struct inverse
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         BOOST_MPL_ASSERT((mpl::equal_to<typename Matrix::num_rows_t,
                                         typename Matrix::num_columns_t>));
+#endif
+
         typedef matrix<
             typename fusion::result_of::as_vector<
             typename mpl::transform_view<

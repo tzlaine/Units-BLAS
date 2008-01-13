@@ -34,6 +34,12 @@ namespace boost { namespace units_blas { namespace result_of {
 
     } // namespace detail
 
+    /** Returns a matrix<> type whose elements are composed of the rows and
+        columns of \a Matrix specified in \a Rows and \a Columns.  \a Matrix
+        must be a matrix<>.  \a Rows and \a Columns must be type sequences
+        containing integral constants; all integral constants in \a Rows and \a
+        Columns must fall within the numbers of rows and columns in Matrix,
+        respectively. */
     template <typename Matrix, typename Rows, typename Columns>
     struct slice
     {

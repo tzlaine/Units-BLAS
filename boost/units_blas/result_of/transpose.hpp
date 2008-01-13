@@ -50,6 +50,8 @@ namespace boost { namespace units_blas { namespace result_of {
 
     } // namespace detail
 
+    /** Returns the type of taking the transpose of \a Matrix.  \a Matrix must
+        be a matrix<>. */
     template <typename Matrix>
     struct transpose
     {

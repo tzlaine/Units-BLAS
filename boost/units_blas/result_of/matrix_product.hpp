@@ -18,6 +18,12 @@
 
 namespace boost { namespace units_blas { namespace result_of {
 
+    /** Returns the type that results from multiplying \a MatrixL and \a
+        MatrixR.  \a MatrixL and \a MatrixR must be matrix<>s, and the number of
+        columns in \a MatrixL must the same as the number of rows in \a MatrixR.
+        Also, a matrix-product type must exist for \a MatrixL and \a MatrixR
+        (some otherwise-suitable pairs of matrix<>s do not have a matrix-product
+        that makes sense when their elements are unit types). */
     template <typename MatrixL, typename MatrixR>
     struct matrix_product
     {
@@ -35,6 +41,8 @@ namespace boost { namespace units_blas { namespace result_of {
         > type;
     };
 
+    /** Returns the type that results from multiplying each element of \a Matrix
+        by \a T.  \a Matrix must be a matrix<>. */
     template <typename Matrix, typename T>
     struct scalar_product
     {
@@ -48,6 +56,8 @@ namespace boost { namespace units_blas { namespace result_of {
         > type;
     };
 
+    /** Returns the type that results from dividing each element of \a Matrix by
+        \a T.  \a Matrix must be a matrix<>. */
     template <typename Matrix, typename T>
     struct scalar_quotient
     {
@@ -61,6 +71,10 @@ namespace boost { namespace units_blas { namespace result_of {
         > type;
     };
 
+    /** Returns the type that results from adding \a MatrixL and \a MatrixR.  \a
+        MatrixL and \a MatrixR must be matrix<>s with the same dimensions.
+        Also, every sum MatrixL()(i, j) + MatrixR()(i, j) must be a valid
+        operation. */
     template <typename MatrixL, typename MatrixR>
     struct matrix_element_sum
     {
@@ -77,6 +91,10 @@ namespace boost { namespace units_blas { namespace result_of {
         > type;
     };
 
+    /** Returns the type that results from subtracting \a MatrixR from \a
+        MatrixL.  \a MatrixL and \a MatrixR must be matrix<>s with the same
+        dimensions.  Also, every difference MatrixL()(i, j) - MatrixR()(i, j)
+        must be a valid operation. */
     template <typename MatrixL, typename MatrixR>
     struct matrix_element_difference
     {
@@ -93,6 +111,9 @@ namespace boost { namespace units_blas { namespace result_of {
         > type;
     };
 
+    /** Returns the type that results from multiplying values in \a MatrixL by
+        values in \a MatrixR, element-by-element.  \a MatrixL and \a MatrixR
+        must be a matrix<>s with the same dimensions. */
     template <typename MatrixL, typename MatrixR>
     struct matrix_element_product
     {
@@ -109,6 +130,9 @@ namespace boost { namespace units_blas { namespace result_of {
         > type;
     };
 
+    /** Returns the type that results from dividing values in \a MatrixL by
+        values in \a MatrixR, element-by-element.  \a MatrixL and \a MatrixR
+        must be a matrix<>s with the same dimensions. */
     template <typename MatrixL, typename MatrixR>
     struct matrix_element_quotient
     {
