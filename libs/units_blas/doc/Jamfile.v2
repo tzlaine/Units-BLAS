@@ -18,7 +18,12 @@ doxygen $(target)
     $(files)
   :
         <doxygen:param>EXTRACT_ALL=YES
-        <doxygen:param>"PREDEFINED=\"BOOST_UNITS_BLAS_DOXYGEN=1\""
+        # note that there is no detail::unspecified -- this is a hack to get all
+        # the SFINAE code out of the API docs.
+        <doxygen:param>"PREDEFINED=\"BOOST_UNITS_BLAS_DOXYGEN=1\" \\
+                                   \"BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS=1\" \\
+                                   \"lazy_enable_if=detail::unspecified\" \\
+                                   \"enable_if=detail::unspecified\""
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES

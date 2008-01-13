@@ -149,6 +149,10 @@ before including any library header.
 
 uniform_matrix name selection (vs. homogeneous_matrix)
 
+use of SFINAE in non-operator versions of operations, e.g. prod vs. operator* for consistency
+
+use of operators, including the slightly wierd operator^ (note that cross products and bitwise xor have quite a bit in common)
+
 [endsect]
 
 [xinclude units_blas_reference.xml]

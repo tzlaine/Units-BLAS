@@ -44,9 +44,7 @@ namespace boost { namespace units_blas { namespace result_of {
     } // namespace detail
 
     /** Returns the type of inverting \A Matrix.  \a Matrix must be a matrix<>,
-        and must be square.  Also, an inverse type must exist for \a Matrix
-        (some otherwise-suitable matrix<>s do not have an inverse that makes
-        sense when their elements are unit types).  */
+        and must be square.  */
     template <typename Matrix>
     struct inverse
     {
