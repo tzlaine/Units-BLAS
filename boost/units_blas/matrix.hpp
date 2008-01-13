@@ -139,7 +139,7 @@ namespace boost { namespace units_blas {
         at () const
             { return fusion::at_c<J>(fusion::at_c<I>(data_)); }
 
-        /** Prints *this to stream \os.  Note that this function remains
+        /** Prints *this to stream \a os.  Note that this function remains
             unimplemented unless io.hpp is also included. */
         std::ostream & print (std::ostream & os) const;
 
@@ -152,9 +152,8 @@ namespace boost { namespace units_blas {
             { return fusion::at_c<J>(fusion::at_c<I>(data_)); }
 
         /** Adds the values in \a rhs to *this, element-by-element.  *this and
-            *\a m must have the same dimensions, and every sum rhs(i, j) +
-            (*this)(i, j) \a m must be convertible to the type of (*this)(i,
-            j). */
+            \a m must have the same dimensions, and every sum rhs(i, j) +
+            (*this)(i, j) must be convertible to the type of (*this)(i, j). */
         template <typename T>
         matrix & operator+= (matrix<T> const & rhs)
             {
@@ -170,7 +169,7 @@ namespace boost { namespace units_blas {
 
         /** Subtracts the values in \a rhs from *this, element-by-element. *this
             and \a m must have the same dimensions, and every difference
-            rhs(i, j) - (*this)(i, j) \a m must be convertible to the type of
+            rhs(i, j) - (*this)(i, j) must be convertible to the type of
             (*this)(i, j). */
         template <typename T>
         matrix & operator-= (matrix<T> const & rhs)
@@ -185,7 +184,7 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Multiplies each element of *this by \a rhs.  Every product
+        /** Multiplies each element of *this by \a val.  Every product
             (*this)(i, j) * \a val must be convertible to the type of (*this)(i,
             j). */
         template <typename T>
@@ -198,7 +197,7 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Divides each element of *this by \a rhs.  Every quotient (*this)(i,
+        /** Divides each element of *this by \a val.  Every quotient (*this)(i,
          j) / \a val must be convertible to the type of (*this)(i, j). */
         template <typename T>
         matrix & operator/= (T const & val)
