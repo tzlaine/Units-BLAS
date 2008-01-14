@@ -29,10 +29,13 @@
 namespace boost { namespace units_blas {
 
     /** Returns a matrix<> consisting of only the rows and columns of \a m
-        specified by \a Rows and \a Columns.  \a Matrix must be a matrix<>.  \a
-        Rows and \a Columns must be type sequences containing integral
-        constants; all integral constants in \a Rows and \a Columns must fall
-        within the numbers of rows and columns in Matrix, respectively. */
+        specified by \a Rows and \a Columns.  \a Matrix must be a matrix<>.
+        \a Rows and \a Columns must be type sequences containing integral
+        constants; all integral constants in \a Rows and \a Columns must be
+        less than the number of rows and columns in Matrix, respectively.
+        Note that duplication and order preservation are not checked for the
+        constants in \a Rows and \a Columns.  It is therefore possible to use
+        slice<>() to rearrange and/or duplicate rows and/or columns. */
     template <typename Rows, typename Columns, typename Matrix>
     typename lazy_enable_if<
         is_matrix<Matrix>,
