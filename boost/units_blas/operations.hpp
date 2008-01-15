@@ -28,14 +28,14 @@
 
 namespace boost { namespace units_blas {
 
-    /** Returns a matrix<> consisting of only the rows and columns of \a m
-        specified by \a Rows and \a Columns.  \a Matrix must be a matrix<>.
-        \a Rows and \a Columns must be type sequences containing integral
-        constants; all integral constants in \a Rows and \a Columns must be
-        less than the number of rows and columns in Matrix, respectively.
+    /** Returns a @c matrix<> consisting of only the rows and columns of @c m
+        specified by @c Rows and @c Columns.  @c Matrix must be a @c matrix<>.
+        @c Rows and @c Columns must be type sequences containing integral
+        constants; all integral constants in @c Rows and @c Columns must be
+        less than the number of rows and columns in @c Matrix, respectively.
         Note that duplication and order preservation are not checked for the
-        constants in \a Rows and \a Columns.  It is therefore possible to use
-        slice<>() to rearrange and/or duplicate rows and/or columns. */
+        constants in @c Rows and @c Columns.  It is therefore possible to use
+        @c slice<>() to rearrange and/or duplicate rows and/or columns. */
     template <typename Rows, typename Columns, typename Matrix>
     typename lazy_enable_if<
         is_matrix<Matrix>,
@@ -54,8 +54,8 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns a const-preserved reference to the element at row \a I, column
-        \a J of \a m.  \a Matrix must be a matrix<>. */
+    /** Returns a const-preserved reference to the element at row @c I, column
+        @c J of @c m.  @c Matrix must be a @c matrix<>. */
     template <typename I, typename J, typename Matrix>
     typename lazy_enable_if<
         is_matrix<Matrix>,
@@ -64,8 +64,8 @@ namespace boost { namespace units_blas {
     at (Matrix & m)
     { return m.at<I::value, J::value>(); }
 
-    /** Returns a const-preserved reference to the element at row \a I, column
-        \a J of \a m.  \a Matrix must be a matrix<>. */
+    /** Returns a const-preserved reference to the element at row @c I, column
+        @c J of @c m.  @c Matrix must be a @c matrix<>. */
     template <std::size_t I, std::size_t J, typename Matrix>
     typename lazy_enable_if<
         is_matrix<Matrix>,
@@ -74,7 +74,7 @@ namespace boost { namespace units_blas {
     at_c (Matrix & m)
     { return m.at<I, J>(); }
 
-    /** Returns the tranpose of \a m.  \a Matrix must be a matrix<>. */
+    /** Returns the tranpose of @c m.  @c Matrix must be a @c matrix<>. */
     template <typename Matrix>
     typename lazy_enable_if<
         is_matrix<Matrix>,
@@ -91,7 +91,7 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the negation of \a m.  \a Matrix must be a matrix<>. */
+    /** Returns the negation of @c m.  @c Matrix must be a @c matrix<>. */
     template <typename Matrix>
     typename enable_if<
         is_matrix<Matrix>,
@@ -109,7 +109,7 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the negation of \a m.  \a Matrix must be a matrix<>. */
+    /** Returns the negation of @c m.  @c Matrix must be a @c matrix<>. */
     template <typename Matrix>
     typename enable_if<
         is_matrix<Matrix>,
@@ -120,9 +120,9 @@ namespace boost { namespace units_blas {
 
 #endif
 
-    /** Returns the elementwise sum of \a lhs and \a rhs. \a MatrixL and \a
-        MatrixR must be matrix<>s with the same dimensions.  Also, every sum
-        lhs(i, j) + rhs(i, j) must be a valid operation.  */
+    /** Returns the elementwise sum of @c lhs and @c rhs. @c MatrixL and @c
+        MatrixR must be <c>matrix<></c>s with the same dimensions.  Also,
+        every sum <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         is_same_shape_matrix<MatrixL, MatrixR>,
@@ -139,9 +139,10 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the elementwise difference of \a lhs and \a rhs. \a MatrixL and
-        \a MatrixR must be matrix<>s with the same dimensions.  Also, every
-        difference lhs(i, j) - rhs(i, j) must be a valid operation.  */
+    /** Returns the elementwise difference of @c lhs and @c rhs. @c MatrixL
+        and @c MatrixR must be <c>matrix<></c>s with the same dimensions.
+        Also, every difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid
+        operation.  */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         is_same_shape_matrix<MatrixL, MatrixR>,
@@ -160,9 +161,9 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the elementwise sum of \a lhs and \a rhs. \a MatrixL and \a
-        MatrixR must be matrix<>s with the same dimensions.  Also, every sum
-        lhs(i, j) + rhs(i, j) must be a valid operation.  */
+    /** Returns the elementwise sum of @c lhs and @c rhs. @c MatrixL and @c
+        MatrixR must be <c>matrix<></c>s with the same dimensions.  Also,
+        every sum <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         is_same_shape_matrix<MatrixL, MatrixR>,
@@ -171,9 +172,10 @@ namespace boost { namespace units_blas {
     operator+ (MatrixL const & lhs, MatrixR const & rhs)
     { return sum(lhs, rhs); }
 
-    /** Returns the elementwise difference of \a lhs and \a rhs. \a MatrixL and
-        \a MatrixR must be matrix<>s with the same dimensions.  Also, every
-        difference lhs(i, j) - rhs(i, j) must be a valid operation.  */
+    /** Returns the elementwise difference of @c lhs and @c rhs. @c MatrixL
+        and @c MatrixR must be <c>matrix<></c>s with the same dimensions.
+        Also, every difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid
+        operation.  */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         is_same_shape_matrix<MatrixL, MatrixR>,
@@ -184,12 +186,13 @@ namespace boost { namespace units_blas {
 
 #endif
 
-    /** Returns the matrix-product of \a lhs and \a rhs. \a MatrixL and \a
-        MatrixR must be matrix<>s, and the number of columns in \a MatrixL must
-        the same as the number of rows in \a MatrixR.  Also, a matrix-product
-        type must exist for \a MatrixL and \a MatrixR (some otherwise-suitable
-        pairs of matrix<>s do not have a matrix-product that makes sense when
-        their elements are unit types). */
+    /** Returns the matrix-product of @c lhs and @c rhs. @c MatrixL and @c
+        MatrixR must be <c>matrix<></c>s, and the number of columns in @c
+        MatrixL must the same as the number of rows in @c MatrixR.  Also, a
+        matrix-product type must exist for @c MatrixL and @c MatrixR (some
+        otherwise-suitable pairs of <c>matrix<></c>s do not have a
+        matrix-product that makes sense when their elements are unit
+        types). */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         mpl::and_<
@@ -217,8 +220,8 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the product of \a m and \a t.  \a Matrix must be a matrix<>, and
-        \a T must not be a matrix<>. */
+    /** Returns the product of @c m and @c t.  @c Matrix must be a @c
+        matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Matrix, typename T>
     typename lazy_enable_if<
         mpl::and_<
@@ -238,8 +241,8 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the product of \a t and \a m.  \a Matrix must be a matrix<>, and
-        \a T must not be a matrix<>. */
+    /** Returns the product of @c t and @c m.  @c Matrix must be a @c
+        matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Matrix, typename T>
     typename lazy_enable_if<
         mpl::and_<
@@ -251,8 +254,8 @@ namespace boost { namespace units_blas {
     prod (T const & t, Matrix const & m)
     { return prod(m, t); }
 
-    /** Returns the result of dividing \a m by \a t.  \a Matrix must be a
-        matrix<>, and \a T must not be a matrix<>. */
+    /** Returns the result of dividing @c m by @c t.  @c Matrix must be a @c
+        matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Matrix, typename T>
     typename lazy_enable_if<
         mpl::and_<
@@ -274,12 +277,13 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the matrix-product of \a lhs and \a rhs. \a MatrixL and \a
-        MatrixR must be matrix<>s, and the number of columns in \a MatrixL must
-        the same as the number of rows in \a MatrixR.  Also, a matrix-product
-        type must exist for \a MatrixL and \a MatrixR (some otherwise-suitable
-        pairs of matrix<>s do not have a matrix-product that makes sense when
-        their elements are unit types). */
+    /** Returns the matrix-product of @c lhs and @c rhs. @c MatrixL and @c
+        MatrixR must be <c>matrix<></c>s, and the number of columns in @c
+        MatrixL must the same as the number of rows in @c MatrixR.  Also, a
+        matrix-product type must exist for @c MatrixL and @c MatrixR (some
+        otherwise-suitable pairs of <c>matrix<></c>s do not have a
+        matrix-product that makes sense when their elements are unit
+        types). */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         mpl::and_<
@@ -295,8 +299,8 @@ namespace boost { namespace units_blas {
     operator* (MatrixL const & lhs, MatrixR const & rhs)
     { return prod(lhs, rhs); }
 
-    /** Returns the product of \a m and \a t.  \a Matrix must be a matrix<>, and
-        \a T must not be a matrix<>. */
+    /** Returns the product of @c m and @c t.  @c Matrix must be a @c
+        matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Matrix, typename T>
     typename lazy_enable_if<
         mpl::and_<
@@ -308,8 +312,8 @@ namespace boost { namespace units_blas {
     operator* (Matrix const & m, T const & t)
     { return prod(m, t); }
 
-    /** Returns the product of \a t and \a m.  \a Matrix must be a matrix<>, and
-        \a T must not be a matrix<>. */
+    /** Returns the product of @c t and @c m.  @c Matrix must be a @c
+        matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Matrix, typename T>
     typename lazy_enable_if<
         mpl::and_<
@@ -321,8 +325,8 @@ namespace boost { namespace units_blas {
     operator* (T const & t, Matrix const & m)
     { return prod(m, t); }
 
-    /** Returns the result of dividing \a m by \a t.  \a Matrix must be a
-        matrix<>, and \a T must not be a matrix<>. */
+    /** Returns the result of dividing @c m by @c t.  @c Matrix must be a @c
+        matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Matrix, typename T>
     typename lazy_enable_if<
         mpl::and_<
@@ -336,9 +340,9 @@ namespace boost { namespace units_blas {
 
 #endif
 
-    /** Returns the elementwise multiplication of the elements of \a lhs by the
-        elements of \a rhs.  \a MatrixL and \a MatrixR must be a matrix<>s with
-        the same dimensions. */
+    /** Returns the elementwise multiplication of the elements of @c lhs by
+        the elements of @c rhs.  @c MatrixL and @c MatrixR must be
+        <c>matrix<></c>s with the same dimensions. */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         is_same_shape_matrix<MatrixL, MatrixR>,
@@ -355,9 +359,9 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the elementwise division of the elements of \a lhs by the
-        elements of \a rhs.  \a MatrixL and \a MatrixR must be a matrix<>s with
-        the same dimensions. */
+    /** Returns the elementwise division of the elements of @c lhs by the
+        elements of @c rhs.  @c MatrixL and @c MatrixR must be
+        <c>matrix<></c>s with the same dimensions. */
     template <typename MatrixL, typename MatrixR>
     typename lazy_enable_if<
         is_same_shape_matrix<MatrixL, MatrixR>,
@@ -374,8 +378,8 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Swaps the values in \a lhs and \a rhs.  Note that this is an
-        O(size<Matrix>::value) operation. */
+    /** Swaps the values in @c lhs and @c rhs.  Note that this is an
+        O(@c size<Matrix>::value) operation. */
     template <typename Matrix>
     typename enable_if<
         is_matrix<Matrix>
@@ -388,9 +392,9 @@ namespace boost { namespace units_blas {
         );
     }
 
-    /** Returns the dot product of \a lhs and \a rhs.  \a VectorL and \a VectorR
-        must be matrix<>s, and must have the same dimensions.  Additionally,
-        both matrix<>s must be "vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
+        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "vectors". */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         is_same_length_vector<VectorL, VectorR>,
@@ -416,9 +420,9 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the dot product of \a lhs and \a rhs.  \a VectorL and \a VectorR
-        must be matrix<>s, and must have the same dimensions.  Additionally,
-        both matrix<>s must be "transpose vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
+        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "transpose vectors". */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         is_same_length_transpose_vector<VectorL, VectorR>,
@@ -440,9 +444,9 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the dot product of \a lhs and \a rhs.  \a VectorL and \a VectorR
-        must be matrix<>s, and must have the same dimensions.  Additionally,
-        both matrix<>s must be "vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
+        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "vectors". */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         is_same_length_vector<VectorL, VectorR>,
@@ -451,9 +455,9 @@ namespace boost { namespace units_blas {
     operator* (VectorL const & lhs, VectorR const & rhs)
     { return dot(lhs, rhs); }
 
-    /** Returns the dot product of \a lhs and \a rhs.  \a VectorL and \a VectorR
-        must be matrix<>s, and must have the same dimensions.  Additionally,
-        both matrix<>s must be "transpose vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
+        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "transpose vectors". */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         is_same_length_transpose_vector<VectorL, VectorR>,
@@ -464,11 +468,12 @@ namespace boost { namespace units_blas {
 
 #endif
 
-    /** Returns the cross product of \a lhs with \a rhs.  \a VectorL and \a
-        VectorR must both be matrix<>s, and must both be 3 x 1 "vectors".  Also,
-        a cross product type must exist for \a VectorL and \a VectorR (some
-        otherwise-suitable pairs of matrix<>s do not have a cross product that
-        makes sense when their elements are unit types). */
+    /** Returns the cross product of @c lhs with @c rhs.  @c VectorL and @c
+        VectorR must both be <c>matrix<></c>s, and must both be 3 x 1
+        "vectors".  Also, a cross product type must exist for @c VectorL and
+        @c VectorR (some otherwise-suitable pairs of <c>matrix<></c>s do not
+        have a cross product that makes sense when their elements are unit
+        types). */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         mpl::and_<
@@ -491,11 +496,12 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the cross product of \a lhs with \a rhs.  \a VectorL and \a
-        VectorR must both be matrix<>s, and must both be 1 x 3 "transpose
-        vectors".  Also, a cross product type must exist for \a VectorL and \a
-        VectorR (some otherwise-suitable pairs of matrix<>s do not have a cross
-        product that makes sense when their elements are unit types). */
+    /** Returns the cross product of @c lhs with @c rhs.  @c VectorL and @c
+        VectorR must both be <c>matrix<></c>s, and must both be 1 x 3
+        "transpose vectors".  Also, a cross product type must exist for @c
+        VectorL and @c VectorR (some otherwise-suitable pairs of
+        <c>matrix<></c>s do not have a cross product that makes sense when
+        their elements are unit types). */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         mpl::and_<
@@ -520,11 +526,12 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the cross product of \a lhs with \a rhs.  \a VectorL and \a
-        VectorR must both be matrix<>s, and must both be 3 x 1 "vectors".  Also,
-        a cross product type must exist for \a VectorL and \a VectorR (some
-        otherwise-suitable pairs of matrix<>s do not have a cross product that
-        makes sense when their elements are unit types). */
+    /** Returns the cross product of @c lhs with @c rhs.  @c VectorL and @c
+        VectorR must both be <c>matrix<></c>s, and must both be 3 x 1
+        "vectors".  Also, a cross product type must exist for @c VectorL and
+        @c VectorR (some otherwise-suitable pairs of <c>matrix<></c>s do not
+        have a cross product that makes sense when their elements are unit
+        types). */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         mpl::and_<
@@ -539,11 +546,12 @@ namespace boost { namespace units_blas {
     operator^ (VectorL const & lhs, VectorR const & rhs)
     { return cross(lhs, rhs); }
 
-    /** Returns the cross product of \a lhs with \a rhs.  \a VectorL and \a
-        VectorR must both be matrix<>s, and must both be 1 x 3 "transpose
-        vectors".  Also, a cross product type must exist for \a VectorL and \a
-        VectorR (some otherwise-suitable pairs of matrix<>s do not have a cross
-        product that makes sense when their elements are unit types). */
+    /** Returns the cross product of @c lhs with @c rhs.  @c VectorL and @c
+        VectorR must both be <c>matrix<></c>s, and must both be 1 x 3
+        "transpose vectors".  Also, a cross product type must exist for @c
+        VectorL and @c VectorR (some otherwise-suitable pairs of
+        <c>matrix<></c>s do not have a cross product that makes sense when
+        their elements are unit types). */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
         mpl::and_<
@@ -560,10 +568,10 @@ namespace boost { namespace units_blas {
 
 #endif
 
-    /** Returns the sum of all elements in \a v.  \a Vector must be a "vector"
-        matrix<>.  Also, a sum type must exist for \a Vector (some
-        otherwise-suitable matrix<>s do not have a sum that makes sense when
-        their elements are unit types). */
+    /** Returns the sum of all elements in @c v.  @c Vector must be a "vector"
+        @c matrix<>.  Also, a sum type must exist for @c Vector (some
+        otherwise-suitable <c>matrix<></c>s do not have a sum that makes sense
+        when their elements are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
         is_vector<Vector>,
@@ -580,10 +588,10 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the sum of all elements in \a v.  \a Vector must be a "transpose
-        vector" matrix<>.  Also, a sum type must exist for \a Vector (some
-        otherwise-suitable matrix<>s do not have a sum that makes sense when
-        their elements are unit types). */
+    /** Returns the sum of all elements in @c v.  @c Vector must be a
+        "transpose vector" @c matrix<>.  Also, a sum type must exist for @c
+        Vector (some otherwise-suitable <c>matrix<></c>s do not have a sum
+        that makes sense when their elements are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
         is_transpose_vector<Vector>,
@@ -600,10 +608,10 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the sum of the absolute values of all elements in \a v.  \a
-        Vector must be a "vector" matrix<>.  Also, a sum type must exist for \a
-        Vector (some otherwise-suitable matrix<>s do not have a sum that makes
-        sense when their elements are unit types). */
+    /** Returns the sum of the absolute values of all elements in @c v.  @c
+        Vector must be a "vector" @c matrix<>.  Also, a sum type must exist
+        for @c Vector (some otherwise-suitable <c>matrix<></c>s do not have a
+        sum that makes sense when their elements are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
         is_vector<Vector>,
@@ -620,10 +628,11 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the sum of the absolute values of all elements in \a v.  \a
-        Vector must be a "transpose vector" matrix<>.  Also, a sum type must
-        exist for \a Vector (some otherwise-suitable matrix<>s do not have a sum
-        that makes sense when their elements are unit types). */
+    /** Returns the sum of the absolute values of all elements in @c v.  @c
+        Vector must be a "transpose vector" @c matrix<>.  Also, a sum type
+        must exist for @c Vector (some otherwise-suitable <c>matrix<></c>s do
+        not have a sum that makes sense when their elements are unit
+        types). */
     template <typename Vector>
     typename lazy_enable_if<
         is_transpose_vector<Vector>,
@@ -640,10 +649,11 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the square root of the sum of the squares of all elements in \a
-        v.  \a Vector must be a "vector" matrix<>.  Also, a sum type must exist
-        for \a Vector (some otherwise-suitable matrix<>s do not have a sum that
-        makes sense when their elements are unit types). */
+    /** Returns the square root of the sum of the squares of all elements in
+        @c v.  @c Vector must be a "vector" @c matrix<>.  Also, a sum type
+        must exist for @c Vector (some otherwise-suitable <c>matrix<></c>s do
+        not have a sum that makes sense when their elements are unit
+        types). */
     template <typename Vector>
     typename lazy_enable_if<
         is_vector<Vector>,
@@ -662,10 +672,11 @@ namespace boost { namespace units_blas {
         return sqrt(tmp);
     }
 
-    /** Returns the square root of the sum of the squares of all elements in \a
-        v.  \a Vector must be a "transpose vector" matrix<>.  Also, a sum type
-        must exist for \a Vector (some otherwise-suitable matrix<>s do not have
-        a sum that makes sense when their elements are unit types). */
+    /** Returns the square root of the sum of the squares of all elements in
+        @c v.  @c Vector must be a "transpose vector" @c matrix<>.  Also, a
+        sum type must exist for @c Vector (some otherwise-suitable
+        <c>matrix<></c>s do not have a sum that makes sense when their
+        elements are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
         is_transpose_vector<Vector>,
@@ -684,9 +695,9 @@ namespace boost { namespace units_blas {
         return sqrt(tmp);
     }
 
-    /** Returns the max of the absolute values of all elements in \a v.  \a
-        Vector must be a "vector" matrix<>.  Also, operator< must must exist for
-        all pairs of elements in \a Vector. */
+    /** Returns the max of the absolute values of all elements in @c v.  @c
+        Vector must be a "vector" @c matrix<>.  Also, @c operator< must must
+        exist for all pairs of elements in @c Vector. */
     template <typename Vector>
     typename lazy_enable_if<
         is_vector<Vector>,
@@ -704,9 +715,9 @@ namespace boost { namespace units_blas {
         return tmp.first;
     }
 
-    /** Returns the max of the absolute values of all elements in \a v.  \a
-        Vector must be a "transpose vector" matrix<>.  Also, operator< must must
-        exist for all pairs of elements in \a Vector. */
+    /** Returns the max of the absolute values of all elements in @c v.  @c
+        Vector must be a "transpose vector" @c matrix<>.  Also, @c operator<
+        must must exist for all pairs of elements in @c Vector. */
     template <typename Vector>
     typename lazy_enable_if<
         is_transpose_vector<Vector>,
@@ -724,9 +735,10 @@ namespace boost { namespace units_blas {
         return tmp.first;
     }
 
-    /** Returns the index of the first element in \a v equal to norm_inf(v).  \a
-        Vector must be a "transpose vector" matrix<>.  Also, operator< must must
-        exist for all pairs of elements in \a Vector. */
+    /** Returns the index of the first element in @c v equal to @c
+        norm_inf(v).  @c Vector must be a "transpose vector" @c matrix<>.
+        Also, @c operator< must must exist for all pairs of elements in @c
+        Vector. */
     template <typename Vector>
     typename enable_if<
         is_vector<Vector>,
@@ -744,9 +756,10 @@ namespace boost { namespace units_blas {
         return tmp.second;
     }
 
-    /** Returns the index of the first element in \a v equal to norm_inf(v).  \a
-        Vector must be a "transpose vector" matrix<>.  Also, operator< must must
-        exist for all pairs of elements in \a Vector. */
+    /** Returns the index of the first element in @c v equal to @c
+        norm_inf(v).  @c Vector must be a "transpose vector" @c matrix<>.
+        Also, @c operator< must must exist for all pairs of elements in @c
+        Vector. */
     template <typename Vector>
     typename enable_if<
         is_transpose_vector<Vector>,
@@ -825,10 +838,10 @@ namespace boost { namespace units_blas {
     }
 #endif
 
-    /** Returns the determinant of \a m.  \a Matrix must be a matrix<>, and must
-        be square.  Also, a determinant type must exist for \a Matrix (some
-        otherwise-suitable matrix<>s do not have a determinant that makes sense
-        when their elements are unit types).  */
+    /** Returns the determinant of @c m.  @c Matrix must be a @c matrix<>, and
+        must be square.  Also, a determinant type must exist for @c Matrix
+        (some otherwise-suitable <c>matrix<></c>s do not have a determinant
+        that makes sense when their elements are unit types).  */
     template <typename Matrix>
     typename lazy_enable_if<
         mpl::and_<
@@ -867,8 +880,9 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the inverse of \a m.  Throws singular_matrix if \a m is found to
-        be singular.  \a Matrix must be a matrix<>, and must be square. */
+    /** Returns the inverse of @c m.  Throws @c singular_matrix if @c m is
+        found to be singular.  @c Matrix must be a @c matrix<>, and must be
+        square. */
     template <typename Matrix>
     typename lazy_enable_if<
         is_square_matrix<Matrix>,
@@ -904,11 +918,11 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the solution to \a A * \a x = \a b in \a x.  Throws
-        singular_matrix if \a A is found to be singular.  \a AMatrix must be a
-        matrix<>, and must be square.  \a XVector and \a BVector must be
-        "vector" matrix<>s with the same dimensions, and must have a number of
-        rows equal to the number of columns in \a AMatrix. */
+    /** Returns the solution to the equation Ax = b in @c x.  Throws @c
+        singular_matrix if @c A is found to be singular.  @c AMatrix must be a
+        @c matrix<>, and must be square.  @c XVector and @c BVector must be
+        "vector" <c>matrix<></c>s with the same dimensions, and must have a
+        number of rows equal to the number of columns in @c AMatrix. */
     template <typename AMatrix, typename XVector, typename BVector>
     typename enable_if<
         mpl::and_<

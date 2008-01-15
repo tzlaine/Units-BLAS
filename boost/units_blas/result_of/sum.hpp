@@ -18,10 +18,11 @@
 
 namespace boost { namespace units_blas { namespace result_of {
 
-    /** Returns the type of the sum of all elements in \a Matrix.  \a Matrix
-        must be a "vector" or "transpose vector" matrix<>.  Also, a sum type must
-        exist for \a Matrix (some otherwise-suitable matrix<>s do not have a sum
-        that makes sense when their elements are unit types). */
+    /** Returns the type of the sum of all elements in @c Matrix.  @c Matrix
+        must be a "vector" or "transpose vector" @c matrix<>.  Also, a sum
+        type must exist for @c Matrix (some otherwise-suitable
+        <c>matrix<></c>s do not have a sum that makes sense when their
+        elements are unit types). */
     template <typename Matrix>
     struct sum
     {

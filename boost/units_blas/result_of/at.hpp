@@ -32,7 +32,7 @@ namespace boost { namespace units_blas { namespace result_of {
     }
 
     /** Returns a const-preserving reference to the type of the element at row
-        \a I, column \a J of Matrix.  Matrix must be a matrix<>. */
+        @c I, column @c J of @c Matrix.  @c Matrix must be a @c matrix<>. */
     template <typename Matrix, typename I, typename J>
     struct at
     {
@@ -40,7 +40,7 @@ namespace boost { namespace units_blas { namespace result_of {
     };
 
     /** Returns a const-preserving reference to the type of the element at row
-        \a I, column \a J of Matrix.  Matrix must be a matrix<>. */
+        @c I, column @c J of @c Matrix.  @c Matrix must be a @c matrix<>. */
     template <typename Matrix, std::size_t I, std::size_t J>
     struct at_c
     {

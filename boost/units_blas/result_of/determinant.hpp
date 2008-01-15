@@ -103,13 +103,14 @@ namespace boost { namespace units_blas { namespace result_of {
 
 #else
 
-    /** Returns the type that results from taking the determinant of \a Matrix.
-        \a Matrix must be a matrix<>, and must be square.  Also, a determinant type
-        must exist for \a Matrix (some otherwise-suitable matrix<>s do not have
-        a determinant that makes sense when their elements are unit types).
-        Note that the default implementation of this metafunction is
-        (compile-time) O(n!) in the number of rows.  See the Configuration
-        section of the documentation for a discussion of alternatives. */
+    /** Returns the type that results from taking the determinant of @c
+        Matrix.  @c Matrix must be a @c matrix<>, and must be square.  Also, a
+        determinant type must exist for @c Matrix (some otherwise-suitable
+        <c>matrix<>s</c> do not have a determinant that makes sense when their
+        elements are unit types).  Note that the default implementation of
+        this metafunction is (compile-time) O(n!) in the number of rows.  See
+        the Configuration section of the documentation for a possible
+        alternative. */
     template <typename Matrix, std::size_t Size>
     struct determinant
     {

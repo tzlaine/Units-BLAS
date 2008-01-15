@@ -34,15 +34,15 @@ namespace boost { namespace units_blas { namespace result_of {
 
     } // namespace detail
 
-    /** Returns a matrix<> type whose elements are composed of the rows and
-        columns of \a Matrix specified in \a Rows and \a Columns.  \a Matrix
-        must be a matrix<>.  \a Rows and \a Columns must be type sequences
-        containing integral constants; all integral constants in \a Rows and
-        \a Columns must be less than the number of rows and columns in Matrix,
-        respectively.  Note that duplication and order preservation are not
-        checked for the constants in \a Rows and \a Columns.  It is therefore
-        possible to use slice<> to rearrange and/or duplicate rows and/or
-        columns. */
+    /** Returns a @c matrix<> type whose elements are composed of the rows and
+        columns of @c Matrix specified in @c Rows and @c Columns.  @c Matrix
+        must be a @c matrix<>.  @c Rows and @c Columns must be type sequences
+        containing integral constants; all integral constants in @c Rows and
+        @c Columns must be less than the number of rows and columns in @c
+        Matrix, respectively.  Note that duplication and order preservation
+        are not checked for the constants in @c Rows and @c Columns.  It is
+        therefore possible to use @c slice<> to rearrange and/or duplicate
+        rows and/or columns. */
     template <typename Matrix, typename Rows, typename Columns>
     struct slice
     {

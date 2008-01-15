@@ -18,8 +18,9 @@
 
 namespace boost { namespace units_blas {
 
-    /** Convenience metafunction that returns matrix<X>, where X is the template
-        parameter \a Rows, converted to a fusion::vector of fusion::vectors. */
+    /** Convenience metafunction that returns @c matrix<X>, where @c X is the
+        template parameter @c Rows, converted to a @c fusion::vector of
+        @c fusion::vectors. */
     template <typename Rows>
     struct make_matrix
     {
@@ -40,8 +41,8 @@ namespace boost { namespace units_blas {
 
     } // namespace detail
 
-    /** Convenience metafunction that returns a matrix<> of dimension \a Rows x
-        \a Columns, in which each element is of type \a T. */
+    /** Convenience metafunction that returns a @c matrix<> of dimension @c
+        Rows x @c Columns, in which each element is of type @c T. */
     template <typename T, std::size_t Rows, std::size_t Columns>
     struct uniform_matrix
     {
@@ -75,10 +76,10 @@ namespace boost { namespace units_blas {
 
     } // namespace detail
 
-    /** Convenience metafunction that returns a "vector" -- a matrix<> of
-        dimension N x 1.  Specifically, the resulting matrix<>'s dimensions are
-        \a size(Elements) x 1, and each element (i, 0) is the ith type in
-        Elements. */
+    /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
+        dimension N x 1.  Specifically, the resulting @c matrix<>'s dimensions
+        are size(@c Elements) x 1, and each element (i, 0) is the ith type in
+        @c Elements. */
     template <typename Elements>
     struct vector
     {
@@ -105,10 +106,10 @@ namespace boost { namespace units_blas {
 
     } // namespace detail
 
-    /** Convenience metafunction that returns a "transpose vector" -- a matrix<>
-        of dimension 1 x N.  Specifically, the resulting matrix<>'s dimensions
-        are 1 x \a size(Elements) 1, and each element (0, i) is the ith type in
-        Elements. */
+    /** Convenience metafunction that returns a "transpose vector" -- a @c
+        matrix<> of dimension 1 x N.  Specifically, the resulting @c
+        matrix<>'s dimensions are 1 x size(@c Elements) 1, and each element
+        (0, i) is the ith type in @c Elements. */
     template <typename Elements>
     struct transpose_vector
     {
@@ -122,16 +123,16 @@ namespace boost { namespace units_blas {
         typedef matrix<fusion::vector<elements_as_fusion_vector> > type;
     };
 
-    /** Convenience metafunction that returns a "vector" -- a matrix<> of
-        dimension N x 1, in which each element is of type T. */
+    /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
+        dimension N x 1, in which each element is of type @c T. */
     template <typename T, std::size_t N>
     struct uniform_vector
     {
         typedef typename uniform_matrix<T, N, 1>::type type;
     };
 
-    /** Convenience metafunction that returns a "transpose vector" -- a matrix<>
-        of dimension 1 x N, in which each element is of type T. */
+    /** Convenience metafunction that returns a "transpose vector" -- a @c
+        matrix<> of dimension 1 x N, in which each element is of type @c T. */
     template <typename T, std::size_t N>
     struct uniform_transpose_vector
     {

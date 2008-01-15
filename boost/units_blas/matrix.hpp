@@ -66,9 +66,10 @@ namespace boost { namespace units_blas {
         };
     }
 
-    /** Note that in the member documentation that follows, the notation m(i, j)
-        is used to refer to the element of matrix m at row i, column j, even
-        though there is no operator() defined for matrix<>. */
+    /** Note that in the member documentation that follows, the notation @c
+        m(i, j) is used to refer to the element of matrix @c m at row @c i,
+        column @c j, even though there is no @c operator() defined for @c
+        matrix<>. */
     template <typename Rows>
     class matrix
     {
@@ -78,7 +79,7 @@ namespace boost { namespace units_blas {
         typedef typename detail::num_rows<value_types>::type num_rows_t;
         typedef typename detail::num_columns<value_types>::type num_columns_t;
 
-        /** Default ctor.  Each element of *this is default constructed. */
+        /** Default ctor.  Each element of @c *this is default constructed. */
         matrix () :
             data_ ()
             {}
@@ -88,8 +89,9 @@ namespace boost { namespace units_blas {
             data_ (m.data_)
             {}
 
-        /** Copy ctor.  *this and \a m must have the same dimensions, and every
-            \a m(i, j) must be convertible to the type of (*this)(i, j). */
+        /** Copy ctor.  @c *this and @c m must have the same dimensions, and
+            every @c m(i, j) must be convertible to the type of <c>(*this)(i,
+            j)</c>. */
         template <typename T>
         matrix (matrix<T> const & m) :
             data_ ()
@@ -107,9 +109,9 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Assignment operator ctor.  *this and \a m must have the same
-            dimensions, and every \a m(i, j) must be convertible to the type of
-            (*this)(i, j). */
+        /** Assignment operator ctor.  @c *this and @c m must have the same
+            dimensions, and every @c m(i, j) must be convertible to the type
+            of <c>(*this)(i, j)</c>. */
         template <typename T>
         matrix & operator= (matrix<T> const & rhs)
             {
@@ -120,40 +122,42 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Returns the number of elements in *this. */
+        /** Returns the number of elements in @c *this. */
         size_type size () const
             { return mpl::times<num_rows_t, num_columns_t>::value; }
 
-        /** Returns the number of rows in *this. */
+        /** Returns the number of rows in @c *this. */
         size_type rows () const
             { return num_rows_t::value; }
 
-        /** Returns the number of columns in *this. */
+        /** Returns the number of columns in @c *this. */
         size_type columns () const
             { return num_columns_t::value; }
 
-        /** Returns a const reference to the element at row \a I, column \a
+        /** Returns a const reference to the element at row @c I, column @c
             J. */
         template <size_type I, size_type J>
         typename result_of::at_c<matrix const, I, J>::type
         at () const
             { return fusion::at_c<J>(fusion::at_c<I>(data_)); }
 
-        /** Prints *this to stream \a os.  Note that this function remains
-            unimplemented unless io.hpp is also included. */
+        /** Prints @c *this to stream @c os.  Note that this function remains
+            unimplemented unless @c boost/units_blas/io.hpp is also
+            included. */
         std::ostream & print (std::ostream & os) const;
 
 
-        /** Returns a non-const reference to the element at row \a I, column \a
+        /** Returns a non-const reference to the element at row @c I, column @c
             J. */
         template <size_type I, size_type J>
         typename result_of::at_c<matrix, I, J>::type
         at ()
             { return fusion::at_c<J>(fusion::at_c<I>(data_)); }
 
-        /** Adds the values in \a rhs to *this, element-by-element.  *this and
-            \a m must have the same dimensions, and every sum rhs(i, j) +
-            (*this)(i, j) must be convertible to the type of (*this)(i, j). */
+        /** Adds the values in @c rhs to @c *this, element-by-element.  @c
+            *this and @c m must have the same dimensions, and every sum
+            <c>(*this)(i, j) + rhs(i, j)</c> must be convertible to the type
+            of <c>(*this)(i, j)</c>. */
         template <typename T>
         matrix & operator+= (matrix<T> const & rhs)
             {
@@ -167,10 +171,10 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Subtracts the values in \a rhs from *this, element-by-element. *this
-            and \a m must have the same dimensions, and every difference
-            rhs(i, j) - (*this)(i, j) must be convertible to the type of
-            (*this)(i, j). */
+        /** Subtracts the values in @c rhs from @c *this,
+            element-by-element. @c *this and @c m must have the same
+            dimensions, and every difference <c>(*this)(i, j) - rhs(i, j)</c>
+            must be convertible to the type of <c>(*this)(i, j)</c>. */
         template <typename T>
         matrix & operator-= (matrix<T> const & rhs)
             {
@@ -184,9 +188,9 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Multiplies each element of *this by \a val.  Every product
-            (*this)(i, j) * \a val must be convertible to the type of (*this)(i,
-            j). */
+        /** Multiplies each element of @c *this by @c val.  Every product
+            <c>(*this)(i, j) * val</c> must be convertible to the type of
+            <c>(*this)(i, j)</c>. */
         template <typename T>
         matrix & operator*= (T const & val)
             {
@@ -197,8 +201,9 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Divides each element of *this by \a val.  Every quotient (*this)(i,
-         j) / \a val must be convertible to the type of (*this)(i, j). */
+        /** Divides each element of @c *this by @c val.  Every quotient
+            <c>(*this)(i, j) / val</c> must be convertible to the type of
+            <c>(*this)(i, j)</c>. */
         template <typename T>
         matrix & operator/= (T const & val)
             {
@@ -257,8 +262,8 @@ namespace boost { namespace units_blas {
         value_types data_;
     };
 
-    /** Returns a \a Matrix whose diagonal elements are 1, and whose nondiagonal
-        elements are 0. */
+    /** Returns a @c Matrix whose diagonal elements are 1, and whose
+        nondiagonal elements are 0. */
     template <typename Matrix>
     typename enable_if<
         mpl::equal_to<

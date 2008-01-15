@@ -15,10 +15,10 @@
 
 namespace boost { namespace units_blas { namespace result_of {
 
-    /** Returns the type of the dot product of \a MatrixL and \a MatrixR.  \a
-        MatrixL and \a MatrixR must be matrix<>s, and must have the same
-        dimensions.  Additionally, both matrix<>s must be "vectors", or
-        "transpose vectors". */
+    /** Returns the type of the dot product of @c MatrixL and @c MatrixR.  @c
+        MatrixL and @c MatrixR must be <c>matrix<></c>s, and must have the
+        same dimensions.  Additionally, both <c>matrix<></c>s must be
+        "vectors", or "transpose vectors". */
     template <typename MatrixL, typename MatrixR>
     struct dot_product
     {

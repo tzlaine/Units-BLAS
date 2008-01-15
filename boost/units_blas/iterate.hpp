@@ -15,10 +15,11 @@
 
 namespace boost { namespace units_blas {
 
-    /** This struct has one member, call().  call() calls several iterations of
-        F::call(), then recursively calls itself, until all iterations have been
-        invoked.  Note that the order of iteration is descending, from N - 1 to
-        0.  \see See also boost::units_blas::iterate(). */
+    /** This struct has one member, @c call().  @c call() calls several
+        iterations of @c F::call(), then recursively calls itself, until all
+        iterations have been invoked.  Note that the order of iteration is
+        descending, from N - 1 to 0.  \see See also @c
+        boost::units_blas::iterate(). */
     template <std::size_t N>
     struct iterate_unrolled
     {
@@ -79,13 +80,13 @@ namespace boost { namespace units_blas {
     };
 #endif
 
-    /** This function can be used as a generic mechanism for unrolling loops at
-        compile time.  Given a number of iterations \a N, an arbitrary Fusion
-        vector of operands \a Operands, and a functor type \a F as template
-        parameters, it calls iterate_unrolled<>::call().
-        iterate_unrolled<>::call() calls several iterations of F::call(), then
-        recursively calls itself, until all iterations have been invoked.  Note
-        that the order of iteration is descending, from N - 1 to 0. */
+    /** This function can be used as a generic mechanism for unrolling loops
+        at compile time.  Given a number of iterations @c N, an arbitrary @c
+        fusion::vector of operands @c Operands, and a functor type @c F as
+        template parameters, it calls @c iterate_unrolled<>::call().  @c
+        iterate_unrolled<>::call() calls several iterations of @c F::call(),
+        then recursively calls itself, until all iterations have been invoked.
+        Note that the order of iteration is descending, from N - 1 to 0. */
     template <typename N, typename Operands, typename F>
     BOOST_UNITS_BLAS_INLINE void iterate (Operands const & operands, F const & f)
     { iterate_unrolled<N::value>::call(operands, f); }

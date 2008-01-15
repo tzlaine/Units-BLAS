@@ -89,11 +89,12 @@ namespace boost { namespace units_blas { namespace result_of {
 
     } // namespace detail
 
-    /** Returns the type of the cross product of \a MatrixL with \a MatrixR.  \a
-        MatrixL and \a MatrixR must both be matrix<>s, and must both be either 3
-        x 1 or 1 x 3.  Also, a cross product type must exist for \a MatrixL and
-        \a MatrixR (some otherwise-suitable pairs of matrix<>s do not have a
-        cross product that makes sense when their elements are unit types). */
+    /** Returns the type of the cross product of @c MatrixL with @c MatrixR.
+        @c MatrixL and @c MatrixR must both be <c>matrix<></c>s, and must both
+        be either 3 x 1 or 1 x 3.  Also, a cross product type must exist for
+        @c MatrixL and @c MatrixR (some otherwise-suitable pairs of
+        <c>matrix<></c>s do not have a cross product that makes sense when
+        their elements are unit types). */
     template <typename MatrixL, typename MatrixR>
     struct cross_product
     {

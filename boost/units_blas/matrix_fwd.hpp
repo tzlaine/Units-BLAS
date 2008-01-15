@@ -14,7 +14,7 @@
 
 namespace boost { namespace units_blas {
 
-    /** An mpl::integral_c<> whose value_type is std::size_t. */
+    /** An @c mpl::integral_c<> whose @c value_type is @c std::size_t. */
     template <std::size_t N>
     struct size_t_ : mpl::integral_c<std::size_t, N> {};
 
