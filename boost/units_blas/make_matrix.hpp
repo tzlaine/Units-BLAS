@@ -12,6 +12,7 @@
 #include <boost/units_blas/matrix_fwd.hpp>
 
 #include <boost/fusion/include/as_vector.hpp>
+#include <boost/mpl/quote.hpp>
 #include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/range_c.hpp>
 
@@ -27,20 +28,6 @@ namespace boost { namespace units_blas {
         typedef matrix<typename detail::deep_as_vector<Rows>::type> type;
     };
 
-    namespace detail {
-
-        template <typename T>
-        struct uniform
-        {
-            template <typename Ignore>
-            struct apply
-            {
-                typedef T type;
-            };
-        };
-
-    } // namespace detail
-
     /** Convenience metafunction that returns a @c matrix<> of dimension @c
         Rows x @c Columns, in which each element is of type @c T. */
     template <typename T, std::size_t Rows, std::size_t Columns>
@@ -49,32 +36,19 @@ namespace boost { namespace units_blas {
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 mpl::range_c<std::size_t, 0, Columns>,
-                detail::uniform<T>
+                mpl::bind1<mpl::quote1<mpl::identity>, T>
             >::type
         >::type row_type;
 
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 mpl::range_c<std::size_t, 0, Rows>,
-                detail::uniform<row_type>
+                mpl::bind1<mpl::quote1<mpl::identity>, row_type>
             >::type
         >::type all_rows_type;
 
         typedef matrix<all_rows_type> type;
     };
-
-    namespace detail {
-
-        struct vectorize
-        {
-            template <class T>
-            struct apply
-            {
-                typedef fusion::vector<T> type;
-            };
-        };
-
-    } // namespace detail
 
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1.  Specifically, the resulting @c matrix<>'s dimensions
@@ -86,25 +60,12 @@ namespace boost { namespace units_blas {
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 Elements,
-                detail::vectorize
+                mpl::bind1<mpl::quote1<fusion::vector>, mpl::_1>
             >::type
         >::type all_rows_type;
 
         typedef matrix<all_rows_type> type;
     };
-
-    namespace detail {
-
-        struct identity
-        {
-            template <class T>
-            struct apply
-            {
-                typedef T type;
-            };
-        };
-
-    } // namespace detail
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N.  Specifically, the resulting @c
@@ -116,7 +77,7 @@ namespace boost { namespace units_blas {
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 Elements,
-                detail::identity
+                mpl::quote1<mpl::identity>
             >::type
         >::type elements_as_fusion_vector;
 
