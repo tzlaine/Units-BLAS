@@ -480,7 +480,7 @@ namespace boost { namespace units_blas {
             is_same_length_vector<VectorL, VectorR>,
             mpl::equal_to<
                 typename VectorL::num_rows_t,
-                size_t_<3>
+                mpl::size_t<3>
             >
         >,
         result_of::cross_product<VectorL, VectorR>
@@ -508,7 +508,7 @@ namespace boost { namespace units_blas {
             is_same_length_transpose_vector<VectorL, VectorR>,
             mpl::equal_to<
                 typename VectorL::num_columns_t,
-                size_t_<3>
+                mpl::size_t<3>
             >
         >,
         result_of::cross_product<VectorL, VectorR>
@@ -538,7 +538,7 @@ namespace boost { namespace units_blas {
             is_same_length_vector<VectorL, VectorR>,
             mpl::equal_to<
                 typename VectorL::num_rows_t,
-                size_t_<3>
+                mpl::size_t<3>
             >
         >,
         result_of::cross_product<VectorL, VectorR>
@@ -558,7 +558,7 @@ namespace boost { namespace units_blas {
             is_same_length_transpose_vector<VectorL, VectorR>,
             mpl::equal_to<
                 typename VectorL::num_columns_t,
-                size_t_<3>
+                mpl::size_t<3>
             >
         >,
         result_of::cross_product<VectorL, VectorR>
@@ -796,7 +796,7 @@ namespace boost { namespace units_blas {
             is_square_matrix<Matrix>,
             mpl::equal_to<
                 typename Matrix::num_rows_t,
-                size_t_<1>
+                mpl::size_t<1>
             >
         >,
         result_of::determinant<Matrix>
@@ -810,7 +810,7 @@ namespace boost { namespace units_blas {
             is_square_matrix<Matrix>,
             mpl::equal_to<
                 typename Matrix::num_rows_t,
-                size_t_<2>
+                mpl::size_t<2>
             >
         >,
         result_of::determinant<Matrix>
@@ -824,7 +824,7 @@ namespace boost { namespace units_blas {
             is_square_matrix<Matrix>,
             mpl::equal_to<
                 typename Matrix::num_rows_t,
-                size_t_<3>
+                mpl::size_t<3>
             >
         >,
         result_of::determinant<Matrix>
@@ -847,7 +847,7 @@ namespace boost { namespace units_blas {
         mpl::and_<
             is_square_matrix<Matrix>,
             mpl::less<
-                size_t_<3>,
+                mpl::size_t<3>,
                 typename Matrix::num_rows_t
             >
         >,

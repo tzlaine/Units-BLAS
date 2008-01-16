@@ -43,13 +43,13 @@ namespace boost { namespace units_blas { namespace result_of {
             template <typename N>
             struct apply
             {
-                typedef typename value_at<Matrix, size_t_<0>, N>::type top_row_element;
+                typedef typename value_at<Matrix, mpl::size_t<0>, N>::type top_row_element;
                 typedef typename determinant<
                     typename slice<
                         Matrix,
                         typename range_without_i<
                             typename Matrix::num_rows_t,
-                            size_t_<0>
+                            mpl::size_t<0>
                         >::type,
                         typename range_without_i<
                             typename Matrix::num_columns_t,

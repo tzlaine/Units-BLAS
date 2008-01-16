@@ -44,7 +44,7 @@ namespace boost { namespace units_blas { namespace result_of {
     template <typename Matrix, std::size_t I, std::size_t J>
     struct at_c
     {
-        typedef typename at<Matrix, size_t_<I>, size_t_<J> >::type type;
+        typedef typename at<Matrix, mpl::size_t<I>, mpl::size_t<J> >::type type;
     };
 
 } } } // namespace boost::units_blas::result_of

@@ -27,16 +27,16 @@ int test_main (int, char *[])
 
     A_matrix_3x1_fundamentals_type m_A1;
 
-    bub::at<bub::size_t_<0>, bub::size_t_<0> >(m_A1) = 3.0;
-    bub::at<bub::size_t_<1>, bub::size_t_<0> >(m_A1) = 1.0;
-    bub::at<bub::size_t_<2>, bub::size_t_<0> >(m_A1) = 2.0;
+    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1) = 3.0;
+    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1) = 1.0;
+    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1) = 2.0;
     BOOST_CHECK((m_A1.at<0, 0>() == 3.0));
     BOOST_CHECK((m_A1.at<1, 0>() == 1.0));
     BOOST_CHECK((m_A1.at<2, 0>() == 2.0));
 
-    bub::at<bub::size_t_<0>, bub::size_t_<0> >(m_A1) = 2.0;
-    bub::at<bub::size_t_<1>, bub::size_t_<0> >(m_A1) = 3.0;
-    bub::at<bub::size_t_<2>, bub::size_t_<0> >(m_A1) = 1.0;
+    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1) = 2.0;
+    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1) = 3.0;
+    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1) = 1.0;
     BOOST_CHECK((m_A1.at<0, 0>() == 2.0));
     BOOST_CHECK((m_A1.at<1, 0>() == 3.0));
     BOOST_CHECK((m_A1.at<2, 0>() == 1.0));
@@ -158,16 +158,16 @@ int test_main (int, char *[])
 
     A_matrix_3x1_units_type m_A1_u;
 
-    bub::at<bub::size_t_<0>, bub::size_t_<0> >(m_A1_u) = time_::from_value(3.0);
-    bub::at<bub::size_t_<1>, bub::size_t_<0> >(m_A1_u) = length::from_value(1.0);
-    bub::at<bub::size_t_<2>, bub::size_t_<0> >(m_A1_u) = dimensionless::from_value(2.0);
+    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1_u) = time_::from_value(3.0);
+    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1_u) = length::from_value(1.0);
+    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1_u) = dimensionless::from_value(2.0);
     BOOST_CHECK((m_A1_u.at<0, 0>().value() == 3.0));
     BOOST_CHECK((m_A1_u.at<1, 0>().value() == 1.0));
     BOOST_CHECK((m_A1_u.at<2, 0>().value() == 2.0));
 
-    bub::at<bub::size_t_<0>, bub::size_t_<0> >(m_A1_u) = time_::from_value(2.0);
-    bub::at<bub::size_t_<1>, bub::size_t_<0> >(m_A1_u) = length::from_value(3.0);
-    bub::at<bub::size_t_<2>, bub::size_t_<0> >(m_A1_u) = dimensionless::from_value(1.0);
+    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1_u) = time_::from_value(2.0);
+    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1_u) = length::from_value(3.0);
+    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1_u) = dimensionless::from_value(1.0);
     BOOST_CHECK((m_A1_u.at<0, 0>().value() == 2.0));
     BOOST_CHECK((m_A1_u.at<1, 0>().value() == 3.0));
     BOOST_CHECK((m_A1_u.at<2, 0>().value() == 1.0));

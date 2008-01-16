@@ -29,14 +29,14 @@ namespace boost { namespace units_blas { namespace result_of {
                                         typename MatrixR::num_columns_t>));
         BOOST_MPL_ASSERT((
             mpl::or_<
-                mpl::equal_to<typename MatrixL::num_rows_t, size_t_<1> >,
-                mpl::equal_to<typename MatrixL::num_columns_t, size_t_<1> >
+                mpl::equal_to<typename MatrixL::num_rows_t, mpl::size_t<1> >,
+                mpl::equal_to<typename MatrixL::num_columns_t, mpl::size_t<1> >
             >
         ));
 #endif
 
         typedef typename mpl::eval_if<
-            mpl::equal_to<typename MatrixL::num_columns_t, size_t_<1> >,
+            mpl::equal_to<typename MatrixL::num_columns_t, mpl::size_t<1> >,
             result_of::detail::dot_product<
                 typename fusion::result_of::value_at_c<
                     typename result_of::transpose<MatrixL>::type::value_types,

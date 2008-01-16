@@ -73,21 +73,21 @@ typedef bub::matrix<
 
 int test_main (int, char *[])
 {
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_4x1_type>, bub::size_t_<4> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_1x4_type>, bub::size_t_<4> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_4x4_type>, bub::size_t_<16> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_4x1_type>, boost::mpl::size_t<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_1x4_type>, boost::mpl::size_t<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_4x4_type>, boost::mpl::size_t<16> >));
 
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::rows<matrix_4x1_units_type>, bub::size_t_<4> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::rows<matrix_1x4_units_type>, bub::size_t_<1> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::rows<matrix_4x4_units_type>, bub::size_t_<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::rows<matrix_4x1_units_type>, boost::mpl::size_t<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::rows<matrix_1x4_units_type>, boost::mpl::size_t<1> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::rows<matrix_4x4_units_type>, boost::mpl::size_t<4> >));
 
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x1_type>, bub::size_t_<1> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_1x4_type>, bub::size_t_<4> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x4_type>, bub::size_t_<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x1_type>, boost::mpl::size_t<1> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_1x4_type>, boost::mpl::size_t<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x4_type>, boost::mpl::size_t<4> >));
 
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x1_units_type>, bub::size_t_<1> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_1x4_units_type>, bub::size_t_<4> >));
-    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x4_units_type>, bub::size_t_<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x1_units_type>, boost::mpl::size_t<1> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_1x4_units_type>, boost::mpl::size_t<4> >));
+    BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::columns<matrix_4x4_units_type>, boost::mpl::size_t<4> >));
 
     BOOST_MPL_ASSERT((bub::is_matrix<matrix_4x1_type>));
     BOOST_MPL_ASSERT((bub::is_matrix<matrix_1x4_type>));

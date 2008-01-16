@@ -14,6 +14,7 @@
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/less.hpp>
+#include <boost/mpl/size_t.hpp>
 
 
 namespace boost { namespace units_blas { namespace result_of {
@@ -42,7 +43,7 @@ namespace boost { namespace units_blas { namespace result_of {
     template <typename Matrix, std::size_t I, std::size_t J>
     struct value_at_c
     {
-        typedef typename value_at<Matrix, size_t_<I>, size_t_<J> >::type type;
+        typedef typename value_at<Matrix, mpl::size_t<I>, mpl::size_t<J> >::type type;
     };
 
 } } } // namespace boost::units_blas::result_of

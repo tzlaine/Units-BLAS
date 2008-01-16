@@ -9,14 +9,8 @@
 #ifndef BOOST_UNITS_BLAS_MATRIX_FWD_HPP
 #define BOOST_UNITS_BLAS_MATRIX_FWD_HPP
 
-#include <boost/mpl/integral_c.hpp>
-
 
 namespace boost { namespace units_blas {
-
-    /** An @c mpl::integral_c<> whose @c value_type is @c std::size_t. */
-    template <std::size_t N>
-    struct size_t_ : mpl::integral_c<std::size_t, N> {};
 
     template <typename Rows>
     class matrix;

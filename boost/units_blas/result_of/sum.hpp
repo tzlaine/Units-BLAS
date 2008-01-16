@@ -12,8 +12,8 @@
 #include <boost/units_blas/result_of/transpose.hpp>
 #include <boost/units_blas/result_of/detail/matrix_product.hpp>
 
-#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/typeof/typeof.hpp>
 
 
 namespace boost { namespace units_blas { namespace result_of {
@@ -29,12 +29,12 @@ namespace boost { namespace units_blas { namespace result_of {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
         BOOST_MPL_ASSERT((
             mpl::or_<
-                mpl::equal_to<typename Matrix::num_rows_t, size_t_<1> >,
-                mpl::equal_to<typename Matrix::num_columns_t, size_t_<1> >
+                mpl::equal_to<typename Matrix::num_rows_t, mpl::size_t<1> >,
+                mpl::equal_to<typename Matrix::num_columns_t, mpl::size_t<1> >
             >
         ));
         typedef typename mpl::eval_if<
-            mpl::equal_to<typename Matrix::num_columns_t, size_t_<1> >,
+            mpl::equal_to<typename Matrix::num_columns_t, mpl::size_t<1> >,
             fusion::result_of::value_at_c<typename result_of::transpose<Matrix>::type::value_types, 0>,
             fusion::result_of::value_at_c<typename Matrix::value_types, 0>
         >::type element_types;

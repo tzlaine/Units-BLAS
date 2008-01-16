@@ -106,19 +106,19 @@ namespace boost { namespace units_blas { namespace result_of {
         BOOST_MPL_ASSERT((
             mpl::or_<
                 mpl::and_<
-                    mpl::equal_to<typename MatrixL::num_rows_t, size_t_<3> >,
-                    mpl::equal_to<typename MatrixL::num_columns_t, size_t_<1> >
+                    mpl::equal_to<typename MatrixL::num_rows_t, mpl::size_t<3> >,
+                    mpl::equal_to<typename MatrixL::num_columns_t, mpl::size_t<1> >
                 >,
                 mpl::and_<
-                    mpl::equal_to<typename MatrixL::num_rows_t, size_t_<1> >,
-                    mpl::equal_to<typename MatrixL::num_columns_t, size_t_<3> >
+                    mpl::equal_to<typename MatrixL::num_rows_t, mpl::size_t<1> >,
+                    mpl::equal_to<typename MatrixL::num_columns_t, mpl::size_t<3> >
                 >
             >
         ));
 #endif
 
         typedef typename mpl::eval_if<
-            mpl::equal_to<typename MatrixL::num_rows_t, size_t_<3> >,
+            mpl::equal_to<typename MatrixL::num_rows_t, mpl::size_t<3> >,
             detail::vector_cross_product<MatrixL, MatrixR>,
             detail::transpose_vector_cross_product<MatrixL, MatrixR>
         >::type type;

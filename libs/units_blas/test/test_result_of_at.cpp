@@ -13,8 +13,8 @@
 
 int test_main (int, char *[])
 {
-    typedef bub::size_t_<0> zero;
-    typedef bub::size_t_<1> one;
+    typedef boost::mpl::size_t<0> zero;
+    typedef boost::mpl::size_t<1> one;
 
     BOOST_MPL_ASSERT((
         boost::is_same<

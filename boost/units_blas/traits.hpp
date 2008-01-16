@@ -58,7 +58,7 @@ namespace boost { namespace units_blas {
     struct is_vector :
         mpl::and_<
             is_matrix<T>,
-            mpl::equal_to<columns<T>, size_t_<1> >
+            mpl::equal_to<columns<T>, mpl::size_t<1> >
         >::type
     {};
 
@@ -68,7 +68,7 @@ namespace boost { namespace units_blas {
     struct is_transpose_vector :
         mpl::and_<
             is_matrix<T>,
-            mpl::equal_to<rows<T>, size_t_<1> >
+            mpl::equal_to<rows<T>, mpl::size_t<1> >
         >::type
     {};
 

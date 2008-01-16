@@ -17,6 +17,7 @@
 
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/not_equal_to.hpp>
+#include <boost/mpl/size_t.hpp>
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/preprocessor/enum_params.hpp>
@@ -47,7 +48,7 @@ namespace boost { namespace units_blas {
         template <typename ValueTypes>
         struct num_rows
         {
-            typedef size_t_<
+            typedef mpl::size_t<
                 fusion::result_of::size<ValueTypes>::type::value
             > type;
         };
@@ -55,7 +56,7 @@ namespace boost { namespace units_blas {
         template <typename ValueTypes>
         struct num_columns
         {
-            typedef size_t_<
+            typedef mpl::size_t<
                 fusion::result_of::size<
                     typename fusion::result_of::value_at_c<
                         ValueTypes,
@@ -238,8 +239,8 @@ namespace boost { namespace units_blas {
 
         // If you're seeing an error at one of these assertions, it's because
         // length-0 rows and columns are illegal.
-        BOOST_MPL_ASSERT((mpl::less<size_t_<0>, num_rows_t>));
-        BOOST_MPL_ASSERT((mpl::less<size_t_<0>, num_columns_t>));
+        BOOST_MPL_ASSERT((mpl::less<mpl::size_t<0>, num_rows_t>));
+        BOOST_MPL_ASSERT((mpl::less<mpl::size_t<0>, num_columns_t>));
 
         // If you're seeing an error here, it's because you used some type
         // sequence besides boost::fusion::vector in your Rows template

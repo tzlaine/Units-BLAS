@@ -15,7 +15,6 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/range_c.hpp>
-#include <boost/mpl/size_t.hpp>
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/units/is_dimensionless.hpp>
 
