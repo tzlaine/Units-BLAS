@@ -232,11 +232,11 @@ namespace boost { namespace units_blas {
             >
         {};
 
-        // If you're seeing an error at this assert, it's because you defined
-        // two or more rows that have different numbers of columns.
+        // If you're seeing an error here, it's because you defined two or
+        // more rows that have different numbers of columns.
         BOOST_MPL_ASSERT((column_lengths_equal));
 
-        // If you're seeing an error at one of these asserts, it's because
+        // If you're seeing an error at one of these assertions, it's because
         // length-0 rows and columns are illegal.
         BOOST_MPL_ASSERT((mpl::less<size_t_<0>, num_rows_t>));
         BOOST_MPL_ASSERT((mpl::less<size_t_<0>, num_columns_t>));

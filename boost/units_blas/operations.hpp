@@ -855,6 +855,11 @@ namespace boost { namespace units_blas {
     >::type
     determinant (Matrix const & m)
     {
+        // If you're seeing an error here, you're trying to perform LU
+        // decomposition on a matrix that has mixed units of the same
+        // dimension (e.g. centimeters and meters in the same matrix).
+        BOOST_MPL_ASSERT((detail::is_lu_decomposable<Matrix>));
+
         typedef typename result_of::determinant<Matrix>::type result_type;
         result_type retval = detail::one_value<result_type>::value();
         typedef typename detail::get_value_type<result_type>::type raw_value_type;
@@ -890,6 +895,11 @@ namespace boost { namespace units_blas {
     >::type
     inverse (Matrix const & m)
     {
+        // If you're seeing an error here, you're trying to perform LU
+        // decomposition on a matrix that has mixed units of the same
+        // dimension (e.g. centimeters and meters in the same matrix).
+        BOOST_MPL_ASSERT((detail::is_lu_decomposable<Matrix>));
+
         typedef typename result_of::inverse<Matrix>::type result_type;
         result_type retval;
         typedef typename result_of::determinant<Matrix>::type temp_value_type;
@@ -938,6 +948,11 @@ namespace boost { namespace units_blas {
     {
         typedef BOOST_TYPEOF((AMatrix() * XVector())) a_times_b_type;
         BOOST_MPL_ASSERT((is_convertible<a_times_b_type, BVector>));
+
+        // If you're seeing an error here, you're trying to perform LU
+        // decomposition on a matrix that has mixed units of the same
+        // dimension (e.g. centimeters and meters in the same matrix).
+        BOOST_MPL_ASSERT((detail::is_lu_decomposable<AMatrix>));
 
         typedef typename result_of::determinant<AMatrix>::type temp_value_type;
         typedef typename detail::get_value_type<temp_value_type>::type raw_value_type;
