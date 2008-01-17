@@ -12,6 +12,7 @@
 #include <boost/units_blas/exception.hpp>
 #include <boost/units_blas/detail/abs.hpp>
 
+#include <boost/throw_exception.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/range_c.hpp>
@@ -103,7 +104,8 @@ namespace boost { namespace units_blas { namespace detail {
 
     template <typename TempMatrix>
     typename TempMatrix::value_type::value_type
-    lu_decompose (TempMatrix & m, array<std::size_t, TempMatrix::static_size> & indices)
+    lu_decompose (TempMatrix & m,
+                  array<std::size_t, TempMatrix::static_size> & indices)
     {
         BOOST_STATIC_ASSERT((
             static_cast<std::size_t>(TempMatrix::static_size) ==
@@ -124,7 +126,7 @@ namespace boost { namespace units_blas { namespace detail {
                 if (max < (tmp = abs_(m[i][j])))
                     max = tmp;
                 if (!max)
-                    throw singular_matrix();
+                    throw_exception(singular_matrix());
                 scale_factors[i] = 1.0 / max;
             }
         }
