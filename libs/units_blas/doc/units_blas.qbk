@@ -81,7 +81,7 @@
 
 [/ External Links ]
 
-[def _mpl_            [@http://boost.org/libs/mpl/doc/index.html MPL]]
+[def _mpl_                  [@http://boost.org/libs/mpl/doc/index.html MPL]]
 
 [include intro.qbk]
 
@@ -113,13 +113,7 @@ note that zero elements of matrices often have units.
 
 [endsect]
 
-[section:configuration Configuration]
-
-    // Note that this is (compile-time) O(n!) in the number of rows!  Users
-    // may wish to use the simpler but less exact product-of-diagonals
-    // implementation above when compiling large matrices.
-
-[endsect]
+[include config.qbk]
 
 [endsect]
 
