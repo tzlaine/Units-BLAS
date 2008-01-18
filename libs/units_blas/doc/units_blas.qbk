@@ -252,17 +252,7 @@ note that zero elements of matrices often have units
 
 [endsect]
 
-[section:adapting Adapting UnitsBlas To Other Units Libraries]
-
-zero_value
-one_value
-matrix_to_temp_assign
-assign_from_value_type
-matrix_to_temp_vector_assign
-value_quotient
-value_inverse
-
-[endsect]
+[include adapting.qbk]
 
 [section:rationale Rationale]
 
