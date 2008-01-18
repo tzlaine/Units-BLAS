@@ -173,14 +173,16 @@ int test_main (int, char *[])
     BOOST_CHECK((norm_inf(m_B3) == 1.0));
     BOOST_CHECK((norm_inf_index(m_B3) == 1));
 
+    E_matrix_1x1_fundamentals_type m_E;
+    m_E.at<0, 0>() = -2.0;
+    BOOST_CHECK((sum(m_E) == -2.0));
+    BOOST_CHECK((norm_1(m_E) == 2.0));
+    BOOST_CHECK((norm_2(m_E) == std::sqrt(4.0)));
+    BOOST_CHECK((norm_inf(m_E) == 2.0));
+    BOOST_CHECK((norm_inf_index(m_E) == 0));
+
 
     // unit types
-
-#if 0
-    // Should fail.
-    A_matrix_3x1_units_type m_A1_u;
-    dot(m_A1_u, m_A1_u);
-#endif
 
     A_matrix_3x1_units_type m_A1_u;
     m_A1_u.at<0, 0>() = time_::from_value(1.0);
@@ -352,6 +354,14 @@ int test_main (int, char *[])
     BOOST_CHECK((norm_2(m_B3_u) == time_::from_value(std::sqrt(2.0))));
     BOOST_CHECK((norm_inf(m_B3_u) == time_::from_value(1.0)));
     BOOST_CHECK((norm_inf_index(m_B3_u) == 1));
+
+    E_matrix_1x1_units_type m_E_u;
+    m_E_u.at<0, 0>() = length::from_value(-2.0);
+    BOOST_CHECK((sum(m_E_u) == length::from_value(-2.0)));
+    BOOST_CHECK((norm_1(m_E_u) == length::from_value(2.0)));
+    BOOST_CHECK((norm_2(m_E_u) == length::from_value(std::sqrt(4.0))));
+    BOOST_CHECK((norm_inf(m_E_u) == length::from_value(2.0)));
+    BOOST_CHECK((norm_inf_index(m_E_u) == 0));
 
     return 0;
 }

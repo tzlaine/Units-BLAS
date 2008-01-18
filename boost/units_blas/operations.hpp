@@ -392,12 +392,16 @@ namespace boost { namespace units_blas {
         );
     }
 
-    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
-        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
-        Additionally, both <c>matrix<></c>s must be "vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
+        must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "vectors" of length greater
+        than 1. */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
-        is_same_length_vector<VectorL, VectorR>,
+        mpl::and_<
+            is_same_length_vector<VectorL, VectorR>,
+            mpl::not_equal_to<rows<VectorL>, mpl::size_t<1> >
+        >,
         result_of::dot_product<VectorL, VectorR>
     >::type
     dot (VectorL const & lhs, VectorR const & rhs)
@@ -420,12 +424,16 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
-        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
-        Additionally, both <c>matrix<></c>s must be "transpose vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
+        must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "transpose vectors" of
+        length greater than 1. */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
-        is_same_length_transpose_vector<VectorL, VectorR>,
+        mpl::and_<
+            is_same_length_transpose_vector<VectorL, VectorR>,
+            mpl::not_equal_to<columns<VectorL>, mpl::size_t<1> >
+        >,
         result_of::dot_product<VectorL, VectorR>
     >::type
     dot (VectorL const & lhs, VectorR const & rhs)
@@ -444,23 +452,31 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
-        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
-        Additionally, both <c>matrix<></c>s must be "vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
+        must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "vectors" of length greater
+        than 1. */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
-        is_same_length_vector<VectorL, VectorR>,
+        mpl::and_<
+            is_same_length_vector<VectorL, VectorR>,
+            mpl::not_equal_to<rows<VectorL>, mpl::size_t<1> >
+        >,
         result_of::dot_product<VectorL, VectorR>
     >::type
     operator* (VectorL const & lhs, VectorR const & rhs)
     { return dot(lhs, rhs); }
 
-    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c
-        VectorR must be <c>matrix<></c>s, and must have the same dimensions.
-        Additionally, both <c>matrix<></c>s must be "transpose vectors". */
+    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
+        must be <c>matrix<></c>s, and must have the same dimensions.
+        Additionally, both <c>matrix<></c>s must be "transpose vectors" of
+        length greater than 1. */
     template <typename VectorL, typename VectorR>
     typename lazy_enable_if<
-        is_same_length_transpose_vector<VectorL, VectorR>,
+        mpl::and_<
+            is_same_length_transpose_vector<VectorL, VectorR>,
+            mpl::not_equal_to<columns<VectorL>, mpl::size_t<1> >
+        >,
         result_of::dot_product<VectorL, VectorR>
     >::type
     operator* (VectorL const & lhs, VectorR const & rhs)
@@ -588,13 +604,16 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-    /** Returns the sum of all elements in @c v.  @c Vector must be a
-        "transpose vector" @c matrix<>.  Also, a sum type must exist for @c
-        Vector (some otherwise-suitable <c>matrix<></c>s do not have a sum
-        that makes sense when their elements are unit types). */
+    /** Returns the sum of all elements in @c v.  @c Vector must be a "transpose
+        vector" @c matrix<> of length greater than 1.  Also, a sum type must
+        exist for @c Vector (some otherwise-suitable <c>matrix<></c>s do not
+        have a sum that makes sense when their elements are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
-        is_transpose_vector<Vector>,
+        mpl::and_<
+            is_transpose_vector<Vector>,
+            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
+        >,
         result_of::sum<Vector>
     >::type
     sum (Vector const & v)
@@ -629,13 +648,16 @@ namespace boost { namespace units_blas {
     }
 
     /** Returns the sum of the absolute values of all elements in @c v.  @c
-        Vector must be a "transpose vector" @c matrix<>.  Also, a sum type
-        must exist for @c Vector (some otherwise-suitable <c>matrix<></c>s do
-        not have a sum that makes sense when their elements are unit
-        types). */
+        Vector must be a "transpose vector" @c matrix<> of length greater than
+        1.  Also, a sum type must exist for @c Vector (some otherwise-suitable
+        <c>matrix<></c>s do not have a sum that makes sense when their elements
+        are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
-        is_transpose_vector<Vector>,
+        mpl::and_<
+            is_transpose_vector<Vector>,
+            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
+        >,
         result_of::sum<Vector>
     >::type
     norm_1 (Vector const & v)
@@ -672,14 +694,17 @@ namespace boost { namespace units_blas {
         return sqrt(tmp);
     }
 
-    /** Returns the square root of the sum of the squares of all elements in
-        @c v.  @c Vector must be a "transpose vector" @c matrix<>.  Also, a
-        sum type must exist for @c Vector (some otherwise-suitable
-        <c>matrix<></c>s do not have a sum that makes sense when their
-        elements are unit types). */
+    /** Returns the square root of the sum of the squares of all elements in @c
+        v.  @c Vector must be a "transpose vector" @c matrix<> of length greater
+        than 1.  Also, a sum type must exist for @c Vector (some
+        otherwise-suitable <c>matrix<></c>s do not have a sum that makes sense
+        when their elements are unit types). */
     template <typename Vector>
     typename lazy_enable_if<
-        is_transpose_vector<Vector>,
+        mpl::and_<
+            is_transpose_vector<Vector>,
+            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
+        >,
         result_of::sum<Vector>
     >::type
     norm_2 (Vector const & v)
@@ -716,11 +741,15 @@ namespace boost { namespace units_blas {
     }
 
     /** Returns the max of the absolute values of all elements in @c v.  @c
-        Vector must be a "transpose vector" @c matrix<>.  Also, @c operator<
-        must must exist for all pairs of elements in @c Vector. */
+        Vector must be a "transpose vector" @c matrix<> of length greater than
+        1.  Also, @c operator< must must exist for all pairs of elements in @c
+        Vector. */
     template <typename Vector>
     typename lazy_enable_if<
-        is_transpose_vector<Vector>,
+        mpl::and_<
+            is_transpose_vector<Vector>,
+            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
+        >,
         result_of::sum<Vector>
     >::type
     norm_inf (Vector const & v)
@@ -735,10 +764,9 @@ namespace boost { namespace units_blas {
         return tmp.first;
     }
 
-    /** Returns the index of the first element in @c v equal to @c
-        norm_inf(v).  @c Vector must be a "transpose vector" @c matrix<>.
-        Also, @c operator< must must exist for all pairs of elements in @c
-        Vector. */
+    /** Returns the index of the first element in @c v equal to @c norm_inf(v).
+        @c Vector must be a "vector" @c matrix<>.  Also, @c operator< must must
+        exist for all pairs of elements in @c Vector. */
     template <typename Vector>
     typename enable_if<
         is_vector<Vector>,
@@ -756,13 +784,16 @@ namespace boost { namespace units_blas {
         return tmp.second;
     }
 
-    /** Returns the index of the first element in @c v equal to @c
-        norm_inf(v).  @c Vector must be a "transpose vector" @c matrix<>.
-        Also, @c operator< must must exist for all pairs of elements in @c
-        Vector. */
+    /** Returns the index of the first element in @c v equal to @c norm_inf(v).
+        @c Vector must be a "transpose vector" @c matrix<> of length greater
+        than 1.  Also, @c operator< must must exist for all pairs of elements in
+        @c Vector. */
     template <typename Vector>
     typename enable_if<
-        is_transpose_vector<Vector>,
+        mpl::and_<
+            is_transpose_vector<Vector>,
+            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
+        >,
         std::size_t
     >::type
     norm_inf_index (Vector const & v)

@@ -29,14 +29,6 @@ int test_main (int, char *[])
     > AxC_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxC, AxC_manual_product>));
 
-#if 0
-    // Should fail.
-    typedef bub::result_of::matrix_product<
-        C_matrix_1x2_length_type,
-        A_matrix_2x1_time_length_type
-    >::type CxA;
-#endif
-
     typedef bub::result_of::matrix_product<
         A_matrix_2x1_time_length_type,
         D_matrix_1x2_length_time_type
@@ -94,14 +86,6 @@ int test_main (int, char *[])
         >
     > BxD_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<BxD, BxD_manual_product>));
-
-#if 0
-    // Should fail.
-    typedef bub::result_of::matrix_product<
-        D_matrix_1x2_length_time_type,
-        B_matrix_2x1_length_type
-    >::type DxB;
-#endif
 
     typedef bub::result_of::matrix_product<
         C_matrix_1x2_length_type,

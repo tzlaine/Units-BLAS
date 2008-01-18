@@ -31,11 +31,6 @@ int test_main (int, char *[])
             double
         >::type
     ));
-#if 0
-    // Should fail.
-    typedef bub::result_of::sum<E_matrix_2x2_double_type>::type failure_type;
-#endif
-
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::sum<B_matrix_2x1_length_type>::type,
@@ -48,12 +43,6 @@ int test_main (int, char *[])
             length
         >::type
     ));
-#if 0
-    // Should fail.
-    typedef bub::result_of::sum<D_matrix_1x2_length_time_type>::type failure_type;
-    // Should fail.
-    typedef bub::result_of::sum<E_matrix_2x2_time_type>::type failure_type;
-#endif
 
     return 0;
 }

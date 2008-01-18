@@ -1,12 +1,6 @@
-- Determine whether a units-coversion-factor issue exists with the LU code.
-
-- Resolve the abiguity in vector operations on 1x1 matrices.
-
 - Add concept docs specifying what types can be used within a units_blas matrix.  Include concepts for raw-numeric types a la the fundamenal numeric types, and other numeric types a la Boost.Units.
 
 - Document rationale behind picking SFINAE over BOOST_MPL_ASSERTS in operations.  Remind users that when overload resolution fails, it's usually a matrix-dimensionality problem, whereas when something else fails deep in the implementation, it's usually a units problem.
-
-- Add points-of-customization documentation so that a user knows exactly where and how to add code to glue her custom numeric type into units_blas, as was done with Boost.Units.
 
 - Eliminate dependency on native-typeof uses of BOOST_TYPEOF, and/or register units_blas types with BOOST_TYPEOF.
 

@@ -50,19 +50,6 @@ int test_main (int, char *[])
         >
     ));
 
-#if 0
-    // Should fail.
-    BOOST_MPL_ASSERT((
-        boost::is_same<
-            bub::result_of::dot_product<
-                A_matrix_2x1_time_length_type,
-                B_matrix_2x1_length_type
-            >::type,
-            double
-        >
-    ));
-#endif
-
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::dot_product<

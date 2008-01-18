@@ -125,6 +125,17 @@ int test_main (int, char *[])
     m_B1_times_A1 = m_B1 * m_A1;
     BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
 
+    E_matrix_1x1_fundamentals_type m_E;
+    m_E.at<0, 0>() = -2.0;
+    typedef bub::result_of::matrix_product<
+        E_matrix_1x1_fundamentals_type,
+        E_matrix_1x1_fundamentals_type
+    >::type ExE_fundamentals_type;
+    ExE_fundamentals_type m_E_times_E = prod(m_E, m_E);
+    BOOST_CHECK((m_E_times_E.at<0, 0>() == 4.0));
+    m_E_times_E = m_E * m_E;
+    BOOST_CHECK((m_E_times_E.at<0, 0>() == 4.0));
+
     A_matrix_3x1_fundamentals_type m_A1_elem_times_A2 = element_prod(m_A1, m_A2);
     BOOST_CHECK((m_A1_elem_times_A2.at<0, 0>() == 1.0 * 3.0));
     BOOST_CHECK((m_A1_elem_times_A2.at<1, 0>() == 2.0 * 2.0));
@@ -245,6 +256,17 @@ int test_main (int, char *[])
     BOOST_CHECK((m_C1_u_times_B1_u.at<2, 0>().value() == 3.0 * 1.0));
     BOOST_CHECK((m_C1_u_times_B1_u.at<2, 1>().value() == 3.0 * 2.0));
     BOOST_CHECK((m_C1_u_times_B1_u.at<2, 2>().value() == 3.0 * 3.0));
+
+    E_matrix_1x1_units_type m_E_u;
+    m_E_u.at<0, 0>() = length::from_value(-2.0);
+    typedef bub::result_of::matrix_product<
+        E_matrix_1x1_units_type,
+        E_matrix_1x1_units_type
+    >::type ExE_units_type;
+    ExE_units_type m_E_times_E_u = prod(m_E_u, m_E_u);
+    BOOST_CHECK((m_E_times_E_u.at<0, 0>().value() == 4.0));
+    m_E_times_E_u = m_E_u * m_E_u;
+    BOOST_CHECK((m_E_times_E_u.at<0, 0>().value() == 4.0));
 
     typedef bub::result_of::matrix_product<
         B_matrix_1x3_units_type,

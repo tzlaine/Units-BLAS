@@ -68,8 +68,10 @@ namespace boost { namespace units_blas { namespace detail {
             {
                 typedef typename operand_n<Operands, 0>::type to_matrix;
                 typedef typename operand_n<Operands, 1>::type from_matrix_lhs;
-                std::size_t const I = N / (from_matrix_lhs::num_columns_t::value * to_matrix::num_columns_t::value);
-                std::size_t const J = (N / from_matrix_lhs::num_columns_t::value) % to_matrix::num_columns_t::value;
+                std::size_t const I =
+                    N / (from_matrix_lhs::num_columns_t::value * to_matrix::num_columns_t::value);
+                std::size_t const J =
+                    (N / from_matrix_lhs::num_columns_t::value) % to_matrix::num_columns_t::value;
                 std::size_t const K = N % from_matrix_lhs::num_columns_t::value;
                 typedef typename result_of::value_at_c<to_matrix, I, J>::type to_type;
                 fusion::at_c<0>(operands).template at<I, J>() =
@@ -292,6 +294,22 @@ namespace boost { namespace units_blas { namespace detail {
     };
 
     template <typename T>
+    struct assign_to_value_type
+    {
+        template <typename ValueType>
+        static void call (T const & x, ValueType & value)
+            { value = static_cast<ValueType>(x); }
+    };
+
+    template <typename Unit, typename ValueType>
+    struct assign_to_value_type<units::quantity<Unit, ValueType> >
+    {
+        template <typename ValueType2>
+        static void call (units::quantity<Unit, ValueType> const & x, ValueType2 & value)
+            { value = static_cast<ValueType2>(x.value()); }
+    };
+
+    template <typename T>
     struct matrix_to_temp_assign
     {
         template <std::size_t N, typename Operands>
@@ -300,24 +318,11 @@ namespace boost { namespace units_blas { namespace detail {
                 typedef typename operand_n<Operands, 1>::type from_matrix;
                 std::size_t const I = N / from_matrix::num_columns_t::value;
                 std::size_t const J = N % from_matrix::num_columns_t::value;
-                typedef typename operand_n<Operands, 0>::type::value_type::value_type to_type;
-                fusion::at_c<0>(operands)[I][J] =
-                    static_cast<to_type>(fusion::at_c<1>(operands).template at<I, J>());
-            }
-    };
-
-    template <typename Unit, typename ValueType>
-    struct matrix_to_temp_assign<units::quantity<Unit, ValueType> >
-    {
-        template <std::size_t N, typename Operands>
-        static void call (Operands const & operands)
-            {
-                typedef typename operand_n<Operands, 1>::type from_matrix;
-                std::size_t const I = N / from_matrix::num_columns_t::value;
-                std::size_t const J = N % from_matrix::num_columns_t::value;
-                typedef typename operand_n<Operands, 0>::type::value_type::value_type to_type;
-                fusion::at_c<0>(operands)[I][J] =
-                    static_cast<to_type>(fusion::at_c<1>(operands).template at<I, J>().value());
+                typedef typename result_of::value_at_c<from_matrix, I, J>::type from_type;
+                assign_to_value_type<from_type>::call(
+                    fusion::at_c<1>(operands).template at<I, J>(),
+                    fusion::at_c<0>(operands)[I][J]
+                );
             }
     };
 
@@ -390,25 +395,14 @@ namespace boost { namespace units_blas { namespace detail {
         template <std::size_t N, typename Operands>
         static void call (Operands const & operands)
             {
-                typedef typename operand_n<Operands, 0>::type::value_type to_type;
-                fusion::at_c<0>(operands)[N] =
-                    static_cast<to_type>(
-                        fusion::at_c<1>(operands).template at<N, 0>()
-                    );
-            }
-    };
-
-    template <typename Unit, typename ValueType>
-    struct matrix_to_temp_vector_assign<units::quantity<Unit, ValueType> >
-    {
-        template <std::size_t N, typename Operands>
-        static void call (Operands const & operands)
-            {
-                typedef typename operand_n<Operands, 0>::type::value_type to_type;
-                fusion::at_c<0>(operands)[N] =
-                    static_cast<to_type>(
-                        fusion::at_c<1>(operands).template at<N, 0>().value()
-                    );
+                typedef typename operand_n<Operands, 1>::type from_matrix;
+                std::size_t const I = N / from_matrix::num_columns_t::value;
+                std::size_t const J = N % from_matrix::num_columns_t::value;
+                typedef typename result_of::value_at_c<from_matrix, I, J>::type from_type;
+                assign_to_value_type<from_type>::call(
+                    fusion::at_c<1>(operands).template at<N, 0>(),
+                    fusion::at_c<0>(operands)[N]
+                );
             }
     };
 

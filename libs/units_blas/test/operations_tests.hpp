@@ -44,6 +44,12 @@ typedef boost::units_blas::matrix<
     >
 > D_matrix_4x4_fundamentals_type;
 
+typedef bub::matrix<
+    boost::fusion::vector<
+        boost::fusion::vector<double>
+    >
+> E_matrix_1x1_fundamentals_type;
+
 typedef boost::units::quantity<boost::units::SI::time> time_;
 typedef boost::units::quantity<boost::units::SI::length> length;
 typedef boost::units::quantity<boost::units::SI::velocity> velocity;
@@ -101,5 +107,11 @@ typedef boost::units_blas::matrix<
         boost::fusion::vector<length, length, length, length>
     >
 > D_matrix_4x4_units_type;
+
+typedef bub::matrix<
+    boost::fusion::vector<
+        boost::fusion::vector<length>
+    >
+> E_matrix_1x1_units_type;
 
 #endif // BOOST_UNITS_BLAS_TEST_OPERATIONS_TESTS_HPP
