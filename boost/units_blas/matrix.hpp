@@ -94,14 +94,15 @@ namespace boost { namespace units_blas {
             every @c m(i, j) must be convertible to the type of <c>(*this)(i,
             j)</c>. */
         template <typename T>
-        matrix (matrix<T> const & m) :
+        matrix (matrix<T> const & m,
+                typename enable_if<
+                    mpl::and_<
+                        mpl::equal_to<typename matrix<T>::num_rows_t, num_rows_t>,
+                        mpl::equal_to<typename matrix<T>::num_columns_t, num_columns_t>
+                    >
+                >::type * = 0) :
             data_ ()
-            {
-                typedef matrix<T> other_matrix;
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_rows_t, num_rows_t>));
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_columns_t, num_columns_t>));
-                assign_data(m);
-            }
+            { assign_data(m); }
 
         /** Assignment operator. */
         matrix & operator= (matrix const & rhs)
@@ -110,15 +111,19 @@ namespace boost { namespace units_blas {
                 return *this;
             }
 
-        /** Assignment operator ctor.  @c *this and @c m must have the same
+        /** Assignment operator.  @c *this and @c m must have the same
             dimensions, and every @c m(i, j) must be convertible to the type
             of <c>(*this)(i, j)</c>. */
         template <typename T>
-        matrix & operator= (matrix<T> const & rhs)
+        typename enable_if<
+            mpl::and_<
+                mpl::equal_to<typename matrix<T>::num_rows_t, num_rows_t>,
+                mpl::equal_to<typename matrix<T>::num_columns_t, num_columns_t>
+            >,
+            matrix &
+        >::type
+        operator= (matrix<T> const & rhs)
             {
-                typedef matrix<T> other_matrix;
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_rows_t, num_rows_t>));
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_columns_t, num_columns_t>));
                 assign_data(rhs);
                 return *this;
             }
@@ -160,11 +165,16 @@ namespace boost { namespace units_blas {
             <c>(*this)(i, j) + rhs(i, j)</c> must be convertible to the type
             of <c>(*this)(i, j)</c>. */
         template <typename T>
-        matrix & operator+= (matrix<T> const & rhs)
+        typename enable_if<
+            mpl::and_<
+                mpl::equal_to<typename matrix<T>::num_rows_t, num_rows_t>,
+                mpl::equal_to<typename matrix<T>::num_columns_t, num_columns_t>
+            >,
+            matrix &
+        >::type
+        operator+= (matrix<T> const & rhs)
             {
                 typedef matrix<T> other_matrix;
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_rows_t, num_rows_t>));
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_columns_t, num_columns_t>));
                 typedef fusion::vector<matrix &, other_matrix const &> ops;
                 iterate<mpl::times<num_rows_t, num_columns_t> >(
                     ops(*this, rhs), detail::plus_assign()
@@ -177,11 +187,16 @@ namespace boost { namespace units_blas {
             dimensions, and every difference <c>(*this)(i, j) - rhs(i, j)</c>
             must be convertible to the type of <c>(*this)(i, j)</c>. */
         template <typename T>
-        matrix & operator-= (matrix<T> const & rhs)
+        typename enable_if<
+            mpl::and_<
+                mpl::equal_to<typename matrix<T>::num_rows_t, num_rows_t>,
+                mpl::equal_to<typename matrix<T>::num_columns_t, num_columns_t>
+            >,
+            matrix &
+        >::type
+        operator-= (matrix<T> const & rhs)
             {
                 typedef matrix<T> other_matrix;
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_rows_t, num_rows_t>));
-                BOOST_MPL_ASSERT((mpl::equal_to<typename other_matrix::num_columns_t, num_columns_t>));
                 typedef fusion::vector<matrix &, other_matrix const &> ops;
                 iterate<mpl::times<num_rows_t, num_columns_t> >(
                     ops(*this, rhs), detail::minus_assign()
@@ -244,10 +259,10 @@ namespace boost { namespace units_blas {
 
         // If you're seeing an error here, it's because you used some type
         // sequence besides boost::fusion::vector in your Rows template
-        // parameter.  Rows. is supposed to be a boost::fusion::vector of
-        // boost::fusion::vector *only*.  If you want to use something else, you
-        // must use the metafunction make_matrix<> instead of supplying the Rows
-        // parameter directly to this template.
+        // parameter.  Rows is supposed to be a boost::fusion::vector of
+        // boost::fusion::vectors *only*.  If you want to use something else for
+        // Rows, you must use the metafunction make_matrix<Rows> instead of
+        // supplying the Rows parameter directly to this template.
         BOOST_MPL_ASSERT((is_same<Rows, value_types>));
 
         template <typename T>

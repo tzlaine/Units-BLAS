@@ -176,7 +176,7 @@ At a high level, a Kalman filter takes a series of measurements at various
 times, and produces an estimate of the "true" measurement at those times.  It
 does this for some time `t1` by:
 
-# predicting the Kalman state at time `t1` based on the dynamics of the process being filtered, and the previous state at time `t0`;
+# predicting the Kalman state at time `t1` based on the dynamics of the process being filtered, and the previous state at time `t0`; and
 # updating the Kalman state using the predicted state and a measurement *z* taken at time `t0`.
 
 The system being modelled in our Kalman tracker is an object with constant
