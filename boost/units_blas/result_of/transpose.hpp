@@ -57,7 +57,7 @@ namespace boost { namespace units_blas { namespace result_of {
 #if 0
         // TODO: The implementation outside this #if-block is more idiomatic
         // wrt the rest of the result_of code.  Test the compile time
-        // performance of both befor removing either implementation.
+        // performance of both before removing either implementation.
         typedef typename Matrix::value_types value_types;
         typedef typename mpl::transform<
             value_types,

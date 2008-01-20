@@ -808,18 +808,6 @@ namespace boost { namespace units_blas {
         return tmp.second;
     }
 
-    // TODO: Implement these for expression template optimizations, as needed.
-    // axpy_prod(A, u, w, true);  // w = A * u
-    // axpy_prod(A, u, w, false); // w += A * u
-    // axpy_prod(u, A, w, true);  // w = trans(A) * u
-    // axpy_prod(u, A, w, false); // w += trans(A) * u
-    // axpy_prod(A, B, C, true);  // C = A * B
-    // axpy_prod(A, B, C, false); // C += A * B
-
-    // TODO: When are these preferable to the above?
-    // opb_prod(A, B, C, true);  // C = A * B
-    // opb_prod(A, B, C, false); // C += A * B
-
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
     template <typename Matrix>
     typename lazy_enable_if<

@@ -127,26 +127,57 @@ for the specific contents of the UnitsBlas headers.  Additionally, one can
 `#include <boost/units_blas/result_of.hpp>` to get all the headers in the
 `boost/units_blas/result_of` directory.
 
-[heading Case Study: A Kalman Tracker]
+make_matrix and friends
+
+errors: SFINAE & no-such-overload errors == mismatched matrix dimensions,
+whereas longer error messages means type error invloving individual elements;
+also mention that indices are never checked, except in value_at<>
+
+point out that indexing must always be done in compilte-time constants, never
+variables, and that that necessitates the need to use iterate()
+
+the iterate() facility, loop unrolling, and inlining
+
+I/O
+
+cross product is only for pairs of 3x1 or 1x3 matrices; note that cross products
+of vectors in a space S are in space S^2
+
+slicing matrices for fun and profit
+
+rules for operators, especially wrt vectors/transpose-vectors
+
+note that when quantities are in use, an identity matrix may have nontrivial
+element types.  For a uniform matrix U, an identity matrix for U will be
+all-dimensionless, but for some arbitrary matrix M, it may not be.
+
+slow-ass swap
+
+LU-decomposability wrt mixed units, use of LU-decompose for determinant()s of
+matrices larger than 3 rows, inverse(), and solve()
+
+exceptions for singular matrices
+
+[endsect]
+
+[section:case_study Case Study: A Kalman Tracker]
 
 [@http://en.wikipedia.org/wiki/Kalman_filter Kalman filtering] is a means of
 estimating the state of a dynamic system from noisy measurements.
 
 I am going to briefly describe the operation of a Kalman filter used to track
 entities moving in a plane.  The equations used are fairly simple, but their
-large number and large number of elements in the matrices in the equations
-introduce numerous opportunities to get unit conversions and dimensional
-analysis wrong, if they must be done by hand.  It is therefore problem that
-prompted the creation of this library.
+large number and the large number of elements in the matrices used in the
+equations introduce numerous opportunities to get unit conversions and
+dimensional analysis wrong, if they must be done by hand.  It is therefore
+problem that prompted the creation of this library.
 
 At a high level, a Kalman filter takes a series of measurements at various
 times, and produces an estimate of the "true" measurement at those times.  It
 does this for some time `t1` by:
 
-# taking the Kalman state at time `t0`;
-# predicting the Kalman state at time `t1` based on the dynamics of the process being filtered;
-# taking a measurement at time `t1`; and
-# using the prediction along with the measurement to produce an updated Kalman state.
+# predicting the Kalman state at time `t1` based on the dynamics of the process being filtered, and the previous state at time `t0`;
+# updating the Kalman state using the predicted state and a measurement *z* taken at time `t0`.
 
 The system being modelled in our Kalman tracker is an object with constant
 velocity moving in a plane.  So, measurements *z* of this object are:
@@ -175,7 +206,7 @@ as *P*.
 
 [*F] is a bit more interesting, from a dimensional analysis point of view.
 [*F] represents the system's dynamics.  In this case, we are estimating the
-state of a constant velocity model.  Therefore we choose an *F* that updates
+state of a constant velocity system.  Therefore we choose an *F* that updates
 the position elements with the constant velocity times the time interval, and
 leaves the velocity elements unchanged:
 
@@ -240,12 +271,6 @@ are trivial, and unit cenversions are never needed.  However, this requires
 discipline, and if the discipline is ever dropped, the resulting errors can be
 difficult to diagnose.
 
-note that it is usually an error to create an identity matrix whose types are not dimensionless
-
-note that cross products of vectors in a space S are in space S^2
-
-note that zero elements of matrices often have units
-
 [endsect]
 
 [include config.qbk]
@@ -269,6 +294,8 @@ before including any library header.
 uniform_matrix name selection (vs. homogeneous_matrix)
 
 use of SFINAE in non-operator versions of operations, e.g. prod vs. operator* for consistency
+
+rules for handling degenerate 1x1 amtrices (vector vs. transpose vector cases, and vector vs. matrix operator*)
 
 use of operators, including the slightly wierd operator^ (note that cross products and bitwise xor have quite a bit in common)
 

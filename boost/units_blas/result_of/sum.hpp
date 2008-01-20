@@ -44,8 +44,8 @@ namespace boost { namespace units_blas { namespace result_of {
             1
         >::type begin;
         typedef typename mpl::end<element_types>::type end;
-
 #endif
+
         typedef typename mpl::fold<
             mpl::iterator_range<begin, end>,
             typename mpl::front<element_types>::type,

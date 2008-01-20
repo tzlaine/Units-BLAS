@@ -1,3 +1,5 @@
+- Add SFINAE overload guards on matrix<> member operators (and ctors)
+
 - Add concept docs specifying what types can be used within a units_blas matrix.  Include concepts for raw-numeric types a la the fundamenal numeric types, and other numeric types a la Boost.Units.
 
 - Document rationale behind picking SFINAE over BOOST_MPL_ASSERTS in operations.  Remind users that when overload resolution fails, it's usually a matrix-dimensionality problem, whereas when something else fails deep in the implementation, it's usually a units problem.
@@ -7,6 +9,21 @@
 - Add support for complex value_types and associated complex-related functions, like herm(), real(), imag(), and conj().
 
 - Add template expression optimizations using Boost.Proto.
+
+    Cut out of operations.hpp:
+
+    // TODO: Implement these for expression template optimizations, as needed.
+    // axpy_prod(A, u, w, true);  // w = A * u
+    // axpy_prod(A, u, w, false); // w += A * u
+    // axpy_prod(u, A, w, true);  // w = trans(A) * u
+    // axpy_prod(u, A, w, false); // w += trans(A) * u
+    // axpy_prod(A, B, C, true);  // C = A * B
+    // axpy_prod(A, B, C, false); // C += A * B
+
+    // TODO: When are these preferable to the above?
+    // opb_prod(A, B, C, true);  // C = A * B
+    // opb_prod(A, B, C, false); // C += A * B
+
 
 - Do timing comparisons of units_blas vs. boost.ublas, and optimize where possible.
 
