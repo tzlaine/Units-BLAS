@@ -12,15 +12,15 @@
 Quantity types in Boost.Units use the type system to do checking
 (e.g. dimensional analysis and unit conversions) that otherwise would need to be
 done by inspection.  Linear algebra libraries often allow users to select from a
-broad array of value types, but they always require the value type to be the
-same in each vector/matrix position.  For those of us that work with units and
-matrices together, this can present a problem.  We are forced to populate
-matrices using values pulled out of individual quantities, perform our matrix
-calculations, then read individual elements out of our results and place them
-back into Boost.Units quantities, using _from_value_.
+selection of numeric value types, but they always require the value type to be
+the same for each element of a matrix or vector.  For those of us that work with
+units and matrices together, this can present a problem.  We are forced to
+populate matrices using values pulled out of individual quantities, perform our
+matrix calculations, then read individual elements out of our results and place
+them back into Boost.Units quantities, using _from_value_.
 
 This intoduces a typesafety "hole" in the use of Boost.Units.  One must check
-that the types from which the matrix calulation inputs are read, and those to
+that the types from which the matrix calculation inputs are read, and those to
 which its outputs are written, are correct.  This reintroduces the sort of
 by-inspection dimensional analysis and unit conversions that we were trying to
 avoid by using Boost.Units in the first place.

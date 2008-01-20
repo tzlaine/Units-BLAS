@@ -5,44 +5,48 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
+[import ../example/quick_start.cpp]
+
 [section:quick_start Quick Start]
 
 [heading Matrices]
 
 Matrices are declared in the form:
 
-    unts_blas::matrix<
+    units_blas::matrix<
         fusion::vector<
             fusion::vector< ... >,
-            fusion::vector< ... >
+            fusion::vector< ... >,
             ...
         >
     > MyMatrix;
 
-For example, assuming there exist three `quantity` types `length`, `time`, and
-`frequency`, these are all valid matrices:
+For example, assuming there exist three quantity types `Length`, `Time`, and
+`Frequency`, these are all valid matrices:
+
+[/ this does not seems to want to work, so I'm cut-and-pasting instead: quick_start_example_types]
 
     // a 1x3 matrix
-    unts_blas::matrix<
+    typedef units_blas::matrix<
         fusion::vector<
-            fusion::vector<length, time, frequency>
+            fusion::vector<Length, Time, Frequency>
         >
     > MatrixType1;
     
     // a 3x1 matrix
-    unts_blas::matrix<
+    typedef units_blas::matrix<
         fusion::vector<
-            fusion::vector<length>,
-            fusion::vector<time>,
-            fusion::vector<frequency>
+            fusion::vector<Length>,
+            fusion::vector<Time>,
+            fusion::vector<Frequency>
         >
     > MatrixType2;
     
     // a 2x2 matrix
-    unts_blas::matrix<
+    typedef units_blas::matrix<
         fusion::vector<
-            fusion::vector<length, time>,
-            fusion::vector<frequency, time>
+            fusion::vector<Length, Time>,
+            fusion::vector<Frequency, Time>
         >
     > MatrixType3;
 

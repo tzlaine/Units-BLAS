@@ -1,5 +1,3 @@
-- Add SFINAE overload guards on matrix<> member operators (and ctors)
-
 - Add concept docs specifying what types can be used within a units_blas matrix.  Include concepts for raw-numeric types a la the fundamenal numeric types, and other numeric types a la Boost.Units.
 
 - Document rationale behind picking SFINAE over BOOST_MPL_ASSERTS in operations.  Remind users that when overload resolution fails, it's usually a matrix-dimensionality problem, whereas when something else fails deep in the implementation, it's usually a units problem.

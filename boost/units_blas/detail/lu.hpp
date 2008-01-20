@@ -114,7 +114,7 @@ namespace boost { namespace units_blas { namespace detail {
 
         typedef typename TempMatrix::value_type::value_type value_type;
 
-        value_type const TINY(1.0e-20);
+        value_type const epsilon(1.0e-20);
         std::size_t const N = TempMatrix::static_size;
 
         value_type retval(1.0);
@@ -167,9 +167,8 @@ namespace boost { namespace units_blas { namespace detail {
             }
 
             indices[j] = max_index;
-            // TODO: Do we really want to keep this behavior?
             if (!m[j][j])
-                m[j][j] = TINY;
+                m[j][j] = epsilon;
 
             if (j != N - 1) {
                 value_type tmp = value_type(1.0) / m[j][j];
