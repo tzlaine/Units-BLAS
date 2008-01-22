@@ -101,17 +101,17 @@ sequences containing integral constants, and `e1` is an element of _matrix_
 
 There are no vector types in UnitsBlas.  Vectors are merely degenerate matrices.
 All the UnitsBlas vector operations accept _matrix_ parameters of the
-appropriate dimensions (either 1xN or Nx1).  Overloads are provided for both
+appropriate dimensions (either 1 x N or N x 1).  Overloads are provided for both
 orientations where approprate.  Two vector predicate metafunctions are provided,
 _is_vector_ and _is_transpose_vector_.  Common convention dictates that vectors
 are written vertically, so _is_vector_ evaluates to true iff its given argument
 is a _matrix_ and has one column.  _is_transpose_vector_ evaluates to true iff
 its given argument is a _matrix_ and has one row.
 
-Here is a summary of the operations specific to vectors.  Since "vectors" are
-just matrices, all matrix operations also apply to vectors.  In the table below,
-`V1` and `V2` are _matrix_ objects for which _is_vector_ is true, `s` is a
-scalar, and `e1` is an element of _matrix_ `V1`.
+Here is a summary of the operations specific to "vectors".  Since "vectors"
+are just matrices, all matrix operations also apply to "vectors".  In the
+table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true,
+`s` is a scalar, and `e1` is an element of _matrix_ `V1`.
 
 [table Vector Operations
     [[Operation Syntax] [Description] [Notes]]

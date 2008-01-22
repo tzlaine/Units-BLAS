@@ -51,9 +51,11 @@
 [def __state_vector_units__         [$images/state_vector_units.png]]
 [def __update_equations__           [$images/update_equations.png]]
 
+
 [/ Links ]
 
 [def _matrix_                       [classref boost::units_blas::matrix `matrix<>`]]
+[def _matrices_                     [classref boost::units_blas::matrix `matrix<>`s]]
 [def _make_matrix_                  [classref boost::units_blas::make_matrix `make_matrix<>`]]
 [def _uniform_matrix_               [classref boost::units_blas::uniform_matrix `uniform_matrix<>`]]
 [def _vector_                       [classref boost::units_blas::vector `vector<>`]]
@@ -96,11 +98,14 @@
 [def _norm_inf_index_               [funcref boost::units_blas::norm_inf_index `norm_inf_index<>`]]
 [def _solve__                       [funcref boost::units_blas::solve `solve`]]
 [def _solve_                        [funcref boost::units_blas::solve `solve<>`]]
+[def _iterate_                      [funcref boost::units_blas::iterate `iterate<>()`]]
+[def _print_                        [memberref boost::units_blas::matrix::print `print()`]]
+[def _value_at_                     [classref boost::units_blas::result_of::value_at `result_of::value_at<>`]]
+[def _quick_start_                  [link boost_unitsblas.manual.quick_start Quick Start]]
+[def _tutorial_                     [link units_blas.manual.tutorial Tutorial]]
 [def _value_                        `units::quantity<>::value()`]
 [def _from_value_                   `units::quantity<>::from_value()`]
 [def _fus_vec_                      `fusion::vector<>`]
-
-
 
 [/ External Links ]
 
@@ -116,7 +121,8 @@
 All matrix dimensions are given as ROWSxCOLUMNS, so a 1x3 matrix has 1 row and
 3 columns.
 
-Except where otherwise noted, it is assumed that all example code is preceded by:
+Except where otherwise noted, it is assumed that all example code is preceded
+by:
 
     #include <boost/unts_blas.hpp>
     
@@ -136,7 +142,7 @@ for the specific contents of the UnitsBlas headers.  Additionally, one can
 `#include <boost/units_blas/result_of.hpp>` to get all the headers in the
 `boost/units_blas/result_of` directory.
 
-[heading Creating `matrix<>`s]
+[heading Creating _matrices_]
 
 Typically, you will make a _matrix_ by declaring it as indicated previously.
 For example:
@@ -168,7 +174,8 @@ This is equivalent to:
 
 [equiv_vector_decl]
 
-To create a "transpose vector" _matrix_ from a single type sequence, use _transpose_vector_:
+To create a "transpose vector" _matrix_ from a single type sequence, use
+_transpose_vector_:
 
 [transpose_vector_decl]
 
@@ -184,25 +191,104 @@ This is equivalent to:
 
 [equiv_uniform_vector_decls]
 
-!!! The nature of vectors and their use, operators to which they apply, etc.
+[heading Vectors]
 
-errors: SFINAE & no-such-overload errors == mismatched matrix dimensions,
-whereas longer error messages means type error invloving individual elements;
-also mention that indices are never checked, except in value_at<>
+As mentioned previously, there are no vector types in UnitsBlas.  "Vectors"
+are degenerate _matrices_ with a single column.  "Transpose vectors" are
+degenerate _matrices_ with a single row.  Note the use of quotes around the
+terms "vector" and "transpose vector".  I have made an effort to do so
+throughout, to underscore the fact that these are not distinct types, but are
+instead kinds of _matrices_.
 
-point out that indexing must always be done in compilte-time constants, never
-variables, and that that necessitates the need to use iterate()
+That being said, "vectors" and "transpose vectors" are treated a bit
+differently than "normal" _matrices_ (those with both dimensions greater than
+1).  There are overloads for many of the UnitsBlas functions, including the
+operator overloads, that are designed to work with "vectors" and "transpose
+vectors" in particular ways.  The general rule is to make common operations
+easy to write in a natural way.  For instance, consider two 2 x 2 _matrices_
+`a` and `b`.  The expression `a * b` performs the matrix product of `a` and
+`b`.  Now consider two 2 x 1 "vectors" `v1` and `v2`.  The expression `v1 *
+v2` is ill-formed, if taken to mean matrix product, since `v1` has a different
+number of columns as the rows in `v2`.  So instead, the expression `v1 * v2`
+performs the vector dot product of the two "vectors".  This means users can
+simply write `a * b` or `v1 * v2`, both of which are very close to standard
+mathematical notation, without needing to explicitly specify which operation
+should be performed.  Given a 1 x 2 "transpose vector" `tv`, the expressions
+`v * tv` and `tv * v` both perform matrix products, since that operation is
+well-defined for both pairs of operands.
 
-the iterate() facility, loop unrolling, and inlining
+See the _quick_start_ section for a comprehensive list of the operations
+defined for "vectors" and "transpose vectors".
 
-I/O
+[note It is usually not allowed to mix "vectors" and "transpose vectors" in
+the same operation.  `operator*` is a notable exception, since matrix product
+applies to such pairs of operands.]
+
+In operations which must distinguish between "vectors", "transpose vectors",
+and "regular" _matrices_, there is an ambiguous case: the 1 x 1 _matrix_.
+When 1 x 1 _matrices_ are used, they are treated as if they are "regular"
+_matrices_ if at all possible, otherwise they are treated as if they are
+"vectors".  For instance, for 1 x 1 _matrices_ `v1` and `v2`, `v1 * v2`
+resolves to the matrix-product overload of `operator*`, not a "vector" dot
+product or "transpose vector" dot product.  Also, `dot(v1, v2)` (which has no
+"regular" _matrix_ overload) resolves to the "vector" overload of `dot<>()`,
+not the "transpose vector" overload.
+
+[heading Indexing And Iteration]
+
+Indexing is done with compile-time constants.  There is no interface for using
+variables as indices into _matrices_.  This necessitates the need to use
+_iterate_ to loop over elements of a _matrix_.
+
+[note Indices into _matrices_ are usually only checked when they reach the
+static assertions in _value_at_.]
+
+_iterate_ is a generic facility for unrolling loops.  See [headerref
+boost/units_blas/operations.hpp] and [headerref
+boost/units_blas/detail/iteration.hpp] for examples.
+
+[note Each iteration of an _iterate_ loop will be forced inline, to the extent
+this is possible with the platform and compiler, when `NDEBUG` is defined.]
+
+[heading I/O]
+
+There is support for very simple output of _matrices_.  There is no support
+for input of them.  _matrix_ has an unimplemented member function _print_;
+include [headerref boost/units_blas/io.hpp] for the implementation, and an
+overload of `operator<<` for `std::ostream &` and _matrix_.
+
+[heading Common Errors]
+
+There are three categories of errors you will encounter when working with
+UnitsBlas.
+
+[heading Static Assertion Failures]
+
+`BOOST_STATIC_ASSERT()` and `BOOST_MPL_ASSERT()` are used liberally throughout
+UnitsBlas.  All nonobvious static assertions should have a comment indicating
+the most probable reason for the error.
+
+[heading Overload Failure]
+
+[@http://en.wikipedia.org/wiki/SFINAE SFINAE] is used to resolve overloaded
+functions.  The predicates used in the `enable_if`/`disable_if` code rely
+heavily on the size of the _matrices_ supplied to a function.  So when you see
+an error that says "no matching function ..." or similar, it is often due to
+inappropriate dimensions on the _matrix_ parameters to the function you are
+trying to call.
+
+[heading A Giant, Unreadable Mess]
+
+Errors that are not in either of the previous two categories usually fall into
+this one.  Such errors are most commonly due to inappropriate quantity types
+being used in the _matrix_ parameters.  For instance, a _matrix_ with no
+determinant may produce a large number of hard-to-read errors that boil down
+to the inability to add intermediate types used to calculate the determinant.
 
 cross product is only for pairs of 3x1 or 1x3 matrices; note that cross products
 of vectors in a space S are in space S^2
 
 slicing matrices for fun and profit
-
-rules for operators, especially wrt vectors/transpose-vectors
 
 note that when quantities are in use, an identity matrix may have nontrivial
 element types.  For a uniform matrix U, an identity matrix for U will be

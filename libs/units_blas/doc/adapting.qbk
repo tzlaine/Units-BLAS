@@ -23,33 +23,33 @@ specializations must appear in the template's original namespace.
 `is_dimensionless<T>::type` is `mpl::true_` if `T` is dimensionless, or
 `mpl::false_` otherwise.
 
-Found in `boost/units_blas/detail/lu.hpp`.
+Found in [headerref boost/units_blas/detail/lu.hpp].
 
 [heading `detail::unit_of<>`]
 
 `unit_of<T>::type` is type representing the unit of `T`, or `mpl::void_` if none
 exists.
 
-Found in `boost/units_blas/detail/lu.hpp`.
+Found in [headerref boost/units_blas/detail/lu.hpp].
 
 [heading `detail::dimension_of<>`]
 
 `dimension_of<T>::type` is type representing the dimension of `T`, or
 `mpl::void_` if none exists.
 
-Found in `boost/units_blas/detail/lu.hpp`.
+Found in [headerref boost/units_blas/detail/lu.hpp].
 
 [heading `detail::zero_value<>`]
 
 `zero_value<T>::value()` returns an element of type `T `whose value is 0.
 
-Found in `boost/units_blas/detail/zero_value.hpp`.
+Found in [headerref boost/units_blas/detail/zero_value.hpp].
 
 [heading `detail::one_value<>`]
 
 `one_value<T>::value()` returns an element of type `T` whose value is 1.
 
-Found in `boost/units_blas/detail/zero_value.hpp`.
+Found in [headerref boost/units_blas/detail/zero_value.hpp].
 
 [heading `detail::assign_to_value_type<>`]
 
@@ -57,7 +57,7 @@ Found in `boost/units_blas/detail/zero_value.hpp`.
 representation of t to v.  Note that `ValueType` is not necessarily
 `T::value_type`, though `T::value_type` must be convertible to `ValueType`.
 
-Found in `boost/units_blas/detail/iteration.hpp`.
+Found in [headerref boost/units_blas/detail/iteration.hpp].
 
 [heading `detail::assign_from_value_type<>`]
 
@@ -65,7 +65,7 @@ Found in `boost/units_blas/detail/iteration.hpp`.
 value representation of t.  Note that `ValueType` is not necessarily
 `T::value_type`, though `ValueType` must be convertible to `T::value_type`.
 
-Found in `boost/units_blas/detail/iteration.hpp`.
+Found in [headerref boost/units_blas/detail/iteration.hpp].
 
 [heading `detail::value_quotient<>`]
 
@@ -76,7 +76,7 @@ The user should be sure to provide partial specializations for 3 cases:
 # `T0` is a fundamental numeric type, `T1` is a unit type
 # `T0` is a unit type, `T1` is a fundamental numeric type
 
-Found in `boost/units_blas/result_of/detail/matrix_product.hpp`.
+Found in [headerref boost/units_blas/result_of/detail/matrix_product.hpp].
 
 [heading `detail::value_inverse<>`]
 
@@ -86,6 +86,6 @@ dimensionless.  Whether the type should be an explicit dimensionless type
 (e.g. a Boost.Units dimensionless quantity) or a fundamental numeric type
 depends on the user's needs.
 
-Found in `boost/units_blas/result_of/detail/matrix_product.hpp`.
+Found in [headerref boost/units_blas/result_of/detail/matrix_product.hpp].
 
 [endsect]

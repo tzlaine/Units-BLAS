@@ -58,7 +58,7 @@ details.
 
 [heading `BOOST_NO_EXCEPTIONS`]
 
-Any operation involving matrix inversion may throw in UnitsBlas when a
+Any operation involving matrix inversion in UnitsBlas may throw when a
 singular matrix is encoutered.  As with many other Boost libraries,
 `BOOST_NO_EXCEPTIONS` may be defined to replace the `throw` with a call to a
 user-defined function.  See the

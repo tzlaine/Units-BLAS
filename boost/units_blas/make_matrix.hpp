@@ -33,6 +33,7 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t Rows, std::size_t Columns>
     struct uniform_matrix
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 mpl::range_c<std::size_t, 0, Columns>,
@@ -48,6 +49,9 @@ namespace boost { namespace units_blas {
         >::type all_rows_type;
 
         typedef matrix<all_rows_type> type;
+#else
+        typedef detail::unspecified type;
+#endif
     };
 
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
@@ -57,6 +61,7 @@ namespace boost { namespace units_blas {
     template <typename Elements>
     struct vector
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 Elements,
@@ -65,6 +70,9 @@ namespace boost { namespace units_blas {
         >::type all_rows_type;
 
         typedef matrix<all_rows_type> type;
+#else
+        typedef detail::unspecified type;
+#endif
     };
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
@@ -74,6 +82,7 @@ namespace boost { namespace units_blas {
     template <typename Elements>
     struct transpose_vector
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 Elements,
@@ -82,6 +91,9 @@ namespace boost { namespace units_blas {
         >::type elements_as_fusion_vector;
 
         typedef matrix<fusion::vector<elements_as_fusion_vector> > type;
+#else
+        typedef detail::unspecified type;
+#endif
     };
 
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
