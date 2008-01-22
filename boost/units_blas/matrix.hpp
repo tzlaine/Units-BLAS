@@ -19,7 +19,7 @@
 #include <boost/mpl/not_equal_to.hpp>
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/times.hpp>
-#include <boost/mpl/transform.hpp>
+#include <boost/mpl/transform_view.hpp>
 #include <boost/preprocessor/enum_params.hpp>
 #include <boost/fusion/algorithm/query/find_if.hpp>
 #include <boost/fusion/container/vector.hpp>
@@ -38,7 +38,7 @@ namespace boost { namespace units_blas {
         struct deep_as_vector
         {
             typedef typename fusion::result_of::as_vector<
-                typename mpl::transform<
+                typename mpl::transform_view<
                     Rows,
                     fusion::result_of::as_vector<mpl::_1>
                 >::type
