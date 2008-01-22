@@ -27,78 +27,85 @@
 
 [/ Images ]
 
-[def __note__               [$images/note.png]]
-[def __tip__                [$images/tip.png]]
-[def __important__          [$images/important.png]]
-[def __caution__            [$images/caution.png]]
-[def __warning__            [$images/warning.png]]
-[def __bad_determinant__    [$images/bad_determinant.png]]
-[def __f_matrix__           [$images/f_matrix.png]]
-[def __f_matrix_units__     [$images/f_matrix_units.png]]
-[def __f_times_x__          [$images/f_times_x.png]]
-[def __f_times_x_units__    [$images/f_times_x_units.png]]
-[def __h_matrix__           [$images/h_matrix.png]]
-[def __h_matrix_units__     [$images/h_matrix_units.png]]
-[def __k_matrix_units__     [$images/k_matrix_units.png]]
-[def __meas_vector__        [$images/meas_vector.png]]
-[def __meas_vector_units__  [$images/meas_vector_units.png]]
-[def __p_matrix__           [$images/p_matrix.png]]
-[def __p_matrix_units__     [$images/p_matrix_units.png]]
-[def __predict_equations__  [$images/predict_equations.png]]
-[def __r_matrix__           [$images/r_matrix.png]]
-[def __r_matrix_units__     [$images/r_matrix_units.png]]
-[def __state_vector__       [$images/state_vector.png]]
-[def __state_vector_units__ [$images/state_vector_units.png]]
-[def __update_equations__   [$images/update_equations.png]]
+[def __note__                       [$images/note.png]]
+[def __tip__                        [$images/tip.png]]
+[def __important__                  [$images/important.png]]
+[def __caution__                    [$images/caution.png]]
+[def __warning__                    [$images/warning.png]]
+[def __bad_determinant__            [$images/bad_determinant.png]]
+[def __f_matrix__                   [$images/f_matrix.png]]
+[def __f_matrix_units__             [$images/f_matrix_units.png]]
+[def __f_times_x__                  [$images/f_times_x.png]]
+[def __f_times_x_units__            [$images/f_times_x_units.png]]
+[def __h_matrix__                   [$images/h_matrix.png]]
+[def __h_matrix_units__             [$images/h_matrix_units.png]]
+[def __k_matrix_units__             [$images/k_matrix_units.png]]
+[def __meas_vector__                [$images/meas_vector.png]]
+[def __meas_vector_units__          [$images/meas_vector_units.png]]
+[def __p_matrix__                   [$images/p_matrix.png]]
+[def __p_matrix_units__             [$images/p_matrix_units.png]]
+[def __predict_equations__          [$images/predict_equations.png]]
+[def __r_matrix__                   [$images/r_matrix.png]]
+[def __r_matrix_units__             [$images/r_matrix_units.png]]
+[def __state_vector__               [$images/state_vector.png]]
+[def __state_vector_units__         [$images/state_vector_units.png]]
+[def __update_equations__           [$images/update_equations.png]]
 
 [/ Links ]
 
-[def _matrix_               [classref boost::units_blas::matrix `matrix<>`]]
-[def _fus_vec_              [classref boost::fusion::vector `fusion_vector<>`]]
-[def _is_vector_            [classref boost::units_blas::is_vector `is_vector<>`]]
-[def _is_transpose_vector_  [classref boost::units_blas::is_transpose_vector `is_transpose_vector<>`]]
-[def _slice__               [funcref boost::units_blas::slice `slice`]]
-[def _slice_                [funcref boost::units_blas::slice `slice<>`]]
-[def _transpose__           [funcref boost::units_blas::transpose `transpose`]]
-[def _transpose_            [funcref boost::units_blas::transpose `transpose<>`]]
-[def _element_prod__        [funcref boost::units_blas::element_prod `element_prod`]]
-[def _element_prod_         [funcref boost::units_blas::element_prod `element_prod<>`]]
-[def _element_div__         [funcref boost::units_blas::element_div `element_div`]]
-[def _element_div_          [funcref boost::units_blas::element_div `element_div<>`]]
-[def _determinant__         [funcref boost::units_blas::determinant `determinant`]]
-[def _determinant_          [funcref boost::units_blas::determinant `determinant<>`]]
-[def _inverse__             [funcref boost::units_blas::inverse `inverse`]]
-[def _inverse_              [funcref boost::units_blas::inverse `inverse<>`]]
-[def _prod__                [funcref boost::units_blas::prod `prod`]]
-[def _prod_                 [funcref boost::units_blas::prod `prod<>`]]
-[def _sum__                 [funcref boost::units_blas::sum `sum`]]
-[def _sum_                  [funcref boost::units_blas::sum `sum<>`]]
-[def _diff__                [funcref boost::units_blas::diff `diff`]]
-[def _diff_                 [funcref boost::units_blas::diff `diff<>`]]
-[def _neg__                 [funcref boost::units_blas::neg `neg`]]
-[def _neg_                  [funcref boost::units_blas::neg `neg<>`]]
-[def _dot__                 [funcref boost::units_blas::dot `dot`]]
-[def _dot_                  [funcref boost::units_blas::dot `dot<>`]]
-[def _cross__               [funcref boost::units_blas::cross `cross`]]
-[def _cross_                [funcref boost::units_blas::cross `cross<>`]]
-[def _norm_1__              [funcref boost::units_blas::norm_1 `norm_1`]]
-[def _norm_1_               [funcref boost::units_blas::norm_1 `norm_1<>`]]
-[def _norm_2__              [funcref boost::units_blas::norm_2 `norm_2`]]
-[def _norm_2_               [funcref boost::units_blas::norm_2 `norm_2<>`]]
-[def _norm_inf__            [funcref boost::units_blas::norm_inf `norm_inf`]]
-[def _norm_inf_             [funcref boost::units_blas::norm_inf `norm_inf<>`]]
-[def _norm_inf_index__      [funcref boost::units_blas::norm_inf_index `norm_inf_index`]]
-[def _norm_inf_index_       [funcref boost::units_blas::norm_inf_index `norm_inf_index<>`]]
-[def _solve__               [funcref boost::units_blas::solve `solve`]]
-[def _solve_                [funcref boost::units_blas::solve `solve<>`]]
-[def _value_                `quantity::value()`]
-[def _from_value_           `quantity::from_value()`]
+[def _matrix_                       [classref boost::units_blas::matrix `matrix<>`]]
+[def _make_matrix_                  [classref boost::units_blas::make_matrix `make_matrix<>`]]
+[def _uniform_matrix_               [classref boost::units_blas::uniform_matrix `uniform_matrix<>`]]
+[def _vector_                       [classref boost::units_blas::vector `vector<>`]]
+[def _transpose_vector_             [classref boost::units_blas::transpose_vector `transpose_vector<>`]]
+[def _uniform_vector_               [classref boost::units_blas::uniform_vector `uniform_vector<>`]]
+[def _uniform_transpose_vector_     [classref boost::units_blas::uniform_transpose_vector `uniform_transpose_vector<>`]]
+[def _is_vector_                    [classref boost::units_blas::is_vector `is_vector<>`]]
+[def _is_transpose_vector_          [classref boost::units_blas::is_transpose_vector `is_transpose_vector<>`]]
+[def _slice__                       [funcref boost::units_blas::slice `slice`]]
+[def _slice_                        [funcref boost::units_blas::slice `slice<>`]]
+[def _transpose__                   [funcref boost::units_blas::transpose `transpose`]]
+[def _transpose_                    [funcref boost::units_blas::transpose `transpose<>`]]
+[def _element_prod__                [funcref boost::units_blas::element_prod `element_prod`]]
+[def _element_prod_                 [funcref boost::units_blas::element_prod `element_prod<>`]]
+[def _element_div__                 [funcref boost::units_blas::element_div `element_div`]]
+[def _element_div_                  [funcref boost::units_blas::element_div `element_div<>`]]
+[def _determinant__                 [funcref boost::units_blas::determinant `determinant`]]
+[def _determinant_                  [funcref boost::units_blas::determinant `determinant<>`]]
+[def _inverse__                     [funcref boost::units_blas::inverse `inverse`]]
+[def _inverse_                      [funcref boost::units_blas::inverse `inverse<>`]]
+[def _prod__                        [funcref boost::units_blas::prod `prod`]]
+[def _prod_                         [funcref boost::units_blas::prod `prod<>`]]
+[def _sum__                         [funcref boost::units_blas::sum `sum`]]
+[def _sum_                          [funcref boost::units_blas::sum `sum<>`]]
+[def _diff__                        [funcref boost::units_blas::diff `diff`]]
+[def _diff_                         [funcref boost::units_blas::diff `diff<>`]]
+[def _neg__                         [funcref boost::units_blas::neg `neg`]]
+[def _neg_                          [funcref boost::units_blas::neg `neg<>`]]
+[def _dot__                         [funcref boost::units_blas::dot `dot`]]
+[def _dot_                          [funcref boost::units_blas::dot `dot<>`]]
+[def _cross__                       [funcref boost::units_blas::cross `cross`]]
+[def _cross_                        [funcref boost::units_blas::cross `cross<>`]]
+[def _norm_1__                      [funcref boost::units_blas::norm_1 `norm_1`]]
+[def _norm_1_                       [funcref boost::units_blas::norm_1 `norm_1<>`]]
+[def _norm_2__                      [funcref boost::units_blas::norm_2 `norm_2`]]
+[def _norm_2_                       [funcref boost::units_blas::norm_2 `norm_2<>`]]
+[def _norm_inf__                    [funcref boost::units_blas::norm_inf `norm_inf`]]
+[def _norm_inf_                     [funcref boost::units_blas::norm_inf `norm_inf<>`]]
+[def _norm_inf_index__              [funcref boost::units_blas::norm_inf_index `norm_inf_index`]]
+[def _norm_inf_index_               [funcref boost::units_blas::norm_inf_index `norm_inf_index<>`]]
+[def _solve__                       [funcref boost::units_blas::solve `solve`]]
+[def _solve_                        [funcref boost::units_blas::solve `solve<>`]]
+[def _value_                        `units::quantity<>::value()`]
+[def _from_value_                   `units::quantity<>::from_value()`]
+[def _fus_vec_                      `fusion::vector<>`]
 
 
 
 [/ External Links ]
 
-[def _mpl_                  [@http://boost.org/libs/mpl/doc/index.html MPL]]
+[def _mpl_                          [@http://boost.org/libs/mpl/doc/index.html MPL]]
+[def _fusion_                       [@http://boost.org/libs/fusion/doc/index.html Fusion]]
 
 [include intro.qbk]
 
@@ -117,6 +124,8 @@ Except where otherwise noted, it is assumed that all example code is preceded by
 
 [include quick_start.qbk]
 
+[import ../example/tutorial.cpp]
+
 [section:tutorial Tutorial]
 
 [heading A Note About Header Organization]
@@ -127,7 +136,55 @@ for the specific contents of the UnitsBlas headers.  Additionally, one can
 `#include <boost/units_blas/result_of.hpp>` to get all the headers in the
 `boost/units_blas/result_of` directory.
 
-make_matrix and friends
+[heading Creating `matrix<>`s]
+
+Typically, you will make a _matrix_ by declaring it as indicated previously.
+For example:
+
+[default_matrix_decl]
+
+However, in a generic programming context this may be inconvenient.  _matrix_
+will accept any type sequence of same-sized type sequences.  The type sequences
+can be any of those in the _mpl_ or _fusion_ libraries, or in fact any other
+compatible sequence (including views on sequences).  To use
+non-`fusion::vector<>`s, use the metafunction _make_matrix_:
+
+[make_matrix_decl]
+
+As a convenience, a few other metafunctions are also supplied.  To create a N
+x M _matrix_ in which every element has the same type, use _uniform_matrix_:
+
+[uniform_matrix_decl]
+
+This is equivalent to:
+
+[equiv_uniform_matrix_decl]
+
+To create a "vector" _matrix_ from a single type sequence, use _vector_:
+
+[vector_decl]
+
+This is equivalent to:
+
+[equiv_vector_decl]
+
+To create a "transpose vector" _matrix_ from a single type sequence, use _transpose_vector_:
+
+[transpose_vector_decl]
+
+This is equivalent to:
+
+[equiv_transpose_vector_decl]
+
+Of course, there are _uniform_vector_ and _uniform_transpose_vector_:
+
+[uniform_vector_decls]
+
+This is equivalent to:
+
+[equiv_uniform_vector_decls]
+
+!!! The nature of vectors and their use, operators to which they apply, etc.
 
 errors: SFINAE & no-such-overload errors == mismatched matrix dimensions,
 whereas longer error messages means type error invloving individual elements;

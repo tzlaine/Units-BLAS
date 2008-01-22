@@ -148,7 +148,7 @@ large number of matrices involving dimensional types requires quite a bit of
 thought, and is error prone simply because the analysis must be done in so
 many places.  The solution to these problems often is only to use a fixed set
 of units throughout your code.  Thus conversions to and from raw `value_type`s
-are trivial, and unit cenversions are never needed.  However, this requires
+are trivial, and unit conversions are never needed.  However, this requires
 discipline, and if the discipline is ever dropped, the resulting errors can be
 difficult to diagnose.
 

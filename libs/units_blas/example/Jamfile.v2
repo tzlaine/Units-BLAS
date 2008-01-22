@@ -9,7 +9,12 @@ exe quick_start
         quick_start.cpp
     ;
 
-exe kalman
+exe tutorial
     :
-        kalman.cpp
+        tutorial.cpp
     ;
+
+#exe kalman
+#    :
+#        kalman.cpp
+#    ;
