@@ -41,7 +41,7 @@ types.  This library does exactly that.
 [heading Description]
 
 UnitsBlas enables the uniform use of Boost.Units, even if used in linear algebra
-operations.  Specifically its goals are to:
+operations.  Specifically, its goals are to:
 
 * fail to compile malformed linear algebra operations involving Boost.Units;
 * eliminate the need to remove and then re-stuff raw values from/into Boost.Units quantities via _value_ and _from_value_; and

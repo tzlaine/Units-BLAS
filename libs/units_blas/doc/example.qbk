@@ -28,11 +28,11 @@ entities moving in a plane.  The equations used are fairly simple, but their
 large number, and the large number of elements in the matrices used in the
 equations, introduce numerous opportunities to get unit conversions and
 dimensional analysis wrong, if they must be done by hand.  It is therefore
-problem that prompted the creation of this library.
+the problem that prompted the creation of this library.
 
-At a high level, a Kalman filter takes a series of measurements at various
-times, and produces an estimate of the "true" measurement at those times.  It
-does this for some time `t1` by:
+At a high level of abstraction, a Kalman filter takes a series of measurements
+at various times, and produces an estimate of the "true" measurement at those
+times.  It does this for some time `t1` by:
 
 # predicting the Kalman state at time `t1` based on the dynamics of the process being filtered, and the previous state at time `t0`; and
 # updating the Kalman state using the predicted state and a measurement *z* taken at time `t0`.
@@ -46,8 +46,8 @@ __meas_vector__ __meas_vector_units__
 
 Note that we do not directly try to model the object's position.  Instead we
 model the state of the dyamic system.  Because of this, the state we are
-estimating also contains the derivatives of the *z*'s elements with respect to
-time (represented with a dot), so the state *x* is:
+estimating also contains the derivatives of the measurement *z*'s elements
+with respect to time (represented with a dot), so the state *x* is:
 
 __state_vector__ __state_vector_units__
 
@@ -84,15 +84,15 @@ which implies
 
 __f_times_x__,
 
-which is exactly what we want.
+which is exactly what we want our prediction to do in a constant-velocity model.
 
 Note that due to its assignment to *x'*,
 
 __f_times_x_units__
 
 This implies what the the units of *F* must be.  This is our first nontrivial
-result of using matrices containing quantity types (dimensionless quantities
-are represented with the empty set symbol):
+result of using matrices containing quantity types.  Dimensionless quantities
+are represented with the empty set symbol:
 
 __f_matrix_units__
 

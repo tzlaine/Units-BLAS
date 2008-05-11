@@ -254,7 +254,7 @@ this is possible with the platform and compiler, when `NDEBUG` is defined.]
 
 There is support for very simple output of _matrices_.  There is no support
 for input of them.  _matrix_ has an unimplemented member function _print_;
-include [headerref boost/units_blas/io.hpp] for the implementation, and an
+include [headerref boost/units_blas/io.hpp] for the implementation and an
 overload of `operator<<` for `std::ostream &` and _matrix_.
 
 [heading Common Errors]
@@ -286,7 +286,7 @@ determinant may produce a large number of hard-to-read errors that boil down
 to the inability to add intermediate types used to calculate the determinant.
 
 cross product is only for pairs of 3x1 or 1x3 matrices; note that cross products
-of vectors in a space S are in space S^2
+of vectors in a space S are in the space S^2
 
 slicing matrices for fun and profit
 

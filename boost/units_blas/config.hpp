@@ -19,11 +19,12 @@
 #define BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
 /** This is an overridable configuration macro controlling whether fully
-    accurate, but slow (O(n!) in the number of rows), or inexact but fast (O(n)
-    in the number of rows) metafunction should be used to determine the type of
-    a determinant.  See the detailed Configuration page of the documentation for
-    details.  To use the inexact version, define this macro to a nonzero value
-    before including any library header.*/
+    accurate, but compile-time slow (O(n!) in the number of rows), or inexact
+    but compile-time fast (O(n) in the number of rows) metafunction should be
+    used to determine the type of a determinant.  See the detailed
+    Configuration page of the documentation for details.  To use the inexact
+    version, define this macro to a nonzero value before including any library
+    header.*/
 #define BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE
 
 namespace detail {

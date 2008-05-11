@@ -120,8 +120,8 @@ table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true,
     [[_sum__`(V1)`]                    [ Sum of all elements. ]                               [ Elements must be mutually summable. ]]
     [[_norm_1__`(V1)`]                 [ Sum of absolute values of all elements. ]            [ Elements must be mutually summable. ]]
     [[_norm_2__`(V1)`]                 [ Square root of sum of squares of all elements. ]     [ Elements must be mutually summable. ]]
-    [[_norm_inf__`(V1)`]               [ Max of absolute values of all elements. ]            [ Elements must be pairwise less-than comparable summable. ]]
-    [[_norm_inf_index__`(V1)`]         [ Index of first element equal to `norm_inf(V1)`. ]    [ Elements must be pairwise less-than comparable summable. ]]
+    [[_norm_inf__`(V1)`]               [ Max of absolute values of all elements. ]            [ Elements must be pairwise less-than comparable. ]]
+    [[_norm_inf_index__`(V1)`]         [ Index of first element equal to `norm_inf(V1)`. ]    [ Elements must be pairwise less-than comparable. ]]
     [[_solve__`(M1, V2, V1)`]          [ Solution to `M1 * V1 = V2` placed in `V1`. ]         [ `M1` must be square.  Throws if `M1` is singular. ]]
 ]
 

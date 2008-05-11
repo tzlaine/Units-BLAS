@@ -27,21 +27,21 @@ Found in [headerref boost/units_blas/detail/lu.hpp].
 
 [heading `detail::unit_of<>`]
 
-`unit_of<T>::type` is type representing the unit of `T`, or `mpl::void_` if none
-exists.
+`unit_of<T>::type` is the type representing the unit of `T`, or `mpl::void_`
+if none exists.
 
 Found in [headerref boost/units_blas/detail/lu.hpp].
 
 [heading `detail::dimension_of<>`]
 
-`dimension_of<T>::type` is type representing the dimension of `T`, or
+`dimension_of<T>::type` is the type representing the dimension of `T`, or
 `mpl::void_` if none exists.
 
 Found in [headerref boost/units_blas/detail/lu.hpp].
 
 [heading `detail::zero_value<>`]
 
-`zero_value<T>::value()` returns an element of type `T `whose value is 0.
+`zero_value<T>::value()` returns an element of type `T` whose value is 0.
 
 Found in [headerref boost/units_blas/detail/zero_value.hpp].
 
@@ -53,7 +53,7 @@ Found in [headerref boost/units_blas/detail/zero_value.hpp].
 
 [heading `detail::assign_to_value_type<>`]
 
-`assign_from_value_type<T>::call<ValueType>(t, v)` assigns the internal value
+`assign_to_value_type<T>::call<ValueType>(t, v)` assigns the internal value
 representation of t to v.  Note that `ValueType` is not necessarily
 `T::value_type`, though `T::value_type` must be convertible to `ValueType`.
 
