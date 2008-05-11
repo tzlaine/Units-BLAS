@@ -54,6 +54,20 @@ namespace boost { namespace units_blas {
 #endif
     };
 
+    namespace detail {
+        struct make_fusion_vector
+        {
+            template <
+                BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
+                    FUSION_MAX_VECTOR_SIZE, typename T, fusion::void_)
+            >
+            struct apply
+            {
+                typedef fusion::vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)> type;
+            };
+        };
+    }
+
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1.  Specifically, the resulting @c matrix<>'s dimensions
         are size(@c Elements) x 1, and each element (i, 0) is the ith type in
@@ -65,7 +79,7 @@ namespace boost { namespace units_blas {
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
                 Elements,
-                mpl::bind1<mpl::quote1<fusion::vector>, mpl::_1>
+                mpl::bind1<detail::make_fusion_vector, mpl::_1>
             >::type
         >::type all_rows_type;
 
@@ -77,7 +91,7 @@ namespace boost { namespace units_blas {
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N.  Specifically, the resulting @c
-        matrix<>'s dimensions are 1 x size(@c Elements) 1, and each element
+        matrix<>'s dimensions are 1 x size(@c Elements), and each element
         (0, i) is the ith type in @c Elements. */
     template <typename Elements>
     struct transpose_vector
