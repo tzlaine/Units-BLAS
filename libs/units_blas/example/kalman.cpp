@@ -113,24 +113,56 @@ typedef units_blas::matrix<
 
 int main()
 {
-//[prediction_step
-    // prediction step
+//[prediction_step_1
+    // prediction step variables
     state_type x;
     P_type P;
 
     F_type F;
     Q_type Q;
+//]
 
+    x.at<0, 0>() = m::from_value(0.0);
+    x.at<1, 0>() = m_per_s::from_value(1.0);
+    x.at<2, 0>() = m::from_value(0.0);
+    x.at<3, 0>() = m_per_s::from_value(1.0);
+
+    P.at<0, 0>() = m2::from_value(1.0);
+    P.at<1, 1>() = m2_per_s2::from_value(1.0);
+    P.at<2, 2>() = m2::from_value(1.0);
+    P.at<3, 3>() = m2_per_s2::from_value(1.0);
+
+    F.at<0, 0>() = 1.0;
+    F.at<1, 1>() = 1.0;
+    F.at<2, 2>() = 1.0;
+    F.at<3, 3>() = 1.0;
+
+    Q = P;
+
+//[prediction_step_2
+    // prediction step
     state_type x_predict = F * x;
     P_type P_predict = F * P * transpose(F) + Q;
 //]
 
-//[update_step
-    // update step
+//[update_step_1
+    // update step variables
     H_type H;
     R_type R;
     meas_type z;
+//]
 
+    H.at<0, 0>() = 1.0;
+    H.at<1, 2>() = 1.0;
+
+    R.at<0, 0>() = m2::from_value(1.0);
+    R.at<1, 1>() = m2::from_value(1.0);
+
+    z.at<0, 0>() = m::from_value(1.0);
+    z.at<1, 0>() = m::from_value(1.0);
+
+//[update_step_2
+    // update step
     using namespace boost::units_blas;
     S_type S = H * P_predict * transpose(H) + R;
     K_type K = P_predict * transpose(H) * inverse(S);

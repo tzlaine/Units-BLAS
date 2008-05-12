@@ -56,6 +56,8 @@
 
 [def _matrix_                       [classref boost::units_blas::matrix `matrix<>`]]
 [def _matrices_                     [classref boost::units_blas::matrix `matrix<>`s]]
+[def _identity_matrix__             [funcref boost::units_blas:: `identity_matrix`]]
+[def _identity_matrix_              [funcref boost::units_blas:: `identity_matrix<>`]]
 [def _make_matrix_                  [classref boost::units_blas::make_matrix `make_matrix<>`]]
 [def _uniform_matrix_               [classref boost::units_blas::uniform_matrix `uniform_matrix<>`]]
 [def _vector_                       [classref boost::units_blas::vector `vector<>`]]
@@ -133,6 +135,10 @@ by:
 [import ../example/tutorial.cpp]
 
 [section:tutorial Tutorial]
+
+This tutorial is designed to give you an brief overview of UnitsBlas'
+functionality, including examples.  It is intended to be read after reading
+the Quick Start section, so material covered there is not repeated here.
 
 [heading A Note About Header Organization]
 
@@ -257,18 +263,103 @@ for input of them.  _matrix_ has an unimplemented member function _print_;
 include [headerref boost/units_blas/io.hpp] for the implementation and an
 overload of `operator<<` for `std::ostream &` and _matrix_.
 
+[heading Cross Products]
+
+The cross product operation only works with pairs of 3x1 "vector" or 1x3
+"transpose vector" _matrices_.  A nonobvious fact about the cross product
+operation on uniform "vectors" is that it is from S to S^2, where S is the space
+of the operands.  For instance, in the operation here:
+
+[cross_product_space_example]
+
+the result is in length-squared space, not length-space.  This of course
+applies to "transpose vectors" as well.
+
+[heading Slicing]
+
+_matrices_ may be sliced as one would when using Boost.Ublas.  In addition,
+since there are no ordering or duplication requirements placed on the _slice_
+rows and columns, arbitrary reordering and duplication may be performed.  Note
+that all rows and columns given to _slice_ must still be within the dimensions
+of the _matrix_ being sliced.  Here is an example of reordering using slice:
+
+[slicing_example]
+
+[heading Identity Matrices]
+
+Identity matrices of a certain type can be created by calling
+`units_blas::identity_matrix<MatrixType>()`, where `MatrixType` is a square
+_matrix_.
+
+This is simple enough, but there is something else to note about identity
+_matrices_.  The _matrix_ `I` that preserves the values and types of another
+_matrix_ `M` in the operation `M * I` is not always obvious.  For uniform
+(i.e. with homogeneously-typed elements) _matrices_, `I`'s element types will
+be uniformly dimensionless.  However, for some `M` with arbitrary element
+types, `I` must have element types that preserve the types of the elements in
+`M` when multiplied by it, meaning the types of `I`'s elements may be
+arbitrary as well, and may differ significantly from the types of `M`'s
+elements.  In fact, for some _matrices_, no `I` exists which can preserve all
+its element types.  Consider the following _matrix_:
+
+[impossible_to_generate_identity_matrix_example]
+
+Clearly, there is no column 0 that can be created that will produce a `Length`
+type when multiplied by both the first and second rows of `who_am_i`, so there
+is no `I` that will preserve `who_am_i`.
+
+[heading Swap]
+
+As shown in the Quick Start section, there is a swap function that operates on
+_matrices_.  Note that it is O(`size<Matrix>::value`) operation.  It is *not*
+O(1)!
+
+[heading LU Decomposition]
+
+[@http://en.wikipedia.org/wiki/LU_decomposition LU decomposition] is used
+internally by UnitsBlas to implement _determinant_ for _matrices_ of more than
+3 rows, and _inverse_ and _solve_ for _matrices_ of any number of rows.  LU
+decomposition works as it does in any linear algebra library when the
+_matrix_'s element types are all dimensionless.  However, when any of the
+element types are quantity types, LU decomposition presents a particular
+problem: what are the quantity types for the elements in the L and U
+_matrices_?  As it turns out, there is no unique solution.  There are may be
+many L, U pairs that, when multiplied together, return a _matrix_ identical to
+the original _matrix_ being decomposed.
+
+So, UnitsBlas sidesteps this problem by cheating a bit.  UnitsBlas creates L
+and U _matrices_ that are dimensionless.  It hides this implementation detail,
+copying the underlying values out of the quantites in the decomposed _matrix_,
+and stuffing the solution values into the quantities in the solution _matrix_
+at the end of the operation being performed (_determinant_, _inverse_, or
+_solve_).
+
+Unfortunately, you cannot remain totally ignorant of this implementation
+detail.  In order for this technique to work, an LU-decomposable _matrix_ must
+have homogenous unit types in its elements, so that the LU decomposition and
+subsequent operations on L and U do not require any unit conversions.  In
+other words, no two element types of the same dimension, but with different
+units, can exist in an LU-decomposable _matrix_.
+
+[heading Singular Matrices]
+
+Exceptions may be thrown in several places when a
+[@http://en.wikipedia.org/wiki/Singular_matrix singular] _matrix_ is
+encountered.  It is possible to control this behavior using the general Boost
+exception-throwing mechanism.  See the Configuration section for details.
+
 [heading Common Errors]
 
 There are three categories of errors you will encounter when working with
 UnitsBlas.
 
-[heading Static Assertion Failures]
+[heading Common Error 1: Static Assertion Failure]
 
 `BOOST_STATIC_ASSERT()` and `BOOST_MPL_ASSERT()` are used liberally throughout
 UnitsBlas.  All nonobvious static assertions should have a comment indicating
 the most probable reason for the error.
 
-[heading Overload Failure]
+[heading Common Error 2: Overload Failure]
 
 [@http://en.wikipedia.org/wiki/SFINAE SFINAE] is used to resolve overloaded
 functions.  The predicates used in the `enable_if`/`disable_if` code rely
@@ -277,29 +368,17 @@ an error that says "no matching function ..." or similar, it is often due to
 inappropriate dimensions on the _matrix_ parameters to the function you are
 trying to call.
 
-[heading A Giant, Unreadable Mess]
+Note that this also applies to _determinant_ (only for _matrices_ of more than
+3 rows), _inverse_, and _solve_, which are only applicable to LU-decomposable
+_matrices_.
+
+[heading Common Error 3: A Giant, Unreadable Mess]
 
 Errors that are not in either of the previous two categories usually fall into
 this one.  Such errors are most commonly due to inappropriate quantity types
 being used in the _matrix_ parameters.  For instance, a _matrix_ with no
 determinant may produce a large number of hard-to-read errors that boil down
 to the inability to add intermediate types used to calculate the determinant.
-
-cross product is only for pairs of 3x1 or 1x3 matrices; note that cross products
-of vectors in a space S are in the space S^2
-
-slicing matrices for fun and profit
-
-note that when quantities are in use, an identity matrix may have nontrivial
-element types.  For a uniform matrix U, an identity matrix for U will be
-all-dimensionless, but for some arbitrary matrix M, it may not be.
-
-slow-ass swap
-
-LU-decomposability wrt mixed units, use of LU-decompose for determinant()s of
-matrices larger than 3 rows, inverse(), and solve()
-
-exceptions for singular matrices
 
 [endsect]
 

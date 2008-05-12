@@ -65,7 +65,9 @@ Here are the equations for the Kalman tracker's prediction step:
 
 __predict_equations__
 
-[prediction_step]
+[prediction_step_1]
+
+[prediction_step_2]
 
 [*Q] is a covariance matrix representing process noise.  It has the same units
 as *P*.
@@ -108,7 +110,9 @@ measurement *z*, here are the equations for the update step:
 
 __update_equations__
 
-[update_step]
+[update_step_1]
+
+[update_step_2]
 
 [*R] is a covariance matrix representing measurement noise.
 

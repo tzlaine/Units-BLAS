@@ -1,13 +1,16 @@
-#include <boost/units_blas.hpp>
+#include <libs/units_blas/test/operations_tests.hpp>
 
+#include <boost/units_blas.hpp>
 #include <boost/fusion/include/set.hpp>
 #include <boost/fusion/include/list.hpp>
+#include <boost/mpl/vector_c.hpp>
 
 using namespace boost;
 
-struct Length {};
-struct Time {};
-struct Velocity {};
+typedef length Length;
+typedef time_ Time;
+typedef velocity Velocity;
+typedef length_sq LengthSquared;
 
 int main()
 {
@@ -106,6 +109,52 @@ int main()
             fusion::vector<Time, Time>
         >
     > my_transpose_vector;
+//]
+    }
+
+    {
+//[cross_product_space_example
+    units_blas::uniform_vector<Length, 3>::type vec;
+    units_blas::uniform_vector<LengthSquared, 3>::type cross_product_result = vec ^ vec;
+//]
+    }
+
+    {
+//[slicing_example
+    typedef units_blas::matrix<
+        fusion::vector<
+            fusion::vector<double, double>,
+            fusion::vector<double, double>
+        >
+    > Matrix;
+
+    Matrix matrix;
+    matrix.at<0, 0>() = 1.0;
+    matrix.at<0, 1>() = 2.0;
+    matrix.at<1, 0>() = 3.0;
+    matrix.at<1, 1>() = 4.0;
+
+    // Note that Rows reorders rows 0 and 1.
+    typedef mpl::vector_c<std::size_t, 1, 0> Rows;
+    typedef mpl::vector_c<std::size_t, 1> Columns;
+
+    typedef units_blas::result_of::slice<Matrix, Rows, Columns>::type SlicedMatrix;
+    SlicedMatrix sliced_matrix =
+        units_blas::slice<Rows, Columns>(matrix);
+    assert((sliced_matrix.at<0, 0>() == 4.0));
+    assert((sliced_matrix.at<1, 0>() == 2.0));
+//]
+    }
+
+    {
+//[impossible_to_generate_identity_matrix_example
+    // No identity matrix exists which will preserve these types.
+    units_blas::matrix<
+        fusion::vector<
+            fusion::vector<Length, Length>,
+            fusion::vector<Length, Time>
+        >
+    > who_am_i;
 //]
     }
 

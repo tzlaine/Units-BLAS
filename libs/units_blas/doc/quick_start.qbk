@@ -110,12 +110,11 @@ its given argument is a _matrix_ and has one row.
 
 Here is a summary of the operations specific to "vectors".  Since "vectors"
 are just matrices, all matrix operations also apply to "vectors".  In the
-table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true,
-`s` is a scalar, and `e1` is an element of _matrix_ `V1`.
+table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true.
 
 [table Vector Operations
     [[Operation Syntax] [Description] [Notes]]
-    [[`V1 * V2`\n_dot__`(V1, V2)`]     [ Dot product. ]                                       []]
+    [[`V1 * V2`\n_dot__`(V1, V2)`]     [ Dot product. ]                                       [ Elementwise products must be mutually summable. ]]
     [[`V1 ^ V2`\n_cross__`(V1, V2)`]   [ Cross product. ]                                     [ Vectors must be exactly 3x1 (or 1x3). ]]
     [[_sum__`(V1)`]                    [ Sum of all elements. ]                               [ Elements must be mutually summable. ]]
     [[_norm_1__`(V1)`]                 [ Sum of absolute values of all elements. ]            [ Elements must be mutually summable. ]]
