@@ -90,7 +90,7 @@ namespace boost { namespace units_blas { namespace detail {
             >,
             mpl::pair<mpl::set<>, mpl::set<> >,
             mpl::eval_if<
-            is_dimensionless<nth_type<Matrix, mpl::_2> >,
+                is_dimensionless<nth_type<Matrix, mpl::_2> >,
                 mpl::identity<mpl::_1>,
                 update_set_pair<mpl::_1, nth_type<Matrix, mpl::_2> >
             >
