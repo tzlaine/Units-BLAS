@@ -59,7 +59,7 @@ typedef bub::make_matrix<
     >
 >::type made_matrix_2x2_type;
 
-typedef boost::units::quantity<boost::units::SI::length> length;
+typedef boost::units::quantity<boost::units::si::length> length;
 
 typedef bub::matrix<
     boost::fusion::vector<

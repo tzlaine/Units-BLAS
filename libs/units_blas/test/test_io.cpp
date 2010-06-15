@@ -8,6 +8,7 @@
 #include <boost/units_blas/make_matrix.hpp>
 #include <boost/units_blas/io.hpp>
 
+#include <boost/units/io.hpp>
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>
 
@@ -16,7 +17,7 @@
 #include <iostream>
 
 
-typedef boost::units::quantity<boost::units::SI::length, float> length;
+typedef boost::units::quantity<boost::units::si::length, float> length;
 
 namespace bub = boost::units_blas;
 

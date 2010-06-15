@@ -42,10 +42,10 @@ typedef bub::matrix<
     >
 > matrix_4x4_type;
 
-typedef boost::units::quantity<boost::units::SI::time> time_;
-typedef boost::units::quantity<boost::units::SI::length> length;
-typedef boost::units::quantity<boost::units::SI::velocity> velocity;
-typedef boost::units::quantity<boost::units::SI::dimensionless> dimensionless;
+typedef boost::units::quantity<boost::units::si::time> time_;
+typedef boost::units::quantity<boost::units::si::length> length;
+typedef boost::units::quantity<boost::units::si::velocity> velocity;
+typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
 typedef bub::matrix<
     boost::fusion::vector<

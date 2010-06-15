@@ -50,13 +50,13 @@ typedef bub::matrix<
     >
 > E_matrix_1x1_fundamentals_type;
 
-typedef boost::units::quantity<boost::units::SI::time> time_;
-typedef boost::units::quantity<boost::units::SI::length> length;
-typedef boost::units::quantity<boost::units::SI::velocity> velocity;
-typedef boost::units::quantity<boost::units::SI::dimensionless> dimensionless;
-typedef boost::units::quantity<boost::units::SI::frequency> frequency;
+typedef boost::units::quantity<boost::units::si::time> time_;
+typedef boost::units::quantity<boost::units::si::length> length;
+typedef boost::units::quantity<boost::units::si::velocity> velocity;
+typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
+typedef boost::units::quantity<boost::units::si::frequency> frequency;
 
-namespace boost { namespace units { namespace SI {
+namespace boost { namespace units { namespace si {
     typedef derived_dimension<time_base_dimension, 1, length_base_dimension, 1>::type time_length_dimension;
     typedef derived_dimension<time_base_dimension, 2>::type time_sq_dimension;
     typedef derived_dimension<length_base_dimension, 2>::type length_sq_dimension;
@@ -65,9 +65,9 @@ namespace boost { namespace units { namespace SI {
     typedef unit<length_sq_dimension, system> length_sq;
 } } }
 
-typedef boost::units::quantity<boost::units::SI::time_length> time_length;
-typedef boost::units::quantity<boost::units::SI::time_sq> time_sq;
-typedef boost::units::quantity<boost::units::SI::length_sq> length_sq;
+typedef boost::units::quantity<boost::units::si::time_length> time_length;
+typedef boost::units::quantity<boost::units::si::time_sq> time_sq;
+typedef boost::units::quantity<boost::units::si::length_sq> length_sq;
 
 typedef bub::matrix<
     boost::fusion::vector<

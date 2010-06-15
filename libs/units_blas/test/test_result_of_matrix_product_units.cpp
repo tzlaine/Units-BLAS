@@ -201,8 +201,8 @@ int test_main (int, char *[])
 
     // element-wise matrix sums
 
-    typedef boost::units::quantity<boost::units::SI::time, float> time_float;
-    typedef boost::units::quantity<boost::units::SI::length, float> length_float;
+    typedef boost::units::quantity<boost::units::si::time, float> time_float;
+    typedef boost::units::quantity<boost::units::si::length, float> length_float;
     typedef bub::matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_float>,

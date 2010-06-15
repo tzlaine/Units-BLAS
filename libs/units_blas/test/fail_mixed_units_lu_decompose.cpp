@@ -16,8 +16,8 @@
 
 namespace bub = boost::units_blas;
 
-typedef boost::units::quantity<boost::units::SI::length> length;
-typedef boost::units::quantity<boost::units::CGS::length> length2;
+typedef boost::units::quantity<boost::units::si::length> length;
+typedef boost::units::quantity<boost::units::cgs::length> length2;
 
 typedef bub::matrix<
     boost::fusion::vector<

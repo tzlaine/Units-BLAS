@@ -13,7 +13,7 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef boost::units::quantity<boost::units::SI::length, float> length;
+typedef boost::units::quantity<boost::units::si::length, float> length;
 
 namespace bub = boost::units_blas;
 

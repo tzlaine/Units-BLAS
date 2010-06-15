@@ -36,9 +36,9 @@ typedef bub::matrix<
     >
 > C_matrix_1x2_double_type;
 
-typedef boost::units::quantity<boost::units::SI::time> time_;
-typedef boost::units::quantity<boost::units::SI::length> length;
-typedef boost::units::quantity<boost::units::SI::dimensionless> dimensionless;
+typedef boost::units::quantity<boost::units::si::time> time_;
+typedef boost::units::quantity<boost::units::si::length> length;
+typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
 typedef bub::matrix<
     boost::fusion::vector<

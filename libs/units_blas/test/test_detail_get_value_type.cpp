@@ -17,7 +17,7 @@ struct value_type_haver
     typedef int value_type;
 };
 
-typedef boost::units::quantity<boost::units::SI::length, float> length;
+typedef boost::units::quantity<boost::units::si::length, float> length;
 
 namespace bub = boost::units_blas;
 
@@ -27,9 +27,9 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((bub::detail::has_value_type<length>));
     BOOST_MPL_ASSERT_NOT((bub::detail::has_value_type<int>));
 
-    BOOST_MPL_ASSERT((boost::mpl::is_same<bub::detail::get_value_type<int>::type, int>));
-    BOOST_MPL_ASSERT((boost::mpl::is_same<bub::detail::get_value_type<value_type_haver>::type, int>));
-    BOOST_MPL_ASSERT((boost::mpl::is_same<bub::detail::get_value_type<length>::type, float>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::detail::get_value_type<int>::type, int>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::detail::get_value_type<value_type_haver>::type, int>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::detail::get_value_type<length>::type, float>));
 
     return 0;
 }
