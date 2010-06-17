@@ -29,25 +29,22 @@
 namespace boost { namespace units_blas {
 
     /** Returns a @c matrix<> consisting of only the rows and columns of @c m
-        specified by @c Rows and @c Columns.  @c Matrix must be a @c matrix<>.
+        specified by @c Rows and @c Columns.  @c m must be a @c matrix<>.
         @c Rows and @c Columns must be type sequences containing integral
         constants; all integral constants in @c Rows and @c Columns must be
-        less than the number of rows and columns in @c Matrix, respectively.
+        less than the number of rows and columns in @c m, respectively.
         Note that duplication and order preservation are not checked for the
         constants in @c Rows and @c Columns.  It is therefore possible to use
         @c slice<>() to rearrange and/or duplicate rows and/or columns. */
-    template <typename Rows, typename Columns, typename Matrix>
-    typename lazy_enable_if<
-        is_matrix<Matrix>,
-        result_of::slice<Matrix, Rows, Columns>
-    >::type
-    slice (Matrix const & m)
+    template <typename Rows, typename Columns, typename T>
+    typename result_of::slice<matrix<T>, Rows, Columns>::type
+    slice (matrix<T> const & m)
     {
         BOOST_MPL_ASSERT((mpl::less<mpl::int_<0>, mpl::size<Rows> >));
         BOOST_MPL_ASSERT((mpl::less<mpl::int_<0>, mpl::size<Columns> >));
-        typedef typename result_of::slice<Matrix, Rows, Columns>::type result_type;
+        typedef typename result_of::slice<matrix<T>, Rows, Columns>::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, Matrix const &> ops;
+        typedef fusion::vector<result_type &, matrix<T> const &> ops;
         iterate<size<result_type> >(
             ops(retval, m), detail::slice_assign<Rows, Columns>()
         );
@@ -55,53 +52,41 @@ namespace boost { namespace units_blas {
     }
 
     /** Returns a const-preserved reference to the element at row @c I, column
-        @c J of @c m.  @c Matrix must be a @c matrix<>. */
-    template <typename I, typename J, typename Matrix>
-    typename lazy_enable_if<
-        is_matrix<Matrix>,
-        result_of::at<Matrix, I, J>
-    >::type
-    at (Matrix & m)
+        @c J of @c m.  @c m must be a @c matrix<>. */
+    template <typename I, typename J, typename T>
+    typename result_of::at<matrix<T>, I, J>::type
+    at (matrix<T> & m)
     { return m.at<I::value, J::value>(); }
 
     /** Returns a const-preserved reference to the element at row @c I, column
-        @c J of @c m.  @c Matrix must be a @c matrix<>. */
-    template <std::size_t I, std::size_t J, typename Matrix>
-    typename lazy_enable_if<
-        is_matrix<Matrix>,
-        result_of::at_c<Matrix, I, J>
-    >::type
-    at_c (Matrix & m)
+        @c J of @c m.  @c m must be a @c matrix<>. */
+    template <std::size_t I, std::size_t J, typename T>
+    typename result_of::at_c<matrix<T>, I, J>::type
+    at_c (matrix<T> & m)
     { return m.at<I, J>(); }
 
-    /** Returns the tranpose of @c m.  @c Matrix must be a @c matrix<>. */
-    template <typename Matrix>
-    typename lazy_enable_if<
-        is_matrix<Matrix>,
-        result_of::transpose<Matrix>
-    >::type
-    transpose (Matrix const & m)
+    /** Returns the tranpose of @c m.  @c m must be a @c matrix<>. */
+    template <typename T>
+    typename result_of::transpose<matrix<T> >::type
+    transpose (matrix<T> const & m)
     {
-        typedef typename result_of::transpose<Matrix>::type result_type;
+        typedef typename result_of::transpose<matrix<T> >::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, Matrix const &> ops;
-        iterate<size<Matrix> >(
+        typedef fusion::vector<result_type &, matrix<T> const &> ops;
+        iterate<size<matrix<T> > >(
             ops(retval, m), detail::transpose_assign()
         );
         return retval;
     }
 
-    /** Returns the negation of @c m.  @c Matrix must be a @c matrix<>. */
-    template <typename Matrix>
-    typename enable_if<
-        is_matrix<Matrix>,
-        Matrix
-    >::type
-    neg (Matrix const & m)
+    /** Returns the negation of @c m.  @c m must be a @c matrix<>. */
+    template <typename T>
+    matrix<T>
+    neg (matrix<T> const & m)
     {
-        Matrix retval;
-        typedef fusion::vector<Matrix &, Matrix const &> ops;
-        iterate<size<Matrix> >(
+        matrix<T> retval;
+        typedef fusion::vector<matrix<T> &, matrix<T> const &> ops;
+        iterate<size<matrix<T> > >(
             ops(retval, m), detail::negate_assign()
         );
         return retval;
@@ -109,51 +94,47 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the negation of @c m.  @c Matrix must be a @c matrix<>. */
-    template <typename Matrix>
-    typename enable_if<
-        is_matrix<Matrix>,
-        Matrix
-    >::type
-    operator- (Matrix const & m)
+    /** Returns the negation of @c m.  @c m must be a @c matrix<>. */
+    template <typename T>
+    matrix<T>
+    operator- (matrix<T> const & m)
     { return neg(m); }
 
 #endif
 
-    /** Returns the elementwise sum of @c lhs and @c rhs. @c MatrixL and @c
-        MatrixR must be <c>matrix<></c>s with the same dimensions.  Also,
-        every sum <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
-    template <typename MatrixL, typename MatrixR>
+    /** Returns the elementwise sum of @c lhs and @c rhs. @c lhs and @c rhs
+        must be <c>matrix<></c>s with the same dimensions.  Also, every sum
+        <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        is_same_shape_matrix<MatrixL, MatrixR>,
-        result_of::matrix_element_sum<MatrixL, MatrixR>
+        is_same_shape_matrix<matrix<T>, matrix<U> >,
+        result_of::matrix_element_sum<matrix<T>, matrix<U> >
     >::type
-    sum (MatrixL const & lhs, MatrixR const & rhs)
+    sum (matrix<T> const & lhs, matrix<U> const & rhs)
     {
-        typedef typename result_of::matrix_element_sum<MatrixL, MatrixR>::type result_type;
+        typedef typename result_of::matrix_element_sum<matrix<T>, matrix<U> >::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, MatrixL const &, MatrixR const &> ops;
-        iterate<size<MatrixL> >(
+        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
+        iterate<size<matrix<T> > >(
             ops(retval, lhs, rhs), detail::matrix_matrix_elem_add_assign()
         );
         return retval;
     }
 
-    /** Returns the elementwise difference of @c lhs and @c rhs. @c MatrixL
-        and @c MatrixR must be <c>matrix<></c>s with the same dimensions.
-        Also, every difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid
-        operation.  */
-    template <typename MatrixL, typename MatrixR>
+    /** Returns the elementwise difference of @c lhs and @c rhs. @c lhs and @c
+        rhs must be <c>matrix<></c>s with the same dimensions.  Also, every
+        difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid operation.  */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        is_same_shape_matrix<MatrixL, MatrixR>,
-        result_of::matrix_element_sum<MatrixL, MatrixR>
+        is_same_shape_matrix<matrix<T>, matrix<U> >,
+        result_of::matrix_element_sum<matrix<T>, matrix<U> >
     >::type
-    diff (MatrixL const & lhs, MatrixR const & rhs)
+    diff (matrix<T> const & lhs, matrix<U> const & rhs)
     {
-        typedef typename result_of::matrix_element_difference<MatrixL, MatrixR>::type result_type;
+        typedef typename result_of::matrix_element_difference<matrix<T>, matrix<U> >::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, MatrixL const &, MatrixR const &> ops;
-        iterate<size<MatrixL> >(
+        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
+        iterate<size<matrix<T> > >(
             ops(retval, lhs, rhs), detail::matrix_matrix_elem_sub_assign()
         );
         return retval;
@@ -161,114 +142,99 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the elementwise sum of @c lhs and @c rhs. @c MatrixL and @c
-        MatrixR must be <c>matrix<></c>s with the same dimensions.  Also,
-        every sum <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
-    template <typename MatrixL, typename MatrixR>
+    /** Returns the elementwise sum of @c lhs and @c rhs. @c lhs and @c rhs
+        must be <c>matrix<></c>s with the same dimensions.  Also, every sum
+        <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        is_same_shape_matrix<MatrixL, MatrixR>,
-        result_of::matrix_element_sum<MatrixL, MatrixR>
+        is_same_shape_matrix<matrix<T>, matrix<U> >,
+        result_of::matrix_element_sum<matrix<T>, matrix<U> >
     >::type
-    operator+ (MatrixL const & lhs, MatrixR const & rhs)
+    operator+ (matrix<T> const & lhs, matrix<U> const & rhs)
     { return sum(lhs, rhs); }
 
-    /** Returns the elementwise difference of @c lhs and @c rhs. @c MatrixL
-        and @c MatrixR must be <c>matrix<></c>s with the same dimensions.
-        Also, every difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid
-        operation.  */
-    template <typename MatrixL, typename MatrixR>
+    /** Returns the elementwise difference of @c lhs and @c rhs. @c lhs and @c
+        rhs must be <c>matrix<></c>s with the same dimensions.  Also, every
+        difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid operation.  */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        is_same_shape_matrix<MatrixL, MatrixR>,
-        result_of::matrix_element_difference<MatrixL, MatrixR>
+        is_same_shape_matrix<matrix<T>, matrix<U> >,
+        result_of::matrix_element_difference<matrix<T>, matrix<U> >
     >::type
-    operator- (MatrixL const & lhs, MatrixR const & rhs)
+    operator- (matrix<T> const & lhs, matrix<U> const & rhs)
     { return diff(lhs, rhs); }
 
 #endif
 
-    /** Returns the matrix-product of @c lhs and @c rhs. @c MatrixL and @c
-        MatrixR must be <c>matrix<></c>s, and the number of columns in @c
-        MatrixL must the same as the number of rows in @c MatrixR.  Also, a
-        matrix-product type must exist for @c MatrixL and @c MatrixR (some
-        otherwise-suitable pairs of <c>matrix<></c>s do not have a
-        matrix-product that makes sense when their elements are unit
-        types). */
-    template <typename MatrixL, typename MatrixR>
+    /** Returns the matrix-product of @c lhs and @c rhs. @c lhs and @c rhs
+        must be <c>matrix<></c>s, and the number of columns in @c lhs must the
+        same as the number of rows in @c rhs.  Also, a matrix-product type
+        must exist for @c lhs and @c rhs (some otherwise-suitable pairs of
+        <c>matrix<></c>s do not have a matrix-product that makes sense when
+        their elements are unit types). */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<MatrixL>,
-            is_matrix<MatrixR>,
-            mpl::equal_to<
-                typename MatrixL::num_columns_t,
-                typename MatrixR::num_rows_t
-            >
+        mpl::equal_to<
+            typename matrix<T>::num_columns_t,
+            typename matrix<U>::num_rows_t
         >,
-        result_of::matrix_product<MatrixL, MatrixR>
+        result_of::matrix_product<matrix<T>, matrix<U> >
     >::type
-    prod (MatrixL const & lhs, MatrixR const & rhs)
+    prod (matrix<T> const & lhs, matrix<U> const & rhs)
     {
-        typedef typename result_of::matrix_product<MatrixL, MatrixR>::type result_type;
+        typedef typename result_of::matrix_product<matrix<T>, matrix<U> >::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, MatrixL const &, MatrixR const &> ops;
+        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
         iterate<
             mpl::times<
                 typename result_type::num_rows_t,
                 typename result_type::num_columns_t,
-                typename MatrixL::num_columns_t
+                typename matrix<T>::num_columns_t
             >
         >(ops(retval, lhs, rhs), detail::matrix_matrix_mul_assign());
         return retval;
     }
 
-    /** Returns the product of @c m and @c t.  @c Matrix must be a @c
-        matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename Matrix, typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<Matrix>,
-            mpl::not_<is_matrix<T> >
-        >,
-        result_of::scalar_product<Matrix, T>
+    /** Returns the product of @c m and @c t.  @c m must be a @c matrix<>, and
+        @c T must not be a @c matrix<>. */
+    template <typename T, typename U>
+    typename lazy_disable_if<
+        is_or_is_derived_from_matrix<T>,
+        result_of::scalar_product<matrix<U>, T>
     >::type
-    prod (Matrix const & m, T const & t)
+    prod (matrix<U> const & m, T const & t)
     {
-        typedef typename result_of::scalar_product<Matrix, T>::type result_type;
+        typedef typename result_of::scalar_product<matrix<U>, T>::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, Matrix const &, T const &> ops;
+        typedef fusion::vector<result_type &, matrix<U> const &, T const &> ops;
         iterate<size<result_type> >(
             ops(retval, m, t), detail::matrix_scalar_mul_assign()
         );
         return retval;
     }
 
-    /** Returns the product of @c t and @c m.  @c Matrix must be a @c
-        matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename Matrix, typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<Matrix>,
-            mpl::not_<is_matrix<T> >
-        >,
-        result_of::scalar_product<Matrix, T>
+    /** Returns the product of @c t and @c m.  @c m must be a @c matrix<>, and
+        @c T must not be a @c matrix<>. */
+    template <typename T, typename U>
+    typename lazy_disable_if<
+        is_or_is_derived_from_matrix<T>,
+        result_of::scalar_product<matrix<U>, T>
     >::type
-    prod (T const & t, Matrix const & m)
+    prod (T const & t, matrix<U> const & m)
     { return prod(m, t); }
 
-    /** Returns the result of dividing @c m by @c t.  @c Matrix must be a @c
+    /** Returns the result of dividing @c m by @c t.  @c m must be a @c
         matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename Matrix, typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<Matrix>,
-            mpl::not_<is_matrix<T> >
-        >,
-        result_of::scalar_quotient<Matrix, T>
+    template <typename T, typename U>
+    typename lazy_disable_if<
+        is_or_is_derived_from_matrix<T>,
+        result_of::scalar_quotient<matrix<U>, T>
     >::type
-    div (Matrix const & m, T const & t)
+    div (matrix<U> const & m, T const & t)
     {
-        typedef typename result_of::scalar_quotient<Matrix, T>::type result_type;
+        typedef typename result_of::scalar_quotient<matrix<U>, T>::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, Matrix const &, T const &> ops;
+        typedef fusion::vector<result_type &, matrix<U> const &, T const &> ops;
         iterate<size<result_type> >(
             ops(retval, m, t), detail::matrix_scalar_div_assign()
         );
@@ -277,82 +243,68 @@ namespace boost { namespace units_blas {
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
-    /** Returns the matrix-product of @c lhs and @c rhs. @c MatrixL and @c
-        MatrixR must be <c>matrix<></c>s, and the number of columns in @c
-        MatrixL must the same as the number of rows in @c MatrixR.  Also, a
-        matrix-product type must exist for @c MatrixL and @c MatrixR (some
-        otherwise-suitable pairs of <c>matrix<></c>s do not have a
-        matrix-product that makes sense when their elements are unit
-        types). */
-    template <typename MatrixL, typename MatrixR>
+    /** Returns the matrix-product of @c lhs and @c rhs. @c lhs and @c rhs
+        must be <c>matrix<></c>s, and the number of columns in @c lhs must the
+        same as the number of rows in @c rhs.  Also, a matrix-product type
+        must exist for @c lhs and @c rhs (some otherwise-suitable pairs of
+        <c>matrix<></c>s do not have a matrix-product that makes sense when
+        their elements are unit types). */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<MatrixL>,
-            is_matrix<MatrixR>,
-            mpl::equal_to<
-                typename MatrixL::num_columns_t,
-                typename MatrixR::num_rows_t
-            >
+        mpl::equal_to<
+            typename matrix<T>::num_columns_t,
+            typename matrix<U>::num_rows_t
         >,
-        result_of::matrix_product<MatrixL, MatrixR>
+        result_of::matrix_product<matrix<T>, matrix<U> >
     >::type
-    operator* (MatrixL const & lhs, MatrixR const & rhs)
+    operator* (matrix<T> const & lhs, matrix<U> const & rhs)
     { return prod(lhs, rhs); }
 
-    /** Returns the product of @c m and @c t.  @c Matrix must be a @c
-        matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename Matrix, typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<Matrix>,
-            mpl::not_<is_matrix<T> >
-        >,
-        result_of::scalar_product<Matrix, T>
+    /** Returns the product of @c m and @c t.  @c m must be a @c matrix<>, and
+        @c T must not be a @c matrix<>. */
+    template <typename T, typename U>
+    typename lazy_disable_if<
+        is_or_is_derived_from_matrix<T>,
+        result_of::scalar_product<matrix<U>, T>
     >::type
-    operator* (Matrix const & m, T const & t)
+    operator* (matrix<U> const & m, T const & t)
     { return prod(m, t); }
 
-    /** Returns the product of @c t and @c m.  @c Matrix must be a @c
-        matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename Matrix, typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<Matrix>,
-            mpl::not_<is_matrix<T> >
-        >,
-        result_of::scalar_product<Matrix, T>
+    /** Returns the product of @c t and @c m.  @c m must be a @c matrix<>, and
+        @c T must not be a @c matrix<>. */
+    template <typename T, typename U>
+    typename lazy_disable_if<
+        is_or_is_derived_from_matrix<T>,
+        result_of::scalar_product<matrix<U>, T>
     >::type
-    operator* (T const & t, Matrix const & m)
+    operator* (T const & t, matrix<U> const & m)
     { return prod(m, t); }
 
-    /** Returns the result of dividing @c m by @c t.  @c Matrix must be a @c
+    /** Returns the result of dividing @c m by @c t.  @c m must be a @c
         matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename Matrix, typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_matrix<Matrix>,
-            mpl::not_<is_matrix<T> >
-        >,
-        result_of::scalar_quotient<Matrix, T>
+    template <typename T, typename U>
+    typename lazy_disable_if<
+        is_or_is_derived_from_matrix<T>,
+        result_of::scalar_quotient<matrix<U>, T>
     >::type
-    operator/ (Matrix const & m, T const & t)
+    operator/ (matrix<U> const & m, T const & t)
     { return div(m, t); }
 
 #endif
 
     /** Returns the elementwise multiplication of the elements of @c lhs by
-        the elements of @c rhs.  @c MatrixL and @c MatrixR must be
-        <c>matrix<></c>s with the same dimensions. */
-    template <typename MatrixL, typename MatrixR>
+        the elements of @c rhs.  @c lhs and @c rhs must be <c>matrix<></c>s
+        with the same dimensions. */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        is_same_shape_matrix<MatrixL, MatrixR>,
-        result_of::matrix_element_product<MatrixL, MatrixR>
+        is_same_shape_matrix<matrix<T>, matrix<U> >,
+        result_of::matrix_element_product<matrix<T>, matrix<U> >
     >::type
-    element_prod (MatrixL const & lhs, MatrixR const & rhs)
+    element_prod (matrix<T> const & lhs, matrix<U> const & rhs)
     {
-        typedef typename result_of::matrix_element_product<MatrixL, MatrixR>::type result_type;
+        typedef typename result_of::matrix_element_product<matrix<T>, matrix<U> >::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, MatrixL const &, MatrixR const &> ops;
+        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
         iterate<size<result_type> >(
             ops(retval, lhs, rhs), detail::matrix_matrix_elem_mul_assign()
         );
@@ -360,18 +312,18 @@ namespace boost { namespace units_blas {
     }
 
     /** Returns the elementwise division of the elements of @c lhs by the
-        elements of @c rhs.  @c MatrixL and @c MatrixR must be
-        <c>matrix<></c>s with the same dimensions. */
-    template <typename MatrixL, typename MatrixR>
+        elements of @c rhs.  @c lhs and @c rhs must be <c>matrix<></c>s with
+        the same dimensions. */
+    template <typename T, typename U>
     typename lazy_enable_if<
-        is_same_shape_matrix<MatrixL, MatrixR>,
-        result_of::matrix_element_quotient<MatrixL, MatrixR>
+        is_same_shape_matrix<matrix<T>, matrix<U> >,
+        result_of::matrix_element_quotient<matrix<T>, matrix<U> >
     >::type
-    element_div (MatrixL const & lhs, MatrixR const & rhs)
+    element_div (matrix<T> const & lhs, matrix<U> const & rhs)
     {
-        typedef typename result_of::matrix_element_quotient<MatrixL, MatrixR>::type result_type;
+        typedef typename result_of::matrix_element_quotient<matrix<T>, matrix<U> >::type result_type;
         result_type retval;
-        typedef fusion::vector<result_type &, MatrixL const &, MatrixR const &> ops;
+        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
         iterate<size<result_type> >(
             ops(retval, lhs, rhs), detail::matrix_matrix_elem_div_assign()
         );
@@ -379,15 +331,13 @@ namespace boost { namespace units_blas {
     }
 
     /** Swaps the values in @c lhs and @c rhs.  Note that this is an
-        O(@c size<Matrix>::value) operation. */
-    template <typename Matrix>
-    typename enable_if<
-        is_matrix<Matrix>
-    >::type
-    swap (Matrix & lhs, Matrix & rhs)
+        O(@c size<matrix<T> >::value) operation. */
+    template <typename T>
+    void
+    swap (matrix<T> & lhs, matrix<T> & rhs)
     {
-        typedef fusion::vector<Matrix &, Matrix &> ops;
-        iterate<size<Matrix> >(
+        typedef fusion::vector<matrix<T> &, matrix<T> &> ops;
+        iterate<size<matrix<T> > >(
             ops(lhs, rhs), detail::swap()
         );
     }
@@ -809,46 +759,46 @@ namespace boost { namespace units_blas {
     }
 
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-    template <typename Matrix>
+    template <typename T>
     typename lazy_enable_if<
         mpl::and_<
-            is_square_matrix<Matrix>,
+            is_square_matrix<matrix<T> >,
             mpl::equal_to<
-                typename Matrix::num_rows_t,
+                typename matrix<T>::num_rows_t,
                 mpl::size_t<1>
             >
         >,
-        result_of::determinant<Matrix>
+        result_of::determinant<matrix<T> >
     >::type
-    determinant (Matrix const & m)
+    determinant (matrix<T> const & m)
     { return m.at<0, 0>(); }
 
-    template <typename Matrix>
+    template <typename T>
     typename lazy_enable_if<
         mpl::and_<
-            is_square_matrix<Matrix>,
+            is_square_matrix<matrix<T> >,
             mpl::equal_to<
-                typename Matrix::num_rows_t,
+                typename matrix<T>::num_rows_t,
                 mpl::size_t<2>
             >
         >,
-        result_of::determinant<Matrix>
+        result_of::determinant<matrix<T> >
     >::type
-    determinant (Matrix const & m)
+    determinant (matrix<T> const & m)
     { return m.at<0, 0>() * m.at<1, 1>() - m.at<0, 1>() * m.at<1, 0>(); }
 
-    template <typename Matrix>
+    template <typename T>
     typename lazy_enable_if<
         mpl::and_<
-            is_square_matrix<Matrix>,
+            is_square_matrix<matrix<T> >,
             mpl::equal_to<
-                typename Matrix::num_rows_t,
+                typename matrix<T>::num_rows_t,
                 mpl::size_t<3>
             >
         >,
-        result_of::determinant<Matrix>
+        result_of::determinant<matrix<T> >
     >::type
-    determinant (Matrix const & m)
+    determinant (matrix<T> const & m)
     {
         return
             m.at<0, 0>() * (m.at<1, 1>() * m.at<2, 2>() - m.at<1, 2>() * m.at<2, 1>()) -
@@ -857,45 +807,45 @@ namespace boost { namespace units_blas {
     }
 #endif
 
-    /** Returns the determinant of @c m.  @c Matrix must be a @c matrix<>, and
-        must be square.  Also, a determinant type must exist for @c Matrix
-        (some otherwise-suitable <c>matrix<></c>s do not have a determinant
-        that makes sense when their elements are unit types).  */
-    template <typename Matrix>
+    /** Returns the determinant of @c m.  @c m must be a @c matrix<>, and must
+        be square.  Also, a determinant type must exist for @c m (some
+        otherwise-suitable <c>matrix<></c>s do not have a determinant that
+        makes sense when their elements are unit types).  */
+    template <typename T>
     typename lazy_enable_if<
         mpl::and_<
-            is_square_matrix<Matrix>,
+            is_square_matrix<matrix<T> >,
             mpl::less<
                 mpl::size_t<3>,
-                typename Matrix::num_rows_t
+                typename matrix<T>::num_rows_t
             >
         >,
-        result_of::determinant<Matrix>
+        result_of::determinant<matrix<T> >
     >::type
-    determinant (Matrix const & m)
+    determinant (matrix<T> const & m)
     {
         // If you're seeing an error here, you're trying to perform LU
         // decomposition on a matrix that has mixed units of the same
         // dimension (e.g. centimeters and meters in the same matrix).
-        BOOST_MPL_ASSERT((detail::is_lu_decomposable<Matrix>));
+        BOOST_MPL_ASSERT((detail::is_lu_decomposable<matrix<T> >));
 
-        typedef typename result_of::determinant<Matrix>::type result_type;
+        typedef typename result_of::determinant<matrix<T> >::type result_type;
         result_type retval = detail::one_value<result_type>::value();
         typedef typename detail::get_value_type<result_type>::type raw_value_type;
         typedef array<
-            array<raw_value_type, Matrix::num_columns_t::value>,
-            Matrix::num_rows_t::value
+            array<raw_value_type, matrix<T>::num_columns_t::value>,
+            matrix<T>::num_rows_t::value
         > temp_matrix_type;
         temp_matrix_type temp_matrix;
-        typedef fusion::vector<temp_matrix_type &, Matrix const &> ops1;
-        iterate<size<Matrix> >(
+        typedef fusion::vector<temp_matrix_type &, matrix<T> const &> ops1;
+        iterate<size<matrix<T> > >(
             ops1(temp_matrix, m), detail::matrix_to_temp_assign<result_type>()
         );
-        array<std::size_t, Matrix::num_rows_t::value> indices;
+        array<std::size_t, matrix<T>::num_rows_t::value> indices;
         try {
             retval *= detail::lu_decompose(temp_matrix, indices);
             typedef fusion::vector<result_type &, temp_matrix_type const &> ops2;
-            iterate<typename Matrix::num_rows_t>(
+            iterate<typename matrix<T>::num_rows_t>(
                 ops2(retval, temp_matrix), detail::accumulate_determinant()
             );
         } catch (singular_matrix const &) {
@@ -905,96 +855,96 @@ namespace boost { namespace units_blas {
     }
 
     /** Returns the inverse of @c m.  Throws @c singular_matrix if @c m is
-        found to be singular.  @c Matrix must be a @c matrix<>, and must be
+        found to be singular.  @c m must be a @c matrix<>, and must be
         square. */
-    template <typename Matrix>
+    template <typename T>
     typename lazy_enable_if<
-        is_square_matrix<Matrix>,
-        result_of::inverse<Matrix>
+        is_square_matrix<matrix<T> >,
+        result_of::inverse<matrix<T> >
     >::type
-    inverse (Matrix const & m)
+    inverse (matrix<T> const & m)
     {
         // If you're seeing an error here, you're trying to perform LU
         // decomposition on a matrix that has mixed units of the same
         // dimension (e.g. centimeters and meters in the same matrix).
-        BOOST_MPL_ASSERT((detail::is_lu_decomposable<Matrix>));
+        BOOST_MPL_ASSERT((detail::is_lu_decomposable<matrix<T> >));
 
-        typedef typename result_of::inverse<Matrix>::type result_type;
+        typedef typename result_of::inverse<matrix<T> >::type result_type;
         result_type retval;
-        typedef typename result_of::determinant<Matrix>::type temp_value_type;
+        typedef typename result_of::determinant<matrix<T> >::type temp_value_type;
         typedef typename detail::get_value_type<temp_value_type>::type raw_value_type;
         typedef array<
-            array<raw_value_type, Matrix::num_columns_t::value>,
-            Matrix::num_rows_t::value
+            array<raw_value_type, matrix<T>::num_columns_t::value>,
+            matrix<T>::num_rows_t::value
         > temp_matrix_type;
         temp_matrix_type temp_matrix;
-        typedef fusion::vector<temp_matrix_type &, Matrix const &> ops1;
-        iterate<size<Matrix> >(
+        typedef fusion::vector<temp_matrix_type &, matrix<T> const &> ops1;
+        iterate<size<matrix<T> > >(
             ops1(temp_matrix, m), detail::matrix_to_temp_assign<temp_value_type>()
         );
-        typedef array<std::size_t, Matrix::num_rows_t::value> indices_type;
+        typedef array<std::size_t, matrix<T>::num_rows_t::value> indices_type;
         indices_type indices;
         detail::lu_decompose(temp_matrix, indices);
         temp_matrix_type temp_result_matrix;
         typedef fusion::vector<temp_matrix_type &, temp_matrix_type const &, indices_type const &> ops2;
-        iterate<typename Matrix::num_rows_t>(
+        iterate<typename matrix<T>::num_rows_t>(
             ops2(temp_result_matrix, temp_matrix, indices), detail::assign_inverted_column()
         );
         typedef fusion::vector<result_type &, temp_matrix_type const &> ops3;
-        iterate<size<Matrix> >(
+        iterate<size<matrix<T> > >(
             ops3(retval, temp_result_matrix), detail::temp_to_matrix_assign()
         );
         return retval;
     }
 
     /** Returns the solution to the equation Ax = b in @c x.  Throws @c
-        singular_matrix if @c A is found to be singular.  @c AMatrix must be a
-        @c matrix<>, and must be square.  @c XVector and @c BVector must be
-        "vector" <c>matrix<></c>s with the same dimensions, and must have a
-        number of rows equal to the number of columns in @c AMatrix. */
-    template <typename AMatrix, typename XVector, typename BVector>
+        singular_matrix if @c A is found to be singular.  @c A must be a @c
+        matrix<>, and must be square.  @c x and @c b must be "vector"
+        <c>matrix<></c>s with the same dimensions, and must have a number of
+        rows equal to the number of columns in @c A. */
+    template <typename T, typename U, typename V>
     typename enable_if<
         mpl::and_<
-            is_square_matrix<AMatrix>,
-            is_same_length_vector<XVector, BVector>,
+            is_square_matrix<matrix<T> >,
+            is_same_length_vector<matrix<U>, matrix<V> >,
             mpl::equal_to<
-                typename AMatrix::num_columns_t,
-                typename XVector::num_rows_t
+                typename matrix<T>::num_columns_t,
+                typename matrix<U>::num_rows_t
             >
         >
     >::type
-    solve (AMatrix const & A, BVector const & b, XVector & x)
+    solve (matrix<T> const & A, matrix<V> const & b, matrix<U> & x)
     {
-        typedef BOOST_TYPEOF((AMatrix() * XVector())) a_times_b_type;
-        BOOST_MPL_ASSERT((is_convertible<a_times_b_type, BVector>));
+        typedef BOOST_TYPEOF((matrix<T>() * matrix<U>())) a_times_b_type;
+        BOOST_MPL_ASSERT((is_convertible<a_times_b_type, matrix<V> >));
 
         // If you're seeing an error here, you're trying to perform LU
         // decomposition on a matrix that has mixed units of the same
         // dimension (e.g. centimeters and meters in the same matrix).
-        BOOST_MPL_ASSERT((detail::is_lu_decomposable<AMatrix>));
+        BOOST_MPL_ASSERT((detail::is_lu_decomposable<matrix<T> >));
 
-        typedef typename result_of::determinant<AMatrix>::type temp_value_type;
+        typedef typename result_of::determinant<matrix<T> >::type temp_value_type;
         typedef typename detail::get_value_type<temp_value_type>::type raw_value_type;
         typedef array<
-            array<raw_value_type, AMatrix::num_columns_t::value>,
-            AMatrix::num_rows_t::value
+            array<raw_value_type, matrix<T>::num_columns_t::value>,
+            matrix<T>::num_rows_t::value
         > temp_matrix_type;
         temp_matrix_type temp_A;
-        typedef fusion::vector<temp_matrix_type &, AMatrix const &> ops1;
-        iterate<size<AMatrix> >(
+        typedef fusion::vector<temp_matrix_type &, matrix<T> const &> ops1;
+        iterate<size<matrix<T> > >(
             ops1(temp_A, A), detail::matrix_to_temp_assign<temp_value_type>()
         );
-        array<std::size_t, AMatrix::num_rows_t::value> indices;
+        array<std::size_t, matrix<T>::num_rows_t::value> indices;
         detail::lu_decompose(temp_A, indices);
-        typedef array<raw_value_type, AMatrix::num_rows_t::value> temp_vector_type;
+        typedef array<raw_value_type, matrix<T>::num_rows_t::value> temp_vector_type;
         temp_vector_type temp_vector;
-        typedef fusion::vector<temp_vector_type &, BVector const &> ops2;
-        iterate<typename AMatrix::num_rows_t>(
+        typedef fusion::vector<temp_vector_type &, matrix<V> const &> ops2;
+        iterate<typename matrix<T>::num_rows_t>(
             ops2(temp_vector, b), detail::matrix_to_temp_vector_assign<temp_value_type>()
         );
         detail::lu_substitute(temp_A, indices, temp_vector);
-        typedef fusion::vector<XVector &, temp_vector_type const &> ops3;
-        iterate<typename XVector::num_rows_t>(
+        typedef fusion::vector<matrix<U> &, temp_vector_type const &> ops3;
+        iterate<typename matrix<U>::num_rows_t>(
             ops3(x, temp_vector), detail::temp_vector_to_matrix_assign()
         );
     }

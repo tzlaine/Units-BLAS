@@ -11,6 +11,14 @@
 
 namespace bub = boost::units_blas;
 
+struct derived_from_A_matrix_3x1_fundamentals_type :
+    A_matrix_3x1_fundamentals_type
+{};
+
+struct derived_from_B_matrix_1x3_fundamentals_type :
+    B_matrix_1x3_fundamentals_type
+{};
+
 int test_main (int, char *[])
 {
     // funadamental types
@@ -20,10 +28,20 @@ int test_main (int, char *[])
     m_A1.at<1, 0>() = 2.0;
     m_A1.at<2, 0>() = 3.0;
 
+    derived_from_A_matrix_3x1_fundamentals_type m_A1_d;
+    m_A1_d.at<0, 0>() = 1.0;
+    m_A1_d.at<1, 0>() = 2.0;
+    m_A1_d.at<2, 0>() = 3.0;
+
     A_matrix_3x1_fundamentals_type m_A2;
     m_A2.at<0, 0>() = 3.0;
     m_A2.at<1, 0>() = 2.0;
     m_A2.at<2, 0>() = 1.0;
+
+    derived_from_A_matrix_3x1_fundamentals_type m_A2_d;
+    m_A2_d.at<0, 0>() = 3.0;
+    m_A2_d.at<1, 0>() = 2.0;
+    m_A2_d.at<2, 0>() = 1.0;
 
     swap(m_A1, m_A2);
     BOOST_CHECK((m_A1.at<0, 0>() == 3.0));
@@ -34,7 +52,35 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A2.at<2, 0>() == 3.0));
     swap(m_A1, m_A2);
 
-    A_matrix_3x1_fundamentals_type m_A1_plus_A2 = sum(m_A1, m_A2);
+    swap(m_A1_d, m_A2);
+    BOOST_CHECK((m_A1_d.at<0, 0>() == 3.0));
+    BOOST_CHECK((m_A1_d.at<1, 0>() == 2.0));
+    BOOST_CHECK((m_A1_d.at<2, 0>() == 1.0));
+    BOOST_CHECK((m_A2.at<0, 0>() == 1.0));
+    BOOST_CHECK((m_A2.at<1, 0>() == 2.0));
+    BOOST_CHECK((m_A2.at<2, 0>() == 3.0));
+    swap(m_A1_d, m_A2);
+
+    swap(m_A1, m_A2_d);
+    BOOST_CHECK((m_A1.at<0, 0>() == 3.0));
+    BOOST_CHECK((m_A1.at<1, 0>() == 2.0));
+    BOOST_CHECK((m_A1.at<2, 0>() == 1.0));
+    BOOST_CHECK((m_A2_d.at<0, 0>() == 1.0));
+    BOOST_CHECK((m_A2_d.at<1, 0>() == 2.0));
+    BOOST_CHECK((m_A2_d.at<2, 0>() == 3.0));
+    swap(m_A1, m_A2_d);
+
+    swap(m_A1_d, m_A2_d);
+    BOOST_CHECK((m_A1_d.at<0, 0>() == 3.0));
+    BOOST_CHECK((m_A1_d.at<1, 0>() == 2.0));
+    BOOST_CHECK((m_A1_d.at<2, 0>() == 1.0));
+    BOOST_CHECK((m_A2_d.at<0, 0>() == 1.0));
+    BOOST_CHECK((m_A2_d.at<1, 0>() == 2.0));
+    BOOST_CHECK((m_A2_d.at<2, 0>() == 3.0));
+    swap(m_A1_d, m_A2_d);
+
+    A_matrix_3x1_fundamentals_type m_A1_plus_A2;
+    m_A1_plus_A2 = sum(m_A1, m_A2);
     BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
     BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
     BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
@@ -43,11 +89,66 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
     BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
 
-    A_matrix_3x1_fundamentals_type m_A1_minus_A2 = diff(m_A1, m_A2);
+    m_A1_plus_A2 = sum(m_A1_d, m_A2);
+    BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
+    BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
+    BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
+    m_A1_plus_A2 = m_A1_d + m_A2;
+    BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
+    BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
+    BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
+
+    m_A1_plus_A2 = sum(m_A1, m_A2_d);
+    BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
+    BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
+    BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
+    m_A1_plus_A2 = m_A1 + m_A2_d;
+    BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
+    BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
+    BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
+
+    m_A1_plus_A2 = sum(m_A1_d, m_A2_d);
+    BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
+    BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
+    BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
+    m_A1_plus_A2 = m_A1_d + m_A2_d;
+    BOOST_CHECK((m_A1_plus_A2.at<0, 0>() == 1.0 + 3.0));
+    BOOST_CHECK((m_A1_plus_A2.at<1, 0>() == 2.0 + 2.0));
+    BOOST_CHECK((m_A1_plus_A2.at<2, 0>() == 3.0 + 1.0));
+
+    A_matrix_3x1_fundamentals_type m_A1_minus_A2;
+    m_A1_minus_A2 = diff(m_A1, m_A2);
     BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
     BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
     BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
     m_A1_minus_A2 = m_A1 - m_A2;
+    BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
+    BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
+    BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
+
+    m_A1_minus_A2 = diff(m_A1_d, m_A2);
+    BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
+    BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
+    BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
+    m_A1_minus_A2 = m_A1_d - m_A2;
+    BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
+    BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
+    BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
+
+    m_A1_minus_A2 = diff(m_A1, m_A2_d);
+    BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
+    BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
+    BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
+    m_A1_minus_A2 = m_A1 - m_A2_d;
+    BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
+    BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
+    BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
+
+    m_A1_minus_A2 = diff(m_A1_d, m_A2_d);
+    BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
+    BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
+    BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
+    m_A1_minus_A2 = m_A1_d - m_A2_d;
     BOOST_CHECK((m_A1_minus_A2.at<0, 0>() == 1.0 - 3.0));
     BOOST_CHECK((m_A1_minus_A2.at<1, 0>() == 2.0 - 2.0));
     BOOST_CHECK((m_A1_minus_A2.at<2, 0>() == 3.0 - 1.0));
@@ -57,10 +158,20 @@ int test_main (int, char *[])
     m_B1.at<0, 1>() = 2.0;
     m_B1.at<0, 2>() = 3.0;
 
+    derived_from_B_matrix_1x3_fundamentals_type m_B1_d;
+    m_B1_d.at<0, 0>() = 1.0;
+    m_B1_d.at<0, 1>() = 2.0;
+    m_B1_d.at<0, 2>() = 3.0;
+
     B_matrix_1x3_fundamentals_type m_B2;
     m_B2.at<0, 0>() = 3.0;
     m_B2.at<0, 1>() = 2.0;
     m_B2.at<0, 2>() = 1.0;
+
+    derived_from_B_matrix_1x3_fundamentals_type m_B2_d;
+    m_B2_d.at<0, 0>() = 3.0;
+    m_B2_d.at<0, 1>() = 2.0;
+    m_B2_d.at<0, 2>() = 1.0;
 
     swap(m_B1, m_B2);
     BOOST_CHECK((m_B1.at<0, 0>() == 3.0));
@@ -93,7 +204,8 @@ int test_main (int, char *[])
         A_matrix_3x1_fundamentals_type,
         B_matrix_1x3_fundamentals_type
     >::type AxB_type;
-    AxB_type m_A1_times_B1 = prod(m_A1, m_B1);
+    AxB_type m_A1_times_B1;
+    m_A1_times_B1 = prod(m_A1, m_B1);
     BOOST_CHECK((m_A1_times_B1.size() == 9));
     BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
     BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
@@ -115,14 +227,99 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
     BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
 
+    m_A1_times_B1 = prod(m_A1_d, m_B1);
+    BOOST_CHECK((m_A1_times_B1.size() == 9));
+    BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 2>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 0>() == 2.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 2>() == 2.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 0>() == 3.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
+    m_A1_times_B1 = m_A1_d * m_B1;
+    BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 2>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 0>() == 2.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 2>() == 2.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 0>() == 3.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
+
+    m_A1_times_B1 = prod(m_A1, m_B1_d);
+    BOOST_CHECK((m_A1_times_B1.size() == 9));
+    BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 2>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 0>() == 2.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 2>() == 2.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 0>() == 3.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
+    m_A1_times_B1 = m_A1 * m_B1_d;
+    BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 2>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 0>() == 2.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 2>() == 2.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 0>() == 3.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
+
+    m_A1_times_B1 = prod(m_A1_d, m_B1_d);
+    BOOST_CHECK((m_A1_times_B1.size() == 9));
+    BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 2>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 0>() == 2.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 2>() == 2.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 0>() == 3.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
+    m_A1_times_B1 = m_A1_d * m_B1_d;
+    BOOST_CHECK((m_A1_times_B1.at<0, 0>() == 1.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 1>() == 1.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<0, 2>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 0>() == 2.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<1, 2>() == 2.0 * 3.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 0>() == 3.0 * 1.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 1>() == 3.0 * 2.0));
+    BOOST_CHECK((m_A1_times_B1.at<2, 2>() == 3.0 * 3.0));
+
     typedef bub::result_of::matrix_product<
         B_matrix_1x3_fundamentals_type,
         A_matrix_3x1_fundamentals_type
     >::type BxA_type;
-    BxA_type m_B1_times_A1 = prod(m_B1, m_A1);
+    BxA_type m_B1_times_A1;
+    m_B1_times_A1 = prod(m_B1, m_A1);
     BOOST_CHECK((m_B1_times_A1.size() == 1));
     BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
     m_B1_times_A1 = m_B1 * m_A1;
+    BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
+
+    m_B1_times_A1 = prod(m_B1_d, m_A1);
+    BOOST_CHECK((m_B1_times_A1.size() == 1));
+    BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
+    m_B1_times_A1 = m_B1_d * m_A1;
+    BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
+
+    m_B1_times_A1 = prod(m_B1, m_A1_d);
+    BOOST_CHECK((m_B1_times_A1.size() == 1));
+    BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
+    m_B1_times_A1 = m_B1 * m_A1_d;
+    BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
+
+    m_B1_times_A1 = prod(m_B1_d, m_A1_d);
+    BOOST_CHECK((m_B1_times_A1.size() == 1));
+    BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
+    m_B1_times_A1 = m_B1_d * m_A1_d;
     BOOST_CHECK((m_B1_times_A1.at<0, 0>() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
 
     E_matrix_1x1_fundamentals_type m_E;
@@ -136,20 +333,78 @@ int test_main (int, char *[])
     m_E_times_E = m_E * m_E;
     BOOST_CHECK((m_E_times_E.at<0, 0>() == 4.0));
 
-    A_matrix_3x1_fundamentals_type m_A1_elem_times_A2 = element_prod(m_A1, m_A2);
+    A_matrix_3x1_fundamentals_type m_A1_elem_times_A2;
+    m_A1_elem_times_A2 = element_prod(m_A1, m_A2);
     BOOST_CHECK((m_A1_elem_times_A2.at<0, 0>() == 1.0 * 3.0));
     BOOST_CHECK((m_A1_elem_times_A2.at<1, 0>() == 2.0 * 2.0));
     BOOST_CHECK((m_A1_elem_times_A2.at<2, 0>() == 3.0 * 1.0));
-    A_matrix_3x1_fundamentals_type m_A1_elem_div_A2 = element_div(m_A1, m_A2);
+    A_matrix_3x1_fundamentals_type m_A1_elem_div_A2;
+    m_A1_elem_div_A2 = element_div(m_A1, m_A2);
     BOOST_CHECK((m_A1_elem_div_A2.at<0, 0>() == 1.0 / 3.0));
     BOOST_CHECK((m_A1_elem_div_A2.at<1, 0>() == 2.0 / 2.0));
     BOOST_CHECK((m_A1_elem_div_A2.at<2, 0>() == 3.0 / 1.0));
 
-    B_matrix_1x3_fundamentals_type m_B1_elem_times_B2 = element_prod(m_B1, m_B2);
+    m_A1_elem_times_A2 = element_prod(m_A1_d, m_A2);
+    BOOST_CHECK((m_A1_elem_times_A2.at<0, 0>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_elem_times_A2.at<1, 0>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_elem_times_A2.at<2, 0>() == 3.0 * 1.0));
+    m_A1_elem_div_A2 = element_div(m_A1_d, m_A2);
+    BOOST_CHECK((m_A1_elem_div_A2.at<0, 0>() == 1.0 / 3.0));
+    BOOST_CHECK((m_A1_elem_div_A2.at<1, 0>() == 2.0 / 2.0));
+    BOOST_CHECK((m_A1_elem_div_A2.at<2, 0>() == 3.0 / 1.0));
+
+    m_A1_elem_times_A2 = element_prod(m_A1, m_A2_d);
+    BOOST_CHECK((m_A1_elem_times_A2.at<0, 0>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_elem_times_A2.at<1, 0>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_elem_times_A2.at<2, 0>() == 3.0 * 1.0));
+    m_A1_elem_div_A2 = element_div(m_A1, m_A2_d);
+    BOOST_CHECK((m_A1_elem_div_A2.at<0, 0>() == 1.0 / 3.0));
+    BOOST_CHECK((m_A1_elem_div_A2.at<1, 0>() == 2.0 / 2.0));
+    BOOST_CHECK((m_A1_elem_div_A2.at<2, 0>() == 3.0 / 1.0));
+
+    m_A1_elem_times_A2 = element_prod(m_A1_d, m_A2_d);
+    BOOST_CHECK((m_A1_elem_times_A2.at<0, 0>() == 1.0 * 3.0));
+    BOOST_CHECK((m_A1_elem_times_A2.at<1, 0>() == 2.0 * 2.0));
+    BOOST_CHECK((m_A1_elem_times_A2.at<2, 0>() == 3.0 * 1.0));
+    m_A1_elem_div_A2 = element_div(m_A1_d, m_A2_d);
+    BOOST_CHECK((m_A1_elem_div_A2.at<0, 0>() == 1.0 / 3.0));
+    BOOST_CHECK((m_A1_elem_div_A2.at<1, 0>() == 2.0 / 2.0));
+    BOOST_CHECK((m_A1_elem_div_A2.at<2, 0>() == 3.0 / 1.0));
+
+    B_matrix_1x3_fundamentals_type m_B1_elem_times_B2;
+    m_B1_elem_times_B2 = element_prod(m_B1, m_B2);
     BOOST_CHECK((m_B1_elem_times_B2.at<0, 0>() == 1.0 * 3.0));
     BOOST_CHECK((m_B1_elem_times_B2.at<0, 1>() == 2.0 * 2.0));
     BOOST_CHECK((m_B1_elem_times_B2.at<0, 2>() == 3.0 * 1.0));
-    B_matrix_1x3_fundamentals_type m_B1_elem_div_B2 = element_div(m_B1, m_B2);
+    B_matrix_1x3_fundamentals_type m_B1_elem_div_B2;
+    m_B1_elem_div_B2 = element_div(m_B1, m_B2);
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 0>() == 1.0 / 3.0));
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 1>() == 2.0 / 2.0));
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 2>() == 3.0 / 1.0));
+
+    m_B1_elem_times_B2 = element_prod(m_B1_d, m_B2);
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 0>() == 1.0 * 3.0));
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 2>() == 3.0 * 1.0));
+    m_B1_elem_div_B2 = element_div(m_B1_d, m_B2);
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 0>() == 1.0 / 3.0));
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 1>() == 2.0 / 2.0));
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 2>() == 3.0 / 1.0));
+
+    m_B1_elem_times_B2 = element_prod(m_B1, m_B2_d);
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 0>() == 1.0 * 3.0));
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 2>() == 3.0 * 1.0));
+    m_B1_elem_div_B2 = element_div(m_B1, m_B2_d);
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 0>() == 1.0 / 3.0));
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 1>() == 2.0 / 2.0));
+    BOOST_CHECK((m_B1_elem_div_B2.at<0, 2>() == 3.0 / 1.0));
+
+    m_B1_elem_times_B2 = element_prod(m_B1_d, m_B2_d);
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 0>() == 1.0 * 3.0));
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 1>() == 2.0 * 2.0));
+    BOOST_CHECK((m_B1_elem_times_B2.at<0, 2>() == 3.0 * 1.0));
+    m_B1_elem_div_B2 = element_div(m_B1_d, m_B2_d);
     BOOST_CHECK((m_B1_elem_div_B2.at<0, 0>() == 1.0 / 3.0));
     BOOST_CHECK((m_B1_elem_div_B2.at<0, 1>() == 2.0 / 2.0));
     BOOST_CHECK((m_B1_elem_div_B2.at<0, 2>() == 3.0 / 1.0));

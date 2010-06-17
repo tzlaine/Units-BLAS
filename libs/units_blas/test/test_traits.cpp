@@ -71,6 +71,21 @@ typedef bub::matrix<
     >
 > matrix_4x4_units_type;
 
+struct derived_from_matrix_4x1_type :
+    matrix_4x1_type
+{};
+
+struct derived_from_matrix_1x4_type :
+    matrix_1x4_type
+{};
+
+struct derived_from_matrix_4x4_type :
+    matrix_4x4_type
+{};
+
+namespace boost { namespace units_blas {
+} }
+
 int test_main (int, char *[])
 {
     BOOST_MPL_ASSERT((boost::mpl::equal_to<bub::size<matrix_4x1_type>, boost::mpl::size_t<4> >));
@@ -98,6 +113,21 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT_NOT((bub::is_matrix<int>));
     BOOST_MPL_ASSERT_NOT((bub::is_matrix<double>));
     BOOST_MPL_ASSERT_NOT((bub::is_matrix<boost::fusion::vector<boost::fusion::vector<int, long, float, double> > >));
+
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<matrix_4x1_type>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<matrix_1x4_type>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<matrix_4x4_type>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<derived_from_matrix_4x1_type>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<derived_from_matrix_1x4_type>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<derived_from_matrix_4x4_type>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<matrix_4x1_type const>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<matrix_4x1_type volatile>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<matrix_4x1_type const volatile>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<derived_from_matrix_4x1_type const>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<derived_from_matrix_4x1_type volatile>));
+    BOOST_MPL_ASSERT((bub::is_or_is_derived_from_matrix<derived_from_matrix_4x1_type const volatile>));
+    BOOST_MPL_ASSERT_NOT((bub::is_or_is_derived_from_matrix<int>));
+    BOOST_MPL_ASSERT_NOT((bub::is_or_is_derived_from_matrix<double>));
 
     BOOST_MPL_ASSERT((bub::is_matrix<matrix_4x1_units_type>));
     BOOST_MPL_ASSERT((bub::is_matrix<matrix_1x4_units_type>));

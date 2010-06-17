@@ -9,6 +9,7 @@
 #ifndef BOOST_UNITS_BLAS_TRAITS_HPP
 #define BOOST_UNITS_BLAS_TRAITS_HPP
 
+#include <boost/typeof/typeof.hpp>
 #include <boost/units_blas/matrix_fwd.hpp>
 
 
@@ -40,7 +41,32 @@ namespace boost { namespace units_blas {
     struct is_matrix<matrix<T> volatile> : mpl::true_ {};
     template <typename T>
     struct is_matrix<matrix<T> const volatile> : mpl::true_ {};
+
+    namespace detail {
+        mpl::false_ is_or_is_derived_from_matrix_impl(...);
+
+        template <typename T>
+        mpl::true_ is_or_is_derived_from_matrix_impl(matrix<T> &);
+
+        template <typename T>
+        mpl::true_ is_or_is_derived_from_matrix_impl(matrix<T> const &);
+
+        template <typename T>
+        mpl::true_ is_or_is_derived_from_matrix_impl(matrix<T> volatile &);
+
+        template <typename T>
+        mpl::true_ is_or_is_derived_from_matrix_impl(matrix<T> const volatile &);
+    }
 #endif
+
+    /** Returns true iff cv-unqualified @c T is, or is derived from, a @c
+        matrix<>. */
+    template <typename T>
+    struct is_or_is_derived_from_matrix
+    {
+        typedef BOOST_TYPEOF(detail::is_or_is_derived_from_matrix_impl(*(T*)(0))) type;
+        BOOST_STATIC_CONSTANT(bool, value = type::value);
+    };
 
     /** Returns true iff @c T is a (possibly cv-qualified) @c matrix<> with
         the same number of rows as columns. */
