@@ -60,14 +60,30 @@ namespace boost { namespace units { namespace si {
     typedef derived_dimension<time_base_dimension, 1, length_base_dimension, 1>::type time_length_dimension;
     typedef derived_dimension<time_base_dimension, 2>::type time_sq_dimension;
     typedef derived_dimension<length_base_dimension, 2>::type length_sq_dimension;
+    typedef derived_dimension<time_base_dimension, -1, length_base_dimension, 2>::type length_sq_per_time_dimension;
+    typedef derived_dimension<time_base_dimension, -2, length_base_dimension, 2>::type length_sq_per_time_sq_dimension;
+    typedef derived_dimension<length_base_dimension, -2>::type inv_length_sq_dimension;
+    typedef derived_dimension<time_base_dimension, 1, length_base_dimension, -2>::type time_per_length_sq_dimension;
+    typedef derived_dimension<time_base_dimension, 2, length_base_dimension, -2>::type time_sq_per_length_sq_dimension;
+
     typedef unit<time_length_dimension, system> time_length;
     typedef unit<time_sq_dimension, system> time_sq;
     typedef unit<length_sq_dimension, system> length_sq;
+    typedef unit<length_sq_per_time_dimension, system> length_sq_per_time;
+    typedef unit<length_sq_per_time_sq_dimension, system> length_sq_per_time_sq;
+    typedef unit<inv_length_sq_dimension, system> inv_length_sq;
+    typedef unit<time_per_length_sq_dimension, system> time_per_length_sq;
+    typedef unit<time_sq_per_length_sq_dimension, system> time_sq_per_length_sq;
 } } }
 
 typedef boost::units::quantity<boost::units::si::time_length> time_length;
 typedef boost::units::quantity<boost::units::si::time_sq> time_sq;
 typedef boost::units::quantity<boost::units::si::length_sq> length_sq;
+typedef boost::units::quantity<boost::units::si::length_sq_per_time> length_sq_per_time;
+typedef boost::units::quantity<boost::units::si::length_sq_per_time_sq> length_sq_per_time_sq;
+typedef boost::units::quantity<boost::units::si::inv_length_sq> inv_length_sq;
+typedef boost::units::quantity<boost::units::si::time_per_length_sq> time_per_length_sq;
+typedef boost::units::quantity<boost::units::si::time_sq_per_length_sq> time_sq_per_length_sq;
 
 typedef bub::matrix<
     boost::fusion::vector<
