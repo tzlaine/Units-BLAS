@@ -62,12 +62,19 @@ namespace boost { namespace units_blas { namespace result_of { namespace detail 
     struct value_difference
     { typedef BOOST_TYPEOF((T0() - T1())) type; };
 
+    template <typename T, bool fundamental = is_arithmetic<T>::value>
+    struct value_inverse;
+
     template <typename T>
-    struct value_inverse
+    struct value_inverse<T, true>
+    { typedef T type; };
+
+    template <typename T>
+    struct value_inverse<T, false>
     { typedef BOOST_TYPEOF((1 / T(1))) type; };
 
     template <typename Unit, typename ValueType>
-    struct value_inverse<units::quantity<Unit, ValueType> >
+    struct value_inverse<units::quantity<Unit, ValueType>, false>
     {
         typedef BOOST_TYPEOF((
             static_cast<ValueType>(1) /
