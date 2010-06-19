@@ -288,7 +288,7 @@ namespace boost { namespace units_blas {
         >,
         Matrix
     >::type
-    identity_matrix ()
+    make_identity_matrix ()
     {
         Matrix retval;
         typedef fusion::vector<Matrix &> ops;

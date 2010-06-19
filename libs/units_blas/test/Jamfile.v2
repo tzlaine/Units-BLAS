@@ -31,7 +31,7 @@ import testing ;
     [ run test_detail_zero_value_one_value.cpp ]
     [ run test_detail_abs.cpp ]
     [ run test_matrix.cpp ]
-    [ run test_identity_matrix.cpp ]
+    [ run test_make_identity_matrix.cpp ]
     [ run test_vector_operations.cpp ]
     [ run test_simple_matrix_operations.cpp ]
     [ run test_matrix_matrix_operations.cpp ]

@@ -39,9 +39,9 @@ typedef bub::matrix<
 
 int test_main (int, char *[])
 {
-    matrix_3x3_type identity_matrix = bub::identity_matrix<matrix_3x3_type>();
+    matrix_3x3_type identity_matrix = bub::make_identity_matrix<matrix_3x3_type>();
 
-    typedef BOOST_TYPEOF((bub::identity_matrix<matrix_3x3_type>())) identity_type;
+    typedef BOOST_TYPEOF((bub::make_identity_matrix<matrix_3x3_type>())) identity_type;
     BOOST_MPL_ASSERT((boost::is_same<matrix_3x3_type, identity_type>));
 
     BOOST_CHECK((identity_matrix.at<0, 0>() == 1));
@@ -54,9 +54,9 @@ int test_main (int, char *[])
     BOOST_CHECK((identity_matrix.at<2, 1>() == 0.0f));
     BOOST_CHECK((identity_matrix.at<2, 2>() == 1l));
 
-    matrix_3x3_units_type identity_units_matrix = bub::identity_matrix<matrix_3x3_units_type>();
+    matrix_3x3_units_type identity_units_matrix = bub::make_identity_matrix<matrix_3x3_units_type>();
 
-    typedef BOOST_TYPEOF((bub::identity_matrix<matrix_3x3_units_type>())) identity_units_type;
+    typedef BOOST_TYPEOF((bub::make_identity_matrix<matrix_3x3_units_type>())) identity_units_type;
     BOOST_MPL_ASSERT((boost::is_same<matrix_3x3_units_type, identity_units_type>));
 
     BOOST_CHECK((identity_units_matrix.at<0, 0>() == length::from_value(1.0)));
