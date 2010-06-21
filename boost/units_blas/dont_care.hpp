@@ -37,6 +37,17 @@ namespace boost { namespace units_blas {
     const T & operator+ (_, const T & rhs)
     { return rhs; }
 
+    _ operator- (_, _)
+    { return _(); }
+
+    template <typename T>
+    const T & operator- (const T & lhs, _)
+    { return lhs; }
+
+    template <typename T>
+    const T & operator- (_, const T & rhs)
+    { return rhs; }
+
 } } // namespace boost::units_blas
 
 #endif // BOOST_UNITS_BLAS_DONT_CARE_HPP
