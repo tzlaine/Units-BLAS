@@ -278,26 +278,6 @@ namespace boost { namespace units_blas {
         value_types data_;
     };
 
-    /** Returns a @c Matrix whose diagonal elements are 1, and whose
-        nondiagonal elements are 0. */
-    template <typename Matrix>
-    typename enable_if<
-        mpl::equal_to<
-            typename Matrix::num_rows_t,
-            typename Matrix::num_columns_t
-        >,
-        Matrix
-    >::type
-    make_identity_matrix ()
-    {
-        Matrix retval;
-        typedef fusion::vector<Matrix &> ops;
-        iterate<typename Matrix::num_rows_t>(
-            ops(retval), detail::identity_assign()
-        );
-        return retval;
-    }
-
 } } // namespace boost::units_blas
 
 #endif // BOOST_UNITS_BLAS_MATRIX_HPP

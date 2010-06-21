@@ -13,10 +13,11 @@
 #include <boost/units_blas/result_of.hpp>
 #include <boost/units_blas/traits.hpp>
 #include <boost/units_blas/detail/get_value_type.hpp>
-#include <boost/units_blas/detail/simple_iteration.hpp>
+#include <boost/units_blas/detail/has_inverse.hpp>
 #include <boost/units_blas/detail/iteration.hpp>
 #include <boost/units_blas/detail/lu.hpp>
 #include <boost/units_blas/detail/one_value.hpp>
+#include <boost/units_blas/detail/simple_iteration.hpp>
 #include <boost/units_blas/detail/zero_value.hpp>
 
 #include <boost/array.hpp>
@@ -864,6 +865,12 @@ namespace boost { namespace units_blas {
     >::type
     inverse (matrix<T> const & m)
     {
+        // If you're seeing an error here, it's becaue you're trying to invert
+        // a matrix for which no valid inverse type exists.  A valid inverse
+        // of matrix type M must yield an identity matrix I such that M = M *
+        // I is a valid operation.
+        BOOST_MPL_ASSERT((detail::has_inverse<matrix<T> >));
+
         // If you're seeing an error here, you're trying to perform LU
         // decomposition on a matrix that has mixed units of the same
         // dimension (e.g. centimeters and meters in the same matrix).
