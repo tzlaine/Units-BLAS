@@ -17,6 +17,7 @@ import testing ;
     [ compile test_make_matrix.cpp ]
     [ compile test_io.cpp ]
     [ compile test_detail_get_value_type.cpp ]
+    [ compile test_detail_is_assignable.cpp ]
     [ compile test_result_of_at.cpp ]
     [ compile test_result_of_value_at.cpp ]
     [ compile test_result_of_sum.cpp ]
