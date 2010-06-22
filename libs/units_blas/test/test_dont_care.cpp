@@ -39,6 +39,14 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((l * _)), bub::_>::type));
     BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ * l)), bub::_>::type));
 
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ / _)), bub::_>::type));
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((i / _)), bub::_>::type));
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ / i)), bub::_>::type));
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((d / _)), bub::_>::type));
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ / d)), bub::_>::type));
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((l / _)), bub::_>::type));
+    BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ / l)), bub::_>::type));
+
     BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ + _)), bub::_>::type));
 
     BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((i + _)), int>::type));

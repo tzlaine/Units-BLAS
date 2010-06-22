@@ -33,6 +33,17 @@ namespace boost { namespace units_blas {
     _ operator* (_, T)
     { return _(); }
 
+    _ operator/ (_, _)
+    { return _(); }
+
+    template <typename T>
+    _ operator/ (T, _)
+    { return _(); }
+
+    template <typename T>
+    _ operator/ (_, T)
+    { return _(); }
+
     _ operator+ (_, _)
     { return _(); }
 
