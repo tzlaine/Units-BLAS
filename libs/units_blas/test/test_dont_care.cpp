@@ -17,10 +17,19 @@ typedef boost::units::quantity<boost::units::si::length> length;
 
 int test_main (int, char *[])
 {
-    bub::_ _;
     int i;
     double d;
     length l;
+
+    bub::_ _;
+
+    bub::_ _2(i);
+    bub::_ _3(d);
+    bub::_ _4(l);
+
+    static_cast<bub::_>(i);
+    static_cast<bub::_>(d);
+    static_cast<bub::_>(l);
 
     BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((_ * _)), bub::_>::type));
     BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((i * _)), bub::_>::type));

@@ -20,10 +20,6 @@ namespace boost { namespace units_blas {
         template <typename T>
         explicit _ (T const &)
             {}
-
-        template <typename T>
-        _ & operator= (T const &)
-            { return *this; }
     };
 
     _ operator* (_, _)
