@@ -28,6 +28,9 @@ namespace boost { namespace units_blas {
             void operator() (T const & t) const
                 { os_ << t << " "; }
 
+            void operator() (_ const &) const
+                { os_ << "-- "; }
+
             std::ostream & os_;
         };
 

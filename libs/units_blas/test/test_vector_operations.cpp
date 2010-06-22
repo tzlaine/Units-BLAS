@@ -363,5 +363,69 @@ int test_main (int, char *[])
     BOOST_CHECK((norm_inf(m_E_u) == length::from_value(2.0)));
     BOOST_CHECK((norm_inf_index(m_E_u) == 0));
 
+    // unit types and don't-cares
+
+    typedef bub::matrix<
+        boost::fusion::vector<
+            boost::fusion::vector<time_>,
+            boost::fusion::vector<bub::_>,
+            boost::fusion::vector<dimensionless>
+        >
+    > matrix_3x1_with_dont_care_y;
+    matrix_3x1_with_dont_care_y m_A1_u_dc_y;
+    m_A1_u_dc_y.at<0, 0>() = time_::from_value(1.0);
+    m_A1_u_dc_y.at<2, 0>() = dimensionless::from_value(3.0);
+
+    typedef bub::matrix<
+        boost::fusion::vector<
+            boost::fusion::vector<length>,
+            boost::fusion::vector<bub::_>,
+            boost::fusion::vector<time_length>
+        >
+    > matrix_3x1_with_dont_care_y_2;
+    matrix_3x1_with_dont_care_y_2 m_A1_u_dc_y_2;
+    m_A1_u_dc_y_2.at<0, 0>() = length::from_value(1.0);
+    m_A1_u_dc_y_2.at<2, 0>() = time_length::from_value(3.0);
+    BOOST_CHECK((dot(m_A1_u_dc_y, m_A1_u_dc_y_2) == time_length::from_value(1.0 * 1.0 + 3.0 * 3.0)));
+    BOOST_CHECK((m_A1_u_dc_y * m_A1_u_dc_y_2 == time_length::from_value(1.0 * 1.0 + 3.0 * 3.0)));
+
+    typedef bub::matrix<
+        boost::fusion::vector<
+            boost::fusion::vector<bub::_, time_, time_>
+        >
+    > matrix_1x3_units_type_with_dont_care_x;
+    matrix_1x3_units_type_with_dont_care_x m_B_y_dir_u_dc_x;
+    m_B_y_dir_u_dc_x.at<0, 1>() = time_::from_value(1.0);
+    m_B_y_dir_u_dc_x.at<0, 2>() = time_::from_value(0.0);
+    matrix_1x3_units_type_with_dont_care_x m_B_z_dir_u_dc_x;
+    m_B_z_dir_u_dc_x.at<0, 1>() = time_::from_value(0.0);
+    m_B_z_dir_u_dc_x.at<0, 2>() = time_::from_value(1.0);
+
+    // this cross product will be all don't-cares
+    typedef bub::result_of::cross_product<
+        matrix_1x3_units_type_with_dont_care_x,
+        matrix_1x3_units_type_with_dont_care_x
+    >::type matrix_1x3_with_dont_care_x_cross_type;
+    matrix_1x3_with_dont_care_x_cross_type m_B_y_cross_z_u_dc_x = cross(m_B_y_dir_u_dc_x, m_B_z_dir_u_dc_x);
+    m_B_y_cross_z_u_dc_x = m_B_y_dir_u_dc_x ^ m_B_z_dir_u_dc_x;
+    matrix_1x3_with_dont_care_x_cross_type m_B_z_cross_y_u_dc_x = cross(m_B_z_dir_u_dc_x, m_B_y_dir_u_dc_x);
+    m_B_z_cross_y_u_dc_x = m_B_z_dir_u_dc_x ^ m_B_y_dir_u_dc_x;
+
+    typedef bub::matrix<
+        boost::fusion::vector<
+            boost::fusion::vector<dimensionless>,
+            boost::fusion::vector<dimensionless>,
+            boost::fusion::vector<bub::_>
+        >
+    > matrix_3x1_with_dont_care_z;
+    matrix_3x1_with_dont_care_z m_C1_u_dc_z;
+    m_C1_u_dc_z.at<0, 0>() = dimensionless::from_value(-1.0);
+    m_C1_u_dc_z.at<1, 0>() = dimensionless::from_value(-1.0);
+    BOOST_CHECK((sum(m_C1_u) == dimensionless::from_value(-2.0)));
+    BOOST_CHECK((norm_1(m_C1_u) == dimensionless::from_value(2.0)));
+    BOOST_CHECK((norm_2(m_C1_u) == dimensionless::from_value(std::sqrt(2.0))));
+    BOOST_CHECK((norm_inf(m_C1_u) == dimensionless::from_value(1.0)));
+    BOOST_CHECK((norm_inf_index(m_C1_u) == dimensionless::from_value(1)));
+
     return 0;
 }

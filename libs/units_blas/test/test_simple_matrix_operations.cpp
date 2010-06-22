@@ -396,5 +396,45 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D_slice_3_u.at<0, 0>().value() == 2.0));
     BOOST_CHECK((m_D_slice_3_u.at<0, 1>().value() == 4.0));
 
+
+    // units types and don't-cares
+
+    typedef boost::units_blas::matrix<
+        boost::fusion::vector<
+            boost::fusion::vector<bub::_, length, length, length>,
+            boost::fusion::vector<length, length, length, length>,
+            boost::fusion::vector<length, length, length, length>,
+            boost::fusion::vector<length, length, length, length>
+        >
+    > matrix_4x4_units_type_with_dont_cares;
+
+    matrix_4x4_units_type_with_dont_cares m_D1_u_dc_y;
+    m_D1_u_dc_y.at<0, 1>() = length::from_value(2.0);
+    m_D1_u_dc_y.at<0, 2>() = length::from_value(3.0);
+    m_D1_u_dc_y.at<0, 3>() = length::from_value(4.0);
+    m_D1_u_dc_y.at<1, 0>() = length::from_value(5.0);
+    m_D1_u_dc_y.at<1, 1>() = length::from_value(6.0);
+    m_D1_u_dc_y.at<1, 2>() = length::from_value(7.0);
+    m_D1_u_dc_y.at<1, 3>() = length::from_value(8.0);
+    m_D1_u_dc_y.at<2, 0>() = length::from_value(9.0);
+    m_D1_u_dc_y.at<2, 1>() = length::from_value(10.0);
+    m_D1_u_dc_y.at<2, 2>() = length::from_value(11.0);
+    m_D1_u_dc_y.at<2, 3>() = length::from_value(12.0);
+    m_D1_u_dc_y.at<3, 0>() = length::from_value(13.0);
+    m_D1_u_dc_y.at<3, 1>() = length::from_value(14.0);
+    m_D1_u_dc_y.at<3, 2>() = length::from_value(15.0);
+    m_D1_u_dc_y.at<3, 3>() = length::from_value(16.0);
+
+    typedef bub::result_of::slice<
+        matrix_4x4_units_type_with_dont_cares,
+        rows_type_1,
+        columns_type_1
+    >::type matrix_4x4_units_type_with_dont_cares_slice_type;
+    matrix_4x4_units_type_with_dont_cares_slice_type m_D_slice_u_dc_y;
+    m_D_slice_u_dc_y = bub::slice<rows_type_1, columns_type_1>(m_D1_u_dc_y);
+    BOOST_CHECK((m_D_slice_u_dc_y.at<0, 1>().value() == 2.0));
+    BOOST_CHECK((m_D_slice_u_dc_y.at<1, 0>().value() == 5.0));
+    BOOST_CHECK((m_D_slice_u_dc_y.at<1, 1>().value() == 6.0));
+
     return 0;
 }

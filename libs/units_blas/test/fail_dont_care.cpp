@@ -1,4 +1,4 @@
-// Copyright (C) 2008 T. Zachary Laine
+// Copyright (C) 2010 T. Zachary Laine
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
