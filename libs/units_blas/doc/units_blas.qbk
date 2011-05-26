@@ -334,12 +334,12 @@ and stuffing the solution values into the quantities in the solution _matrix_
 at the end of the operation being performed (_determinant_, _inverse_, or
 _solve_).
 
-Unfortunately, you cannot remain totally ignorant of this implementation
-detail.  In order for this technique to work, an LU-decomposable _matrix_ must
-have homogenous unit types in its elements, so that the LU decomposition and
-subsequent operations on L and U do not require any unit conversions.  In
-other words, no two element types of the same dimension, but with different
-units, can exist in an LU-decomposable _matrix_.
+[note Unfortunately, you cannot remain totally ignorant of this implementation
+detail.  In order for the above technique to work, an LU-decomposable _matrix_
+must have homogenous unit types in its elements, so that the LU decomposition
+and subsequent operations on L and U do not require any unit conversions.  In
+other words, no two element types of the same *dimension*, but with different
+*units*, can exist in an LU-decomposable _matrix_.]
 
 [heading Singular Matrices]
 

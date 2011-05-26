@@ -31,13 +31,13 @@ dimensional analysis wrong, if they must be done by hand.  It is therefore
 the problem that prompted the creation of this library.
 
 At a high level of abstraction, a Kalman filter takes a series of measurements
-at various times, and produces an estimate of the "true" measurement at those
-times.  It does this for some time `t1` by:
+of some process at various times, and produces an estimate of the true state
+of the process at those times.  It does this for some time `t1` by:
 
-# predicting the Kalman state at time `t1` based on the dynamics of the process being filtered, and the previous state at time `t0`; and
+# predicting the Kalman state at time `t1` based on the dynamics of the process being modeled, and the previous state at time `t0`; and
 # updating the Kalman state using the predicted state and a measurement *z* taken at time `t0`.
 
-The system being modelled in our Kalman tracker is an object with constant
+The system being modeled in our Kalman tracker is an object with constant
 velocity moving in a plane.  So, measurements *z* of this object are:
 
 __meas_vector__ __meas_vector_units__
