@@ -26,3 +26,5 @@
 - Do timing comparisons of units_blas vs. boost.ublas, and optimize where possible.
 
 - Optimize build speed of library.
+
+- Rename vector<> and transpose_vector<> to make_vector<> and make_transpose_vector<>.
