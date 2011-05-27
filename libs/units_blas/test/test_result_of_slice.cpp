@@ -13,51 +13,51 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long, float, double>,
         boost::fusion::vector<long, int, float, double>,
         boost::fusion::vector<int, float, long, double>,
         boost::fusion::vector<int, long, double, float>
     >
-> matrix_4x4_fundamentals_type;
+>::type matrix_4x4_fundamentals_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<long, int, double>,
         boost::fusion::vector<int, float, double>
     >
-> matrix_4x4_fundamentals_type_slice_1;
+>::type matrix_4x4_fundamentals_type_slice_1;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<long, float>,
         boost::fusion::vector<float, long>
     >
-> matrix_4x4_fundamentals_type_slice_2;
+>::type matrix_4x4_fundamentals_type_slice_2;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<frequency, length, time_, dimensionless>,
         boost::fusion::vector<length, frequency, time_, dimensionless>,
         boost::fusion::vector<frequency, time_, length, dimensionless>,
         boost::fusion::vector<frequency, length, dimensionless, time_>
     >
-> matrix_4x4_units_type;
+>::type matrix_4x4_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, frequency, dimensionless>,
         boost::fusion::vector<frequency, time_, dimensionless>
     >
-> matrix_4x4_units_type_slice_1;
+>::type matrix_4x4_units_type_slice_1;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, time_>,
         boost::fusion::vector<time_, length>
     >
-> matrix_4x4_units_type_slice_2;
+>::type matrix_4x4_units_type_slice_2;
 
 int test_main (int, char *[])
 {

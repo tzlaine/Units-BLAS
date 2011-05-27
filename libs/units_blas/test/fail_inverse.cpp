@@ -9,13 +9,13 @@
 #include <boost/units_blas/operations.hpp>
 
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length_sq,          length_sq,          length_sq_per_time>,
         boost::fusion::vector<length_sq,          length_sq,          length_sq_per_time>,
         boost::fusion::vector<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
     >
-> matrix_3x3_units_type;
+>::type matrix_3x3_units_type;
 
 int test_main (int, char *[])
 {

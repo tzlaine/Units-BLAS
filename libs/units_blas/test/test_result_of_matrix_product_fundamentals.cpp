@@ -21,127 +21,127 @@ int test_main (int, char *[])
         A_matrix_2x1_float_int_type,
         C_matrix_1x2_int_type
     >::type AxC;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<float, float>,
             boost::fusion::vector<int, int>
         >
-    > AxC_manual_product;
+    >::type AxC_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxC, AxC_manual_product>));
 
     typedef bub::result_of::matrix_product<
         C_matrix_1x2_int_type,
         A_matrix_2x1_float_int_type
     >::type CxA;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<float>
         >
-    > CxA_manual_product;
+    >::type CxA_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxA, CxA_manual_product>));
 
     typedef bub::result_of::matrix_product<
         A_matrix_2x1_float_int_type,
         D_matrix_1x2_int_double_type
     >::type AxD;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<float, double>,
             boost::fusion::vector<int, double>
         >
-    > AxD_manual_product;
+    >::type AxD_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxD, AxD_manual_product>));
 
     typedef bub::result_of::matrix_product<
         D_matrix_1x2_int_double_type,
         A_matrix_2x1_float_int_type
     >::type DxA;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double>
         >
-    > DxA_manual_product;
+    >::type DxA_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<DxA, DxA_manual_product>));
 
     typedef bub::result_of::matrix_product<
         B_matrix_2x1_int_type,
         C_matrix_1x2_int_type
     >::type BxC;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<int, int>,
             boost::fusion::vector<int, int>
         >
-    > BxC_manual_product;
+    >::type BxC_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<BxC, BxC_manual_product>));
 
     typedef bub::result_of::matrix_product<
         C_matrix_1x2_int_type,
         B_matrix_2x1_int_type
     >::type CxB;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<int>
         >
-    > CxB_manual_product;
+    >::type CxB_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxB, CxB_manual_product>));
 
     typedef bub::result_of::matrix_product<
         B_matrix_2x1_int_type,
         D_matrix_1x2_int_double_type
     >::type BxD;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<int, double>,
             boost::fusion::vector<int, double>
         >
-    > BxD_manual_product;
+    >::type BxD_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<BxD, BxD_manual_product>));
 
     typedef bub::result_of::matrix_product<
         D_matrix_1x2_int_double_type,
         B_matrix_2x1_int_type
     >::type DxB;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double>
         >
-    > DxB_manual_product;
+    >::type DxB_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<DxB, DxB_manual_product>));
 
     typedef bub::result_of::matrix_product<
         C_matrix_1x2_int_type,
         E_matrix_2x2_double_type
     >::type CxE;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double, double>
         >
-    > CxE_manual_product;
+    >::type CxE_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxE, CxE_manual_product>));
 
     typedef bub::result_of::matrix_product<
         E_matrix_2x2_double_type,
         B_matrix_2x1_int_type
     >::type ExB;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double>,
             boost::fusion::vector<double>
         >
-    > ExB_manual_product;
+    >::type ExB_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<ExB, ExB_manual_product>));
 
     typedef bub::result_of::matrix_product<
         E_matrix_2x2_double_type,
         E_matrix_2x2_double_type
     >::type ExE;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double, double>,
             boost::fusion::vector<double, double>
         >
-    > ExE_manual_product;
+    >::type ExE_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<ExE, ExE_manual_product>));
 
 
@@ -157,12 +157,12 @@ int test_main (int, char *[])
         A_matrix_2x1_float_int_type,
         double
     >::type Axdouble;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double>,
             boost::fusion::vector<double>
         >
-    > Axdouble_manual_product;
+    >::type Axdouble_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<Axdouble, Axdouble_manual_product>));
 
     typedef bub::result_of::scalar_product<
@@ -175,11 +175,11 @@ int test_main (int, char *[])
         D_matrix_1x2_int_double_type,
         double
     >::type Dxdouble;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double, double>
         >
-    > Dxdouble_manual_product;
+    >::type Dxdouble_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<Dxdouble, Dxdouble_manual_product>));
 
 
@@ -195,12 +195,12 @@ int test_main (int, char *[])
         A_matrix_2x1_float_int_type,
         double
     >::type Addouble;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double>,
             boost::fusion::vector<double>
         >
-    > Addouble_manual_quotient;
+    >::type Addouble_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<Addouble, Addouble_manual_quotient>));
 
     typedef bub::result_of::scalar_quotient<
@@ -213,11 +213,11 @@ int test_main (int, char *[])
         D_matrix_1x2_int_double_type,
         double
     >::type Dddouble;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double, double>
         >
-    > Dddouble_manual_quotient;
+    >::type Dddouble_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<Dddouble, Dddouble_manual_quotient>));
 
 
@@ -257,23 +257,23 @@ int test_main (int, char *[])
         A_matrix_2x1_float_int_type,
         B_matrix_2x1_int_type
     >::type AxB_elementwise_product;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<float>,
             boost::fusion::vector<int>
         >
-    > AxB_elementwise_manual_product;
+    >::type AxB_elementwise_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxB_elementwise_product, AxB_elementwise_manual_product>));
 
     typedef bub::result_of::matrix_element_product<
         C_matrix_1x2_int_type,
         D_matrix_1x2_int_double_type
     >::type CxD_elementwise_product;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<int, double>
         >
-    > CxD_elementwise_manual_product;
+    >::type CxD_elementwise_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxD_elementwise_product, CxD_elementwise_manual_product>));
 
     // element-wise matrix quotients
@@ -282,23 +282,23 @@ int test_main (int, char *[])
         A_matrix_2x1_float_int_type,
         B_matrix_2x1_int_type
     >::type AxB_elementwise_quotient;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<float>,
             boost::fusion::vector<int>
         >
-    > AxB_elementwise_manual_quotient;
+    >::type AxB_elementwise_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<AxB_elementwise_quotient, AxB_elementwise_manual_quotient>));
 
     typedef bub::result_of::matrix_element_quotient<
         C_matrix_1x2_int_type,
         D_matrix_1x2_int_double_type
     >::type CxD_elementwise_quotient;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<int, double>
         >
-    > CxD_elementwise_manual_quotient;
+    >::type CxD_elementwise_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<CxD_elementwise_quotient, CxD_elementwise_manual_quotient>));
 
     return 0;

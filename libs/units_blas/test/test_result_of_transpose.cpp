@@ -11,31 +11,31 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<float, int>
     >
-> A_matrix_2x1_float_int_type_transpose;
+>::type A_matrix_2x1_float_int_type_transpose;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int>,
         boost::fusion::vector<double>
     >
-> D_matrix_1x2_int_double_type_transpose;
+>::type D_matrix_1x2_int_double_type_transpose;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_, length>
     >
-> A_matrix_2x1_time_length_type_transpose;
+>::type A_matrix_2x1_time_length_type_transpose;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length>,
         boost::fusion::vector<time_>
     >
-> D_matrix_1x2_length_time_type_transpose;
+>::type D_matrix_1x2_length_time_type_transpose;
 
 int test_main (int, char *[])
 {

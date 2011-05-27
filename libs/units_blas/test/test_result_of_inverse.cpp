@@ -12,93 +12,93 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<float>
     >
-> matrix_1x1_fundamentals_type;
+>::type matrix_1x1_fundamentals_type;
 
 typedef bub::result_of::inverse<
     matrix_1x1_fundamentals_type
 >::type matrix_1x1_fundamentals_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_>
     >
-> matrix_1x1_units_type;
+>::type matrix_1x1_units_type;
 
 typedef bub::result_of::inverse<
     matrix_1x1_units_type
 >::type matrix_1x1_units_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long>,
         boost::fusion::vector<float, double>
     >
-> matrix_2x2_mixed_fundamentals_type;
+>::type matrix_2x2_mixed_fundamentals_type;
 
 typedef bub::result_of::inverse<
     matrix_2x2_mixed_fundamentals_type
 >::type matrix_2x2_mixed_fundamentals_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_, frequency>,
         boost::fusion::vector<time_, frequency>
     >
-> matrix_2x2_mixed_units_type;
+>::type matrix_2x2_mixed_units_type;
 
 typedef bub::result_of::inverse<
     matrix_2x2_mixed_units_type
 >::type matrix_2x2_mixed_units_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long, char>,
         boost::fusion::vector<short, unsigned int, unsigned long>,
         boost::fusion::vector<float, double, unsigned char>
     >
-> matrix_3x3_mixed_fundamentals_type;
+>::type matrix_3x3_mixed_fundamentals_type;
 
 typedef bub::result_of::inverse<
     matrix_3x3_mixed_fundamentals_type
 >::type matrix_3x3_mixed_fundamentals_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length_sq, length_sq, bub::_               >,
         boost::fusion::vector<length_sq, length_sq, bub::_               >,
         boost::fusion::vector<bub::_,    bub::_,    length_sq_per_time_sq>
     >
-> matrix_3x3_mixed_units_type;
+>::type matrix_3x3_mixed_units_type;
 
 typedef bub::result_of::inverse<
     matrix_3x3_mixed_units_type
 >::type matrix_3x3_mixed_units_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long, char, int>,
         boost::fusion::vector<short, unsigned int, unsigned long, int>,
         boost::fusion::vector<float, double, unsigned char, int>,
         boost::fusion::vector<float, double, int, int>
     >
-> matrix_4x4_mixed_fundamentals_type;
+>::type matrix_4x4_mixed_fundamentals_type;
 
 typedef bub::result_of::inverse<
     matrix_4x4_mixed_fundamentals_type
 >::type matrix_4x4_mixed_fundamentals_type_inverse;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length_sq, length_sq, length_sq, bub::_               >,
         boost::fusion::vector<length_sq, length_sq, length_sq, bub::_               >,
         boost::fusion::vector<length_sq, length_sq, length_sq, bub::_               >,
         boost::fusion::vector<bub::_,    bub::_,    bub::_,    length_sq_per_time_sq>
     >
-> matrix_4x4_mixed_units_type;
+>::type matrix_4x4_mixed_units_type;
 
 typedef bub::result_of::inverse<
     matrix_4x4_mixed_units_type

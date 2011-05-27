@@ -11,65 +11,65 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int>
     >
-> matrix_1x1_fundamentals_type;
+>::type matrix_1x1_fundamentals_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, int>,
         boost::fusion::vector<int, float>
     >
-> matrix_2x2_fundamentals_type;
+>::type matrix_2x2_fundamentals_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, int, int>,
         boost::fusion::vector<int, double, float>,
         boost::fusion::vector<int, int, int>
     >
-> matrix_3x3_fundamentals_type;
+>::type matrix_3x3_fundamentals_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, int, int, int>,
         boost::fusion::vector<int, int, float, int>,
         boost::fusion::vector<int, int, int, int>,
         boost::fusion::vector<int, int, int, int>
     >
-> matrix_4x4_fundamentals_type;
+>::type matrix_4x4_fundamentals_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length>
     >
-> matrix_1x1_units_type;
+>::type matrix_1x1_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, length>,
         boost::fusion::vector<time_, time_>
     >
-> matrix_2x2_units_type;
+>::type matrix_2x2_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, length, length>,
         boost::fusion::vector<frequency, frequency, frequency>,
         boost::fusion::vector<time_, time_, time_>
     >
-> matrix_3x3_units_type;
+>::type matrix_3x3_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<frequency, frequency, frequency, frequency>,
         boost::fusion::vector<length, length, length, length>,
         boost::fusion::vector<frequency, frequency, frequency, frequency>,
         boost::fusion::vector<time_, time_, time_, time_>
     >
-> matrix_4x4_units_type;
+>::type matrix_4x4_units_type;
 
 int test_main (int, char *[])
 {

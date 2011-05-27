@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/units_blas/matrix.hpp>
+#include <boost/units_blas/make_matrix.hpp>
 #include <boost/units_blas/operations.hpp>
 
 #include <boost/units/quantity.hpp>
@@ -19,12 +20,12 @@ namespace bub = boost::units_blas;
 typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::cgs::length> length2;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, length2>,
         boost::fusion::vector<length, length>
     >
-> A;
+>::type A;
 
 int test_main (int, char *[])
 {

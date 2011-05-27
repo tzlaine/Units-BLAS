@@ -74,9 +74,9 @@ namespace boost { namespace units_blas { namespace result_of {
         // be float when it really should be double, for instance).  Consider
         // this case:
         // typedef boost::units_blas::matrix<
-        //     boost::fusion::vector<
-        //        boost::fusion::vector<float, double>,
-        //        boost::fusion::vector<double, float>
+        //     boost::fusion::vector2<
+        //        boost::fusion::vector2<float, double>,
+        //        boost::fusion::vector2<double, float>
         //     >
         // > matrix_t;
         // Note that determinant<matrix_t>::type will be float, because this

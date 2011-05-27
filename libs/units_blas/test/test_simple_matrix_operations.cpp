@@ -399,14 +399,14 @@ int test_main (int, char *[])
 
     // units types and don't-cares
 
-    typedef boost::units_blas::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<bub::_, length, length, length>,
             boost::fusion::vector<length, length, length, length>,
             boost::fusion::vector<length, length, length, length>,
             boost::fusion::vector<length, length, length, length>
         >
-    > matrix_4x4_units_type_with_dont_cares;
+    >::type matrix_4x4_units_type_with_dont_cares;
 
     matrix_4x4_units_type_with_dont_cares m_D1_u_dc_y;
     m_D1_u_dc_y.at<0, 1>() = length::from_value(2.0);

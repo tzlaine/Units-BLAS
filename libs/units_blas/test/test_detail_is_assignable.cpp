@@ -13,12 +13,12 @@
 
 typedef boost::units::quantity<boost::units::si::length, float> float_length;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<float_length>,
         boost::fusion::vector<float_length>
     >
-> matrix_2x1_float_length_type;
+>::type matrix_2x1_float_length_type;
 
 int test_main (int, char *[])
 {

@@ -17,11 +17,11 @@ int main()
     {
 //[default_matrix_decl
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Length>,
-            fusion::vector<Velocity>,
-            fusion::vector<Length>,
-            fusion::vector<Velocity>
+        fusion::vector4<
+            fusion::vector1<Length>,
+            fusion::vector1<Velocity>,
+            fusion::vector1<Length>,
+            fusion::vector1<Velocity>
         >
     > my_matrix;
 //]
@@ -47,9 +47,9 @@ int main()
     {
 //[equiv_uniform_matrix_decl
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Time, Time, Time>,
-            fusion::vector<Time, Time, Time>
+        fusion::vector2<
+            fusion::vector3<Time, Time, Time>,
+            fusion::vector3<Time, Time, Time>
         >
     > my_matrix;
 //]
@@ -64,9 +64,9 @@ int main()
     {
 //[equiv_vector_decl
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Length>,
-            fusion::vector<Time>
+        fusion::vector2<
+            fusion::vector1<Length>,
+            fusion::vector1<Time>
         >
     > my_vector;
 //]
@@ -81,8 +81,8 @@ int main()
     {
 //[equiv_transpose_vector_decl
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Length, Time>
+        fusion::vector1<
+            fusion::vector2<Length, Time>
         >
     > my_transpose_vector;
 //]
@@ -98,15 +98,15 @@ int main()
     {
 //[equiv_uniform_vector_decls
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Length>,
-            fusion::vector<Length>
+        fusion::vector2<
+            fusion::vector1<Length>,
+            fusion::vector1<Length>
         >
     > my_vector;
     
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Time, Time>
+        fusion::vector1<
+            fusion::vector2<Time, Time>
         >
     > my_transpose_vector;
 //]
@@ -122,9 +122,9 @@ int main()
     {
 //[slicing_example
     typedef units_blas::matrix<
-        fusion::vector<
-            fusion::vector<double, double>,
-            fusion::vector<double, double>
+        fusion::vector2<
+            fusion::vector2<double, double>,
+            fusion::vector2<double, double>
         >
     > Matrix;
 
@@ -150,9 +150,9 @@ int main()
 //[impossible_to_generate_identity_matrix_example
     // No identity matrix exists which will preserve these types.
     units_blas::matrix<
-        fusion::vector<
-            fusion::vector<Length, Length>,
-            fusion::vector<Length, Time>
+        fusion::vector2<
+            fusion::vector2<Length, Length>,
+            fusion::vector2<Length, Time>
         >
     > who_am_i;
 //]

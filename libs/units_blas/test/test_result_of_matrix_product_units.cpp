@@ -21,105 +21,105 @@ int test_main (int, char *[])
         A_matrix_2x1_time_length_type,
         C_matrix_1x2_length_type
     >::type AxC;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length, time_length>,
             boost::fusion::vector<length_sq, length_sq>
         >
-    > AxC_manual_product;
+    >::type AxC_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxC, AxC_manual_product>));
 
     typedef bub::result_of::matrix_product<
         A_matrix_2x1_time_length_type,
         D_matrix_1x2_length_time_type
     >::type AxD;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length, time_sq>,
             boost::fusion::vector<length_sq, time_length>
         >
-    > AxD_manual_product;
+    >::type AxD_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxD, AxD_manual_product>));
 
     typedef bub::result_of::matrix_product<
         D_matrix_1x2_length_time_type,
         A_matrix_2x1_time_length_type
     >::type DxA;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length>
         >
-    > DxA_manual_product;
+    >::type DxA_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<DxA, DxA_manual_product>));
 
     typedef bub::result_of::matrix_product<
         B_matrix_2x1_length_type,
         C_matrix_1x2_length_type
     >::type BxC;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<length_sq, length_sq>,
             boost::fusion::vector<length_sq, length_sq>
         >
-    > BxC_manual_product;
+    >::type BxC_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<BxC, BxC_manual_product>));
 
     typedef bub::result_of::matrix_product<
         C_matrix_1x2_length_type,
         B_matrix_2x1_length_type
     >::type CxB;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<length_sq>
         >
-    > CxB_manual_product;
+    >::type CxB_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxB, CxB_manual_product>));
 
     typedef bub::result_of::matrix_product<
         B_matrix_2x1_length_type,
         D_matrix_1x2_length_time_type
     >::type BxD;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<length_sq, time_length>,
             boost::fusion::vector<length_sq, time_length>
         >
-    > BxD_manual_product;
+    >::type BxD_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<BxD, BxD_manual_product>));
 
     typedef bub::result_of::matrix_product<
         C_matrix_1x2_length_type,
         E_matrix_2x2_time_type
     >::type CxE;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length, time_length>
         >
-    > CxE_manual_product;
+    >::type CxE_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxE, CxE_manual_product>));
 
     typedef bub::result_of::matrix_product<
         E_matrix_2x2_time_type,
         B_matrix_2x1_length_type
     >::type ExB;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length>,
             boost::fusion::vector<time_length>
         >
-    > ExB_manual_product;
+    >::type ExB_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<ExB, ExB_manual_product>));
 
     typedef bub::result_of::matrix_product<
         E_matrix_2x2_time_type,
         E_matrix_2x2_time_type
     >::type ExE;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_sq, time_sq>,
             boost::fusion::vector<time_sq, time_sq>
         >
-    > ExE_manual_product;
+    >::type ExE_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<ExE, ExE_manual_product>));
 
 
@@ -135,12 +135,12 @@ int test_main (int, char *[])
         A_matrix_2x1_time_length_type,
         time_
     >::type Axtime;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_sq>,
             boost::fusion::vector<time_length>
         >
-    > Axtime_manual_product;
+    >::type Axtime_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<Axtime, Axtime_manual_product>));
 
     typedef bub::result_of::scalar_product<
@@ -153,11 +153,11 @@ int test_main (int, char *[])
         D_matrix_1x2_length_time_type,
         time_
     >::type Dxtime;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length, time_sq>
         >
-    > Dxtime_manual_product;
+    >::type Dxtime_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<Dxtime, Dxtime_manual_product>));
 
 
@@ -173,12 +173,12 @@ int test_main (int, char *[])
         A_matrix_2x1_time_length_type,
         time_
     >::type Adtime;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<dimensionless>,
             boost::fusion::vector<velocity>
         >
-    > Adtime_manual_quotient;
+    >::type Adtime_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<Adtime, Adtime_manual_quotient>));
 
     typedef bub::result_of::scalar_quotient<
@@ -191,11 +191,11 @@ int test_main (int, char *[])
         D_matrix_1x2_length_time_type,
         time_
     >::type Ddtime;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<velocity, dimensionless>
         >
-    > Ddtime_manual_quotient;
+    >::type Ddtime_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<Ddtime, Ddtime_manual_quotient>));
 
 
@@ -203,12 +203,12 @@ int test_main (int, char *[])
 
     typedef boost::units::quantity<boost::units::si::time, float> time_float;
     typedef boost::units::quantity<boost::units::si::length, float> length_float;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_float>,
             boost::fusion::vector<length_float>
        >
-    > A_matrix_2x1_time_length_float_type;
+    >::type A_matrix_2x1_time_length_float_type;
 
     typedef bub::result_of::matrix_element_sum<
         A_matrix_2x1_time_length_type,
@@ -232,23 +232,23 @@ int test_main (int, char *[])
         A_matrix_2x1_time_length_type,
         B_matrix_2x1_length_type
     >::type AxB_elementwise_product;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_length>,
             boost::fusion::vector<length_sq>
         >
-    > AxB_elementwise_manual_product;
+    >::type AxB_elementwise_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<AxB_elementwise_product, AxB_elementwise_manual_product>));
 
     typedef bub::result_of::matrix_element_product<
         C_matrix_1x2_length_type,
         D_matrix_1x2_length_time_type
     >::type CxD_elementwise_product;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<length_sq, time_length>
         >
-    > CxD_elementwise_manual_product;
+    >::type CxD_elementwise_manual_product;
     BOOST_MPL_ASSERT((boost::is_same<CxD_elementwise_product, CxD_elementwise_manual_product>));
 
 
@@ -258,23 +258,23 @@ int test_main (int, char *[])
         B_matrix_2x1_length_type,
         A_matrix_2x1_time_length_type
     >::type BxA_elementwise_quotient;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<velocity>,
             boost::fusion::vector<dimensionless>
         >
-    > BxA_elementwise_manual_quotient;
+    >::type BxA_elementwise_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<BxA_elementwise_quotient, BxA_elementwise_manual_quotient>));
 
     typedef bub::result_of::matrix_element_quotient<
         C_matrix_1x2_length_type,
         D_matrix_1x2_length_time_type
     >::type CxD_elementwise_quotient;
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<dimensionless, velocity>
         >
-    > CxD_elementwise_manual_quotient;
+    >::type CxD_elementwise_manual_quotient;
     BOOST_MPL_ASSERT((boost::is_same<CxD_elementwise_quotient, CxD_elementwise_manual_quotient>));
 
     return 0;

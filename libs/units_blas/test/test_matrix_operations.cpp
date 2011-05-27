@@ -11,14 +11,14 @@
 #include <boost/test/floating_point_comparison.hpp>
 
 
-typedef boost::units_blas::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<double>,
         boost::fusion::vector<double>,
         boost::fusion::vector<double>,
         boost::fusion::vector<double>
     >
-> x_vector_type;
+>::type x_vector_type;
 
 struct derived_from_x_vector_type :
     x_vector_type

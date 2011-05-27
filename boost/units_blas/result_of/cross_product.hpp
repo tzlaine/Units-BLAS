@@ -48,10 +48,10 @@ namespace boost { namespace units_blas { namespace result_of {
             )) element2;
 
             typedef matrix<
-                fusion::vector<
-                    fusion::vector<element0>,
-                    fusion::vector<element1>,
-                    fusion::vector<element2>
+                fusion::vector3<
+                    fusion::vector1<element0>,
+                    fusion::vector1<element1>,
+                    fusion::vector1<element2>
                 >
             > type;
         };
@@ -81,8 +81,8 @@ namespace boost { namespace units_blas { namespace result_of {
             )) element2;
 
             typedef matrix<
-                fusion::vector<
-                    fusion::vector<element0, element1, element2>
+                fusion::vector1<
+                    fusion::vector3<element0, element1, element2>
                 >
             > type;
         };

@@ -258,9 +258,9 @@ namespace boost { namespace units_blas {
         BOOST_MPL_ASSERT((mpl::less<mpl::size_t<0>, num_columns_t>));
 
         // If you're seeing an error here, it's because you used some type
-        // sequence besides boost::fusion::vector in your Rows template
+        // sequence besides boost::fusion::vectorN in your Rows template
         // parameter.  Rows is supposed to be a boost::fusion::vector of
-        // boost::fusion::vectors *only*.  If you want to use something else for
+        // boost::fusion::vectorNs *only*.  If you want to use something else for
         // Rows, you must use the metafunction make_matrix<Rows> instead of
         // supplying the Rows parameter directly to this template.
         BOOST_MPL_ASSERT((is_same<Rows, value_types>));

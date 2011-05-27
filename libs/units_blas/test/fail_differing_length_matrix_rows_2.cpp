@@ -11,12 +11,12 @@
 
 int test_main (int, char *[])
 {
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<double>,
             boost::fusion::vector<double, double>
         >
-    > failure_type;
+    >::type failure_type;
 
     failure_type ft;
 

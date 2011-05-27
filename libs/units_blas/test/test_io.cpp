@@ -45,11 +45,11 @@ typedef bub::uniform_matrix<
     length, 4, 4
 >::type matrix_4x4_length_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, bub::_>
     >
-> matrix_1x2_length_dont_care;
+>::type matrix_1x2_length_dont_care;
 
 int test_main (int, char *[])
 {

@@ -63,7 +63,9 @@ namespace boost { namespace units_blas {
             >
             struct apply
             {
-                typedef fusion::vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)> type;
+                typedef typename fusion::result_of::as_vector<
+                    fusion::vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>
+                >::type type;
             };
         };
     }
@@ -104,7 +106,7 @@ namespace boost { namespace units_blas {
             >::type
         >::type elements_as_fusion_vector;
 
-        typedef matrix<fusion::vector<elements_as_fusion_vector> > type;
+        typedef matrix<fusion::vector1<elements_as_fusion_vector> > type;
 #else
         typedef detail::unspecified type;
 #endif

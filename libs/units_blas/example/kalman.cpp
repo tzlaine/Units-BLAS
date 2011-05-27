@@ -12,13 +12,13 @@ using namespace boost;
 #include <boost/units/systems/si/frequency.hpp>
 #include <boost/units/systems/si/dimensionless.hpp>
 
-typedef units::quantity<units::SI::time> s;
-typedef units::quantity<units::SI::length> m;
-typedef units::quantity<units::SI::velocity> m_per_s;
-typedef units::quantity<units::SI::dimensionless> none;
-typedef units::quantity<units::SI::frequency> hz;
+typedef units::quantity<units::si::time> s;
+typedef units::quantity<units::si::length> m;
+typedef units::quantity<units::si::velocity> m_per_s;
+typedef units::quantity<units::si::dimensionless> none_;
+typedef units::quantity<units::si::frequency> hz;
 
-namespace boost { namespace units { namespace SI {
+namespace boost { namespace units { namespace si {
     typedef derived_dimension<length_base_dimension, 2>::type length_squared_dimension;
     typedef derived_dimension<length_base_dimension, 2, time_base_dimension, -1>::type length_squared_per_time_dimension;
     typedef derived_dimension<length_base_dimension, 2, time_base_dimension, -2>::type length_squared_per_time_squared_dimension;
@@ -27,38 +27,38 @@ namespace boost { namespace units { namespace SI {
     typedef unit<length_squared_per_time_squared_dimension, system> length_squared_per_time_squared;
 } } }
 
-typedef units::quantity<units::SI::length_squared> m2;
-typedef units::quantity<units::SI::length_squared_per_time> m2_per_s;
-typedef units::quantity<units::SI::length_squared_per_time_squared> m2_per_s2;
+typedef units::quantity<units::si::length_squared> m2;
+typedef units::quantity<units::si::length_squared_per_time> m2_per_s;
+typedef units::quantity<units::si::length_squared_per_time_squared> m2_per_s2;
 //]
 
 //[meas_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<m>,
-        fusion::vector<m>
+    fusion::vector2<
+        fusion::vector1<m>,
+        fusion::vector1<m>
     >
 > meas_type;
 //]
 
 //[state_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<m>,
-        fusion::vector<m_per_s>,
-        fusion::vector<m>,
-        fusion::vector<m_per_s>
+    fusion::vector4<
+        fusion::vector1<m>,
+        fusion::vector1<m_per_s>,
+        fusion::vector1<m>,
+        fusion::vector1<m_per_s>
     >
 > state_type;
 //]
 
 //[P_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<m2,       m2_per_s,  m2,       m2_per_s>,
-        fusion::vector<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>,
-        fusion::vector<m2,       m2_per_s,  m2,       m2_per_s>,
-        fusion::vector<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>
+    fusion::vector4<
+        fusion::vector4<m2,       m2_per_s,  m2,       m2_per_s>,
+        fusion::vector4<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>,
+        fusion::vector4<m2,       m2_per_s,  m2,       m2_per_s>,
+        fusion::vector4<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>
     >
 > P_type;
 //]
@@ -69,29 +69,29 @@ typedef P_type Q_type;
 
 //[F_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<none, s,    none, s>,
-        fusion::vector<hz,   none, hz,   none>,
-        fusion::vector<none, s,    none, s>,
-        fusion::vector<hz,   none, hz,   none>
+    fusion::vector4<
+        fusion::vector4<none_, s,     none_, s>,
+        fusion::vector4<hz,    none_, hz,    none_>,
+        fusion::vector4<none_, s,     none_, s>,
+        fusion::vector4<hz,    none_, hz,    none_>
     >
 > F_type;
 //]
 
 //[R_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<m2, m2>,
-        fusion::vector<m2, m2>
+    fusion::vector2<
+        fusion::vector2<m2, m2>,
+        fusion::vector2<m2, m2>
     >
 > R_type;
 //]
 
 //[H_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<none, s, none, s>,
-        fusion::vector<none, s, none, s>
+    fusion::vector2<
+        fusion::vector4<none_, s, none_, s>,
+        fusion::vector4<none_, s, none_, s>
     >
 > H_type;
 //]
@@ -102,11 +102,11 @@ typedef R_type S_type;
 
 //[K_type
 typedef units_blas::matrix<
-    fusion::vector<
-        fusion::vector<none, none>,
-        fusion::vector<hz,   hz>,
-        fusion::vector<none, none>,
-        fusion::vector<hz,   hz>
+    fusion::vector4<
+        fusion::vector2<none_, none_>,
+        fusion::vector2<hz,    hz>,
+        fusion::vector2<none_, none_>,
+        fusion::vector2<hz,    hz>
     >
 > K_type;
 //]

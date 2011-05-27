@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/units_blas/matrix.hpp>
+#include <boost/units_blas/make_matrix.hpp>
 #include <boost/units_blas/traits.hpp>
 
 #include <boost/units/quantity.hpp>
@@ -18,58 +19,58 @@
 
 namespace bub = boost::units_blas;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int>,
         boost::fusion::vector<long>,
         boost::fusion::vector<float>,
         boost::fusion::vector<double>
     >
-> matrix_4x1_type;
+>::type matrix_4x1_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long, float, double>
     >
-> matrix_1x4_type;
+>::type matrix_1x4_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long, float, double>,
         boost::fusion::vector<long, int, float, double>,
         boost::fusion::vector<int, float, long, double>,
         boost::fusion::vector<int, long, double, float>
     >
-> matrix_4x4_type;
+>::type matrix_4x4_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
 typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::si::velocity> velocity;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_>,
         boost::fusion::vector<length>,
         boost::fusion::vector<velocity>,
         boost::fusion::vector<dimensionless>
     >
-> matrix_4x1_units_type;
+>::type matrix_4x1_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_, length, velocity, dimensionless>
     >
-> matrix_1x4_units_type;
+>::type matrix_1x4_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_, length, velocity, dimensionless>,
         boost::fusion::vector<length, time_, velocity, dimensionless>,
         boost::fusion::vector<time_, velocity, length, dimensionless>,
         boost::fusion::vector<time_, length, dimensionless, velocity>
     >
-> matrix_4x4_units_type;
+>::type matrix_4x4_units_type;
 
 struct derived_from_matrix_4x1_type :
     matrix_4x1_type

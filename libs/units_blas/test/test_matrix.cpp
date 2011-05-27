@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/units_blas/matrix.hpp>
+#include <boost/units_blas/make_matrix.hpp>
 
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/time.hpp>
@@ -16,42 +17,42 @@
 
 namespace bub = boost::units_blas;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<float>,
         boost::fusion::vector<int>
     >
-> A_matrix_2x1_float_int_type;
+>::type A_matrix_2x1_float_int_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int>,
         boost::fusion::vector<int>
     >
-> B_matrix_2x1_int_type;
+>::type B_matrix_2x1_int_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<double, double>
     >
-> C_matrix_1x2_double_type;
+>::type C_matrix_1x2_double_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
 typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<time_>,
         boost::fusion::vector<length>
     >
-> A_matrix_2x1_time_length_type;
+>::type A_matrix_2x1_time_length_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<dimensionless, dimensionless>
     >
-> B_matrix_2x1_length_type;
+>::type B_matrix_2x1_length_type;
 
 int test_main (int, char *[])
 {
@@ -181,12 +182,12 @@ int test_main (int, char *[])
 
     // unit types and don't-cares
 
-    typedef bub::matrix<
+    typedef bub::make_matrix<
         boost::fusion::vector<
             boost::fusion::vector<time_>,
             boost::fusion::vector<bub::_>
         >
-    > matrix_2x1_time_dont_care;
+    >::type matrix_2x1_time_dont_care;
     matrix_2x1_time_dont_care m_time_dc_1;
     m_time_dc_1.at<0, 0>() = t;
     matrix_2x1_time_dont_care m_time_dc_2;

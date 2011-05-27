@@ -15,32 +15,32 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<int, long, int>,
         boost::fusion::vector<long, float, int>,
         boost::fusion::vector<float, float, long>
     >
-> matrix_3x3_type;
+>::type matrix_3x3_type;
 
 typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::si::velocity> velocity;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length, length>,
         boost::fusion::vector<length, length>
     >
-> matrix_2x2_units_type;
+>::type matrix_2x2_units_type;
 
-typedef bub::matrix<
+typedef bub::make_matrix<
     boost::fusion::vector<
         boost::fusion::vector<length_sq, length_sq, bub::_               >,
         boost::fusion::vector<length_sq, length_sq, bub::_               >,
         boost::fusion::vector<bub::_,    bub::_,    length_sq_per_time_sq>
     >
-> matrix_3x3_units_type;
+>::type matrix_3x3_units_type;
 
 int test_main (int, char *[])
 {

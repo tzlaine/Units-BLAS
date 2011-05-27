@@ -20,22 +20,22 @@
 namespace bub = boost::units_blas;
 
 typedef bub::matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<float>,
-        boost::fusion::vector<float>
+    boost::fusion::vector2<
+        boost::fusion::vector1<float>,
+        boost::fusion::vector1<float>
     >
 > manual_matrix_2x1_type;
 
 typedef bub::matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<float, float>
+    boost::fusion::vector1<
+        boost::fusion::vector2<float, float>
     >
 > manual_matrix_1x2_type;
 
 typedef bub::matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<float, float>,
-        boost::fusion::vector<float, float>
+    boost::fusion::vector2<
+        boost::fusion::vector2<float, float>,
+        boost::fusion::vector2<float, float>
     >
 > manual_matrix_2x2_type;
 
@@ -62,22 +62,22 @@ typedef bub::make_matrix<
 typedef boost::units::quantity<boost::units::si::length> length;
 
 typedef bub::matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length>,
-        boost::fusion::vector<length>
+    boost::fusion::vector2<
+        boost::fusion::vector1<length>,
+        boost::fusion::vector1<length>
     >
 > manual_matrix_2x1_units_type;
 
 typedef bub::matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, length>
+    boost::fusion::vector1<
+        boost::fusion::vector2<length, length>
     >
 > manual_matrix_1x2_units_type;
 
 typedef bub::matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, length>,
-        boost::fusion::vector<length, length>
+    boost::fusion::vector2<
+        boost::fusion::vector2<length, length>,
+        boost::fusion::vector2<length, length>
     >
 > manual_matrix_2x2_units_type;
 

@@ -14,7 +14,7 @@ exe tutorial
         tutorial.cpp
     ;
 
-#exe kalman
-#    :
-#        kalman.cpp
-#    ;
+exe kalman
+    :
+        kalman.cpp
+    ;
