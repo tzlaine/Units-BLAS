@@ -55,7 +55,7 @@ namespace boost { namespace units_blas { namespace result_of {
 
         typedef matrix<
             typename fusion::result_of::as_vector<
-            typename mpl::transform_view<
+                typename mpl::transform_view<
                     mpl::range_c<std::size_t, 0, Matrix::num_rows_t::value>,
                     detail::inverse_row<
                         typename transpose<Matrix>::type,
