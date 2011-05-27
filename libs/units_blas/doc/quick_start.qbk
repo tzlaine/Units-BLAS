@@ -83,12 +83,24 @@ sequences containing integral constants, and `e1` is an element of _matrix_
     [[`M1 -= M2`]                      [ Elementwise subtraction. ]                       []]
     [[`M1 *= s`]                       [ Matrix-scalar product. ]                         [ Won't compile if `e1 = typeof(e1 * s)` doesn't compile. ]]
     [[`M1 /= s`]                       [ Matrix-scalar division. ]                        [ Won't compile if `e1 = typeof(e1 / s)` doesn't compile. ]]
-    [[`-M1`\n_neg__`(M)`]              [ Elementwise negation. ]                          []]
-    [[`M1 * M2`\n_prod__`(M1, M2)`]    [ Matrix-matrix product. ]                         []]
-    [[`M1 * s`\n_prod__`(M1, s)`]      [ Matrix-scalar product. ]                         []]
-    [[`s * M1`\n_prod__`(s, M2)`]      [ Matrix-scalar product. ]                         []]
-    [[`M1 + M2`\n_sum__`(M1, M2)`]     [ Elementwise addition. ]                          []]
-    [[`M1 - M2`\n_diff__`(M1, M2)`]    [ Elementwise subtraction. ]                       []]
+    [[`-M1`
+
+      _neg__`(M)`]              [ Elementwise negation. ]                          []]
+    [[`M1 * M2`
+
+      _prod__`(M1, M2)`]    [ Matrix-matrix product. ]                         []]
+    [[`M1 * s`
+
+      _prod__`(M1, s)`]      [ Matrix-scalar product. ]                         []]
+    [[`s * M1`
+
+      _prod__`(s, M2)`]      [ Matrix-scalar product. ]                         []]
+    [[`M1 + M2`
+
+      _sum__`(M1, M2)`]     [ Elementwise addition. ]                          []]
+    [[`M1 - M2`
+
+      _diff__`(M1, M2)`]    [ Elementwise subtraction. ]                       []]
     [[_element_prod__`(M1, M2)`]       [ Elementwise product. ]                           []]
     [[_element_div__`(M1, M2)`]        [ Elementwise division. ]                          []]
     [[_slice__`<Rows, Columns>(M1)`]   [ Subset of rows and columns of original matrix. ] []]
@@ -114,8 +126,12 @@ table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true.
 
 [table Vector Operations
     [[Operation Syntax] [Description] [Notes]]
-    [[`V1 * V2`\n_dot__`(V1, V2)`]     [ Dot product. ]                                       [ Elementwise products must be mutually summable. ]]
-    [[`V1 ^ V2`\n_cross__`(V1, V2)`]   [ Cross product. ]                                     [ Vectors must be exactly 3x1 (or 1x3). ]]
+    [[`V1 * V2`
+
+      _dot__`(V1, V2)`]     [ Dot product. ]                                       [ Elementwise products must be mutually summable. ]]
+    [[`V1 ^ V2`
+
+      _cross__`(V1, V2)`]   [ Cross product. ]                                     [ Vectors must be exactly 3x1 (or 1x3). ]]
     [[_sum__`(V1)`]                    [ Sum of all elements. ]                               [ Elements must be mutually summable. ]]
     [[_norm_1__`(V1)`]                 [ Sum of absolute values of all elements. ]            [ Elements must be mutually summable. ]]
     [[_norm_2__`(V1)`]                 [ Square root of sum of squares of all elements. ]     [ Elements must be mutually summable. ]]
