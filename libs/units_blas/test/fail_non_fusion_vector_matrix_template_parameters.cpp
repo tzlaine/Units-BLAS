@@ -13,11 +13,11 @@
 
 int test_main (int, char *[])
 {
-    typedef bub::make_matrix<
+    typedef bub::matrix<
         boost::mpl::vector<
             boost::mpl::vector<double>
         >
-    >::type failure_type;
+    > failure_type;
 
     failure_type ft;
 
