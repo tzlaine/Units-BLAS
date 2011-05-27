@@ -31,7 +31,7 @@ namespace boost { namespace units_blas {
     /** Convenience metafunction that returns a @c matrix<> of dimension @c
         Rows x @c Columns, in which each element is of type @c T. */
     template <typename T, std::size_t Rows, std::size_t Columns>
-    struct uniform_matrix
+    struct make_uniform_matrix
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
@@ -75,7 +75,7 @@ namespace boost { namespace units_blas {
         are size(@c Elements) x 1, and each element (i, 0) is the ith type in
         @c Elements. */
     template <typename Elements>
-    struct vector
+    struct make_vector
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
@@ -96,7 +96,7 @@ namespace boost { namespace units_blas {
         matrix<>'s dimensions are 1 x size(@c Elements), and each element
         (0, i) is the ith type in @c Elements. */
     template <typename Elements>
-    struct transpose_vector
+    struct make_transpose_vector
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
@@ -115,17 +115,17 @@ namespace boost { namespace units_blas {
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1, in which each element is of type @c T. */
     template <typename T, std::size_t N>
-    struct uniform_vector
+    struct make_uniform_vector
     {
-        typedef typename uniform_matrix<T, N, 1>::type type;
+        typedef typename make_uniform_matrix<T, N, 1>::type type;
     };
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N, in which each element is of type @c T. */
     template <typename T, std::size_t N>
-    struct uniform_transpose_vector
+    struct make_uniform_transpose_vector
     {
-        typedef typename uniform_matrix<T, 1, N>::type type;
+        typedef typename make_uniform_matrix<T, 1, N>::type type;
     };
 
 } } // namespace boost::units_blas

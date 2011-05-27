@@ -40,7 +40,7 @@ int main()
 
     {
 //[uniform_matrix_decl
-    units_blas::uniform_matrix<Time, 2, 3>::type my_matrix;
+    units_blas::make_uniform_matrix<Time, 2, 3>::type my_matrix;
 //]
     }
 
@@ -57,7 +57,7 @@ int main()
 
     {
 //[vector_decl
-    units_blas::vector<fusion::vector<Length, Time> >::type my_vector;
+    units_blas::make_vector<fusion::vector<Length, Time> >::type my_vector;
 //]
     }
 
@@ -74,7 +74,7 @@ int main()
 
     {
 //[transpose_vector_decl
-    units_blas::transpose_vector<fusion::vector<Length, Time> >::type my_transpose_vector;
+    units_blas::make_transpose_vector<fusion::vector<Length, Time> >::type my_transpose_vector;
 //]
     }
 
@@ -90,8 +90,8 @@ int main()
 
     {
 //[uniform_vector_decls
-    units_blas::uniform_vector<Length, 2>::type my_vector;
-    units_blas::uniform_transpose_vector<Time, 2>::type my_transpose_vector;
+    units_blas::make_uniform_vector<Length, 2>::type my_vector;
+    units_blas::make_uniform_transpose_vector<Time, 2>::type my_transpose_vector;
 //]
     }
 
@@ -114,8 +114,8 @@ int main()
 
     {
 //[cross_product_space_example
-    units_blas::uniform_vector<Length, 3>::type vec;
-    units_blas::uniform_vector<LengthSquared, 3>::type cross_product_result = vec ^ vec;
+    units_blas::make_uniform_vector<Length, 3>::type vec;
+    units_blas::make_uniform_vector<LengthSquared, 3>::type cross_product_result = vec ^ vec;
 //]
     }
 

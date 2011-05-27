@@ -111,37 +111,37 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((boost::is_same<manual_matrix_2x1_units_type, made_matrix_2x1_units_type>));
     BOOST_MPL_ASSERT((boost::is_same<manual_matrix_2x2_units_type, made_matrix_2x2_units_type>));
 
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<float, 1, 2>::type, manual_matrix_1x2_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<float, 2, 1>::type, manual_matrix_2x1_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<float, 2, 2>::type, manual_matrix_2x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_matrix<float, 1, 2>::type, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_matrix<float, 2, 1>::type, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_matrix<float, 2, 2>::type, manual_matrix_2x2_type>));
 
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<length, 1, 2>::type, manual_matrix_1x2_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<length, 2, 1>::type, manual_matrix_2x1_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<length, 2, 2>::type, manual_matrix_2x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_matrix<length, 1, 2>::type, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_matrix<length, 2, 1>::type, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_matrix<length, 2, 2>::type, manual_matrix_2x2_units_type>));
 
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::fusion::vector<float, float> >::type, manual_matrix_2x1_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::fusion::list<float, float> >::type, manual_matrix_2x1_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::mpl::vector<float, float> >::type, manual_matrix_2x1_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::mpl::list<float, float> >::type, manual_matrix_2x1_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_vector<float, 2>::type, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::fusion::vector<float, float> >::type, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::fusion::list<float, float> >::type, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::mpl::vector<float, float> >::type, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::mpl::list<float, float> >::type, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_vector<float, 2>::type, manual_matrix_2x1_type>));
 
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::fusion::vector<length, length> >::type, manual_matrix_2x1_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::fusion::list<length, length> >::type, manual_matrix_2x1_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::mpl::vector<length, length> >::type, manual_matrix_2x1_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::vector<boost::mpl::list<length, length> >::type, manual_matrix_2x1_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_vector<length, 2>::type, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::fusion::vector<length, length> >::type, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::fusion::list<length, length> >::type, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::mpl::vector<length, length> >::type, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_vector<boost::mpl::list<length, length> >::type, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_vector<length, 2>::type, manual_matrix_2x1_units_type>));
 
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::fusion::vector<float, float> >::type, manual_matrix_1x2_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::fusion::list<float, float> >::type, manual_matrix_1x2_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::mpl::vector<float, float> >::type, manual_matrix_1x2_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::mpl::list<float, float> >::type, manual_matrix_1x2_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_transpose_vector<float, 2>::type, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::fusion::vector<float, float> >::type, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::fusion::list<float, float> >::type, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::mpl::vector<float, float> >::type, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::mpl::list<float, float> >::type, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_transpose_vector<float, 2>::type, manual_matrix_1x2_type>));
 
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::fusion::vector<length, length> >::type, manual_matrix_1x2_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::fusion::list<length, length> >::type, manual_matrix_1x2_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::mpl::vector<length, length> >::type, manual_matrix_1x2_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<boost::mpl::list<length, length> >::type, manual_matrix_1x2_units_type>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_transpose_vector<length, 2>::type, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::fusion::vector<length, length> >::type, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::fusion::list<length, length> >::type, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::mpl::vector<length, length> >::type, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_transpose_vector<boost::mpl::list<length, length> >::type, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::make_uniform_transpose_vector<length, 2>::type, manual_matrix_1x2_units_type>));
 
     return 0;
 }

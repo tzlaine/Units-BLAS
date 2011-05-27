@@ -21,27 +21,27 @@ typedef boost::units::quantity<boost::units::si::length, float> length;
 
 namespace bub = boost::units_blas;
 
-typedef bub::uniform_matrix<
+typedef bub::make_uniform_matrix<
     float, 4, 1
 >::type matrix_4x1_float_type;
 
-typedef bub::uniform_matrix<
+typedef bub::make_uniform_matrix<
     float, 1, 4
 >::type matrix_1x4_float_type;
 
-typedef bub::uniform_matrix<
+typedef bub::make_uniform_matrix<
     float, 4, 4
 >::type matrix_4x4_float_type;
 
-typedef bub::uniform_matrix<
+typedef bub::make_uniform_matrix<
     length, 4, 1
 >::type matrix_4x1_length_type;
 
-typedef bub::uniform_matrix<
+typedef bub::make_uniform_matrix<
     length, 1, 4
 >::type matrix_1x4_length_type;
 
-typedef bub::uniform_matrix<
+typedef bub::make_uniform_matrix<
     length, 4, 4
 >::type matrix_4x4_length_type;
 

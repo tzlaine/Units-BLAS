@@ -1,7 +1,5 @@
 - Add concept docs specifying what types can be used within a units_blas matrix.  Include concepts for raw-numeric types a la the fundamenal numeric types, and other numeric types a la Boost.Units.
 
-- Document rationale behind picking SFINAE over BOOST_MPL_ASSERTS in operations.  Remind users that when overload resolution fails, it's usually a matrix-dimensionality problem, whereas when something else fails deep in the implementation, it's usually a units problem.
-
 - Eliminate dependency on native-typeof uses of BOOST_TYPEOF, and/or register units_blas types with BOOST_TYPEOF.
 
 - Add support for complex value_types and associated complex-related functions, like herm(), real(), imag(), and conj().
@@ -22,9 +20,6 @@
     // opb_prod(A, B, C, true);  // C = A * B
     // opb_prod(A, B, C, false); // C += A * B
 
-
 - Do timing comparisons of units_blas vs. boost.ublas, and optimize where possible.
 
 - Optimize build speed of library.
-
-- Rename vector<> and transpose_vector<> to make_vector<> and make_transpose_vector<>.
