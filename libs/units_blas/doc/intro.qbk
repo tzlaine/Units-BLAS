@@ -56,7 +56,7 @@ std::complex, etc.).
 Currently, there are no provisions made anywhere in the code for complex
 operations.  Specifically, there are no `herm()`, `real()`, `imag()`, or
 `conj()` operations.  This is planned for future work, but is unimplemented as
-of now.  Also, there is no use of expression template optimizations.  This is
+of now.  Also, there is no use of template expression optimizations.  This is
 also planned for the future.
 
 [endsect]

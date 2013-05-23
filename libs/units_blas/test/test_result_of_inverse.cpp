@@ -7,7 +7,6 @@
 #include "result_of_tests.hpp"
 
 #include <boost/units_blas/result_of/inverse.hpp>
-#include <boost/units_blas/dont_care.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -68,9 +67,9 @@ typedef bub::result_of::inverse<
 
 typedef bub::make_matrix<
     boost::fusion::vector<
-        boost::fusion::vector<length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<bub::_,    bub::_,    length_sq_per_time_sq>
+        boost::fusion::vector<length_sq, length_sq, length_sq_per_time>,
+        boost::fusion::vector<length_sq, length_sq, length_sq_per_time>,
+        boost::fusion::vector<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
     >
 >::type matrix_3x3_mixed_units_type;
 
@@ -93,10 +92,10 @@ typedef bub::result_of::inverse<
 
 typedef bub::make_matrix<
     boost::fusion::vector<
-        boost::fusion::vector<length_sq, length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<length_sq, length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<length_sq, length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<bub::_,    bub::_,    bub::_,    length_sq_per_time_sq>
+        boost::fusion::vector<length_sq, length_sq, length_sq, length_sq_per_time>,
+        boost::fusion::vector<length_sq, length_sq, length_sq, length_sq_per_time>,
+        boost::fusion::vector<length_sq, length_sq, length_sq, length_sq_per_time>,
+        boost::fusion::vector<length_sq_per_time, length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
     >
 >::type matrix_4x4_mixed_units_type;
 
@@ -245,7 +244,7 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_3x3_mixed_units_type_inverse, 0, 2>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
@@ -263,19 +262,19 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_3x3_mixed_units_type_inverse, 1, 2>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_3x3_mixed_units_type_inverse, 2, 0>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_3x3_mixed_units_type_inverse, 2, 1>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
@@ -405,7 +404,7 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_4x4_mixed_units_type_inverse, 0, 3>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
@@ -429,7 +428,7 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_4x4_mixed_units_type_inverse, 1, 3>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
@@ -453,25 +452,25 @@ int test_main (int, char *[])
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_4x4_mixed_units_type_inverse, 2, 3>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_4x4_mixed_units_type_inverse, 3, 0>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_4x4_mixed_units_type_inverse, 3, 1>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((
         boost::is_same<
             bub::result_of::value_at_c<matrix_4x4_mixed_units_type_inverse, 3, 2>::type,
-            bub::_
+            time_per_length_sq
         >::type
     ));
     BOOST_MPL_ASSERT((

@@ -34,14 +34,6 @@ typedef bub::make_matrix<
     >
 >::type matrix_2x2_units_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<length_sq, length_sq, bub::_               >,
-        boost::fusion::vector<bub::_,    bub::_,    length_sq_per_time_sq>
-    >
->::type matrix_3x3_units_type;
-
 int test_main (int, char *[])
 {
     {
@@ -118,42 +110,6 @@ int test_main (int, char *[])
         BOOST_CHECK((matrix_times_identity.at<0, 1>() == length::from_value(2.0)));
         BOOST_CHECK((matrix_times_identity.at<1, 0>() == length::from_value(3.0)));
         BOOST_CHECK((matrix_times_identity.at<1, 1>() == length::from_value(4.0)));
-    }
-
-    {
-        matrix_3x3_units_type matrix;
-        matrix.at<0, 0>() = length_sq::from_value(1.0);
-        matrix.at<0, 1>() = length_sq::from_value(2.0);
-        matrix.at<1, 0>() = length_sq::from_value(3.0);
-        matrix.at<1, 1>() = length_sq::from_value(4.0);
-        matrix.at<2, 2>() = length_sq_per_time_sq::from_value(5.0);
-
-        typedef BOOST_TYPEOF((bub::make_identity_matrix<matrix_3x3_units_type>())) identity_type;
-        identity_type identity_matrix = bub::make_identity_matrix<matrix_3x3_units_type>();
-
-        BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<0, 0>()))>));
-        BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<0, 1>()))>));
-        BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((identity_matrix.at<0, 2>())), bub::_>));
-        BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<1, 0>()))>));
-        BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<1, 1>()))>));
-        BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((identity_matrix.at<1, 2>())), bub::_>));
-        BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((identity_matrix.at<2, 0>())), bub::_>));
-        BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((identity_matrix.at<2, 1>())), bub::_>));
-        BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<2, 2>()))>));
-
-        BOOST_CHECK((identity_matrix.at<0, 0>() == 1));
-        BOOST_CHECK((identity_matrix.at<0, 1>() == 0));
-        BOOST_CHECK((identity_matrix.at<1, 0>() == 0));
-        BOOST_CHECK((identity_matrix.at<1, 1>() == 1));
-        BOOST_CHECK((identity_matrix.at<2, 2>() == 1));
-
-        matrix_3x3_units_type matrix_times_identity = matrix * identity_matrix;
-
-        BOOST_CHECK((matrix_times_identity.at<0, 0>() == length_sq::from_value(1.0)));
-        BOOST_CHECK((matrix_times_identity.at<0, 1>() == length_sq::from_value(2.0)));
-        BOOST_CHECK((matrix_times_identity.at<1, 0>() == length_sq::from_value(3.0)));
-        BOOST_CHECK((matrix_times_identity.at<1, 1>() == length_sq::from_value(4.0)));
-        BOOST_CHECK((matrix_times_identity.at<2, 2>() == length_sq_per_time_sq::from_value(5.0)));
     }
 
     return 0;

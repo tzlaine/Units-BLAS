@@ -179,36 +179,5 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A5_u.at<0, 0>() == t / 2.0));
     BOOST_CHECK((m_A5_u.at<1, 0>() == l / 2.0));
 
-
-    // unit types and don't-cares
-
-    typedef bub::make_matrix<
-        boost::fusion::vector<
-            boost::fusion::vector<time_>,
-            boost::fusion::vector<bub::_>
-        >
-    >::type matrix_2x1_time_dont_care;
-    matrix_2x1_time_dont_care m_time_dc_1;
-    m_time_dc_1.at<0, 0>() = t;
-    matrix_2x1_time_dont_care m_time_dc_2;
-    m_time_dc_2.at<0, 0>() = t;
-
-    m_time_dc_1 += m_time_dc_2;
-    BOOST_CHECK((m_time_dc_1.at<0, 0>() == t + t));
-
-    m_time_dc_1 -= m_time_dc_2;
-    BOOST_CHECK((m_time_dc_1.at<0, 0>() == t + t - t));
-
-    m_time_dc_1 = m_time_dc_2;
-    m_time_dc_1 *= 2.0;
-    BOOST_CHECK((m_time_dc_1.at<0, 0>() == t * 2.0));
-
-    m_time_dc_1 = m_time_dc_2;
-    m_time_dc_1 /= 2.0;
-    BOOST_CHECK((m_time_dc_1.at<0, 0>() == t / 2.0));
-
-    m_time_dc_1 = m_A5_u;
-    BOOST_CHECK((m_time_dc_1.at<0, 0>() == t / 2.0));
-
     return 0;
 }

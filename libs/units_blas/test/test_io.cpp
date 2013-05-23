@@ -45,12 +45,6 @@ typedef bub::make_uniform_matrix<
     length, 4, 4
 >::type matrix_4x4_length_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, bub::_>
-    >
->::type matrix_1x2_length_dont_care;
-
 int test_main (int, char *[])
 {
     std::cout
@@ -60,7 +54,6 @@ int test_main (int, char *[])
         << matrix_4x1_length_type()
         << matrix_1x4_length_type()
         << matrix_4x4_length_type()
-        << matrix_1x2_length_dont_care()
         ;
 
     return 0;

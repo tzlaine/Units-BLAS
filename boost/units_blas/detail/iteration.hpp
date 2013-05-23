@@ -301,13 +301,6 @@ namespace boost { namespace units_blas { namespace detail {
             { value = static_cast<ValueType>(x); }
     };
 
-    template <>
-    struct assign_to_value_type<_>
-    {
-        template <typename ValueType>
-        static void call (_ const &, ValueType &) {}
-    };
-
     template <typename Unit, typename ValueType>
     struct assign_to_value_type<units::quantity<Unit, ValueType> >
     {
@@ -339,8 +332,6 @@ namespace boost { namespace units_blas { namespace detail {
         template <typename ValueType>
         static void call (T & x, ValueType const & value)
             { x = static_cast<T>(value); }
-
-        static void call (T &, _ const &) {}
     };
 
     template <typename Unit, typename ValueType>
@@ -349,8 +340,6 @@ namespace boost { namespace units_blas { namespace detail {
         template <typename ValueType2>
         static void call (units::quantity<Unit, ValueType> & x, ValueType2 const & value)
             { x = units::quantity<Unit, ValueType>::from_value(static_cast<ValueType>(value)); }
-
-        static void call (units::quantity<Unit, ValueType> &, _ const &) {}
     };
 
     struct temp_to_matrix_assign

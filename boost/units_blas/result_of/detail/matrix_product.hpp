@@ -12,7 +12,6 @@
 #include <boost/mpl/range_c.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/units/quantity.hpp>
-#include <boost/units_blas/dont_care.hpp>
 
 
 namespace boost { namespace units_blas { namespace result_of { namespace detail {
@@ -69,10 +68,6 @@ namespace boost { namespace units_blas { namespace result_of { namespace detail 
     template <typename T>
     struct value_inverse<T, true>
     { typedef T type; };
-
-    template <>
-    struct value_inverse<_, false>
-    { typedef _ type; };
 
     template <typename T>
     struct value_inverse<T, false>
