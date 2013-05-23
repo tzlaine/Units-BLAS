@@ -57,14 +57,14 @@ namespace boost { namespace units_blas {
     template <typename I, typename J, typename T>
     typename result_of::at<matrix<T>, I, J>::type
     at (matrix<T> & m)
-    { return m.at<I::value, J::value>(); }
+    { return m.template at<I::value, J::value>(); }
 
     /** Returns a const-preserved reference to the element at row @c I, column
         @c J of @c m.  @c m must be a @c matrix<>. */
     template <std::size_t I, std::size_t J, typename T>
     typename result_of::at_c<matrix<T>, I, J>::type
     at_c (matrix<T> & m)
-    { return m.at<I, J>(); }
+    { return m.template at<I, J>(); }
 
     /** Returns the tranpose of @c m.  @c m must be a @c matrix<>. */
     template <typename T>
@@ -457,9 +457,9 @@ namespace boost { namespace units_blas {
         typedef typename result_of::cross_product<VectorL, VectorR>::type result_type;
         result_type retval;
         typedef fusion::vector<result_type &, VectorL const &, VectorR const &> ops;
-        retval.at<0, 0>() = lhs.at<1, 0>() * rhs.at<2, 0>() - lhs.at<2, 0>() * rhs.at<1, 0>();
-        retval.at<1, 0>() = lhs.at<2, 0>() * rhs.at<0, 0>() - lhs.at<0, 0>() * rhs.at<2, 0>();
-        retval.at<2, 0>() = lhs.at<0, 0>() * rhs.at<1, 0>() - lhs.at<1, 0>() * rhs.at<0, 0>();
+        retval.template at<0, 0>() = lhs.template at<1, 0>() * rhs.template at<2, 0>() - lhs.template at<2, 0>() * rhs.template at<1, 0>();
+        retval.template at<1, 0>() = lhs.template at<2, 0>() * rhs.template at<0, 0>() - lhs.template at<0, 0>() * rhs.template at<2, 0>();
+        retval.template at<2, 0>() = lhs.template at<0, 0>() * rhs.template at<1, 0>() - lhs.template at<1, 0>() * rhs.template at<0, 0>();
         return retval;
     }
 
@@ -485,9 +485,9 @@ namespace boost { namespace units_blas {
         typedef typename result_of::cross_product<VectorL, VectorR>::type result_type;
         result_type retval;
         typedef fusion::vector<result_type &, VectorL const &, VectorR const &> ops;
-        retval.at<0, 0>() = lhs.at<0, 1>() * rhs.at<0, 2>() - lhs.at<0, 2>() * rhs.at<0, 1>();
-        retval.at<0, 1>() = lhs.at<0, 2>() * rhs.at<0, 0>() - lhs.at<0, 0>() * rhs.at<0, 2>();
-        retval.at<0, 2>() = lhs.at<0, 0>() * rhs.at<0, 1>() - lhs.at<0, 1>() * rhs.at<0, 0>();
+        retval.template at<0, 0>() = lhs.template at<0, 1>() * rhs.template at<0, 2>() - lhs.template at<0, 2>() * rhs.template at<0, 1>();
+        retval.template at<0, 1>() = lhs.template at<0, 2>() * rhs.template at<0, 0>() - lhs.template at<0, 0>() * rhs.template at<0, 2>();
+        retval.template at<0, 2>() = lhs.template at<0, 0>() * rhs.template at<0, 1>() - lhs.template at<0, 1>() * rhs.template at<0, 0>();
         return retval;
     }
 
@@ -683,7 +683,7 @@ namespace boost { namespace units_blas {
     {
         typedef typename result_of::sum<Vector>::type result_type;
         typedef std::pair<result_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<result_type>(v.at<0, 0>())), 0);
+        temp_type tmp(detail::abs_(static_cast<result_type>(v.template at<0, 0>())), 0);
         typedef fusion::vector<temp_type &, Vector const &> ops;
         iterate<typename Vector::num_rows_t>(
             ops(tmp, v), detail::vector_norm_inf()
@@ -707,7 +707,7 @@ namespace boost { namespace units_blas {
     {
         typedef typename result_of::sum<Vector>::type result_type;
         typedef std::pair<result_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<result_type>(v.at<0, 0>())), 0);
+        temp_type tmp(detail::abs_(static_cast<result_type>(v.template at<0, 0>())), 0);
         typedef fusion::vector<temp_type &, Vector const &> ops;
         iterate<typename Vector::num_columns_t>(
             ops(tmp, v), detail::transpose_vector_norm_inf()
@@ -727,7 +727,7 @@ namespace boost { namespace units_blas {
     {
         typedef typename result_of::sum<Vector>::type sum_type;
         typedef std::pair<sum_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<sum_type>(v.at<0, 0>())), 0);
+        temp_type tmp(detail::abs_(static_cast<sum_type>(v.template at<0, 0>())), 0);
         typedef fusion::vector<temp_type &, Vector const &> ops;
         iterate<typename Vector::num_rows_t>(
             ops(tmp, v), detail::vector_norm_inf()
@@ -751,7 +751,7 @@ namespace boost { namespace units_blas {
     {
         typedef typename result_of::sum<Vector>::type sum_type;
         typedef std::pair<sum_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<sum_type>(v.at<0, 0>())), 0);
+        temp_type tmp(detail::abs_(static_cast<sum_type>(v.template at<0, 0>())), 0);
         typedef fusion::vector<temp_type &, Vector const &> ops;
         iterate<typename Vector::num_columns_t>(
             ops(tmp, v), detail::transpose_vector_norm_inf()
@@ -772,7 +772,7 @@ namespace boost { namespace units_blas {
         result_of::determinant<matrix<T> >
     >::type
     determinant (matrix<T> const & m)
-    { return m.at<0, 0>(); }
+    { return m.template at<0, 0>(); }
 
     template <typename T>
     typename lazy_enable_if<
@@ -786,7 +786,7 @@ namespace boost { namespace units_blas {
         result_of::determinant<matrix<T> >
     >::type
     determinant (matrix<T> const & m)
-    { return m.at<0, 0>() * m.at<1, 1>() - m.at<0, 1>() * m.at<1, 0>(); }
+    { return m.template at<0, 0>() * m.template at<1, 1>() - m.template at<0, 1>() * m.template at<1, 0>(); }
 
     template <typename T>
     typename lazy_enable_if<
@@ -802,9 +802,9 @@ namespace boost { namespace units_blas {
     determinant (matrix<T> const & m)
     {
         return
-            m.at<0, 0>() * (m.at<1, 1>() * m.at<2, 2>() - m.at<1, 2>() * m.at<2, 1>()) -
-            m.at<0, 1>() * (m.at<1, 0>() * m.at<2, 2>() - m.at<1, 2>() * m.at<2, 0>()) +
-            m.at<0, 2>() * (m.at<1, 0>() * m.at<2, 1>() - m.at<1, 1>() * m.at<2, 0>());
+            m.template at<0, 0>() * (m.template at<1, 1>() * m.template at<2, 2>() - m.template at<1, 2>() * m.template at<2, 1>()) -
+            m.template at<0, 1>() * (m.template at<1, 0>() * m.template at<2, 2>() - m.template at<1, 2>() * m.template at<2, 0>()) +
+            m.template at<0, 2>() * (m.template at<1, 0>() * m.template at<2, 1>() - m.template at<1, 1>() * m.template at<2, 0>());
     }
 #endif
 
