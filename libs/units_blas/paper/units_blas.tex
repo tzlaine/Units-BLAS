@@ -1,0 +1,419 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\author{T. Zachary Laine}
+
+\newtheorem{defn}{Definition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}{Corollary}[section]
+\newenvironment{proof}{\noindent\textbf{Proof} }{\qed \newline}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+      \ifdim\lastskip<1.5em \hskip-\lastskip
+      \hskip1.5em plus0em minus0.5em \fi \nobreak
+      \vrule height0.75em width0.5em depth0.25em\fi}
+
+\setlength{\parindent}{0mm}
+
+\numberwithin{equation}{section}
+
+\begin{document}
+Need proof/discussion of:
+
+\[ \left\langle \hat{M}_{ij} = \hat{M}^{-1}_{ji}\right\rangle \]
+\[ \forall I_{n} \mbox{(left- or right-)} det(I_{n}) = 1 ? \]
+Every identity I has an inverse, $I^{-1} = I^{TV}$ and possibly $I \not= I^{-1}$?
+some numerically nonsingular matrices have no inverse due to units
+
+***TODO*** Discuss the addition and multiplication of units.
+
+\section{Introduction}
+
+***TODO***
+
+\section{Conventions}
+
+***TODO*** Basic definitions
+
+***TODO*** dimensional value vector
+
+***TODO*** Some of this should be moved up to Introduction.
+
+Consider the x-y-doppler correlation matrix
+\[XYD = \left[ \begin{matrix}
+xx & xy & xd \\ yx & yy & yd \\ dx & dy & dd
+\end{matrix} \right]. \]
+
+This is the typical representation of such a correlation matrix in the literature – as a purely numeric matrix.  All operations defined for any numeric matrix with these particular values are also defined for this one.  This includes, for example, addition.  However, addition of matrices in this form (with the dimensions of those matrices' values having been removed) elides the dimensional analysis that is otherwise applied to physical quantities.
+
+Consider now the same x-y-doppler correlation matrix, this time with its physical dimensions preserved
+
+\[ \widehat{XYD} = \left[ \begin{matrix}
+  xx \cdot m^2 & xy \cdot m^2 & xd \cdot m^2/s \\
+  yx \cdot m^2 & yy \cdot m^2 & yd \cdot m^2/s \\
+  dx \cdot m^2/s & dy \cdot m^2/s & dd \cdot m^2/s^2
+\end{matrix} \right]. \]
+
+Now, the set of matrix operations applicable to must take into account the dimensions of the values in the matrix.  However, this quickly leads to nontrivial questions.  For instance, what is the identity matrix that one can use with ?  Note that
+
+\[ \hat I = \left[ \begin{matrix} 
+  \hat 1 & \hat 0 & \hat 0 \\
+  \hat 0 & \hat 1 & \hat 0 \\
+  \hat 0 & \hat 0 & \hat 1
+ \end{matrix} \right]. \]
+ 
+does not work.  Try to compute any element of the result of either $\hat I \cdot \widehat{XYD}$ or $\widehat{XYD} \cdot \hat I$ to see why.  As it turns out, there are two identities for $\widehat{XYD}$.  One can only be used on the left:
+ 
+ \[ \left[ \begin{matrix} 
+  \hat 1 & \hat 0 & 0 \cdot s \\
+  \hat 0 & \hat 1 & 0 \cdot s \\
+  0 \cdot s^{-1} & 0 \cdot s^{-1} & \hat 1
+ \end{matrix} \right] \]
+
+and one can only be used on the right:
+
+\[ \left[ \begin{matrix} 
+  \hat 1 & \hat 0 & 0 \cdot s^{-1} \\
+  \hat 0 & \hat 1 & 0 \cdot s^{-1} \\
+  0 \cdot s & 0 \cdot s & \hat 1
+ \end{matrix} \right] \]
+ 
+This paper attempts to answer why this result, and other nontrivial results, are inherent to matrices containing physical quantities.
+
+\begin{defn} A value with an associated with one or more physical dimensions is a \textbf{dimensional value}. \end{defn}
+
+Dimensional values are written as $x \cdot T$, where $x$ is the numeric value, and $T$ is the dimension of the value.  For instance, $1 \cdot m$, $2 \cdot m/s^2$, and $3 \cdot s$ are all dimensional values whose numerical values are respectively 1, 2, and 3, and whose dimensions are respectively meters, meters-per-second-squared, and seconds.
+ 
+Note that in this document we use the terms unit, units, dimension, and dimensions interchangeably.  While as a practical matter it may be important to distinguish between different units within a single dimension (feet versus meters, kilograms versus grams), we do not do so here.  It is assumed that all dimensional values of a given dimension are converted to the same units before they are used.
+ 
+The empty-set symbol $\emptyset$ is used to indicate that a dimensional value has no dimension – that it is dimensionless.  Note that $x \cdot \emptyset \equiv x$.  Two special symbols are used to indicate dimensionless-0 ($\hat 0$) and dimensionless-1 ($\hat 1$).  By definition,
+ 
+ \[ 0 \cdot \emptyset \equiv \hat 0, \mbox{and} \]
+ \[ 1 \cdot \emptyset \equiv \hat 1. \]
+
+Two new operations are defined on dimensional values.  This first is the value-of operation, indicated with a double-vertical-bar notation:
+
+\[ \left\| x \cdot T \right\| \equiv x \]
+
+The second is the dimension-of operation, indicated with an angled bracket notation:
+
+\[ \left\langle x \cdot T \right\rangle \equiv T \]
+
+Note that all other operations on real numbers apply to dimensional values as well, within the limits of the rules of dimensional analysis.  For instance, addition is not defined for two operands of different dimensions.
+
+
+\begin{defn}A matrix whose elements are dimensional values is a \textbf{dimensional value matrix}.\end{defn}
+Such a matrix is indicated with a hat symbol above its name, for example $\hat M$, to distinguish it from a purely numerical matrix.
+
+A new operation is defined on dimensional value matrices, the value-of operation, indicated with a double-vertical-bar notation; given
+
+\[ \widehat{XYD} = \left[ \begin{matrix} 
+  xx \cdot m^2 & xy \cdot m^2 & xd \cdot m^2/s \\
+  yx \cdot m^2 & yy \cdot m^2 & yd \cdot m^2/s \\
+  dx \cdot m^2/s & dy \cdot m^2/s & dd \cdot m^2/s^2
+ \end{matrix} \right], \]
+ 
+ \[ \left\| \widehat{XYD} \right\| \equiv \left[ \begin{matrix} 
+  xx & xy & xd \\
+  yx & yy & yd \\
+  dx & dy & dd
+ \end{matrix} \right]. \]
+ 
+\section{Identity Matrices}
+
+\begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$, $\hat I_L$, is said to be the \textbf{left-identity} of $\hat M$ iff $\hat I_L \cdot \hat M = \hat M$.\end{defn}
+
+\begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$, $\hat I_R$, is said to be the \textbf{right-identity} of $\hat M$ iff $\hat M \cdot \hat I_R = \hat M$.\end{defn}
+
+\begin{lem}The values of the elements of any square dimensional value identity matrix $\hat I$ must be 1 on the diagonal, and 0 elsewhere.\end{lem}
+
+The introduction of units does not change the arithmetic used in matrix multiplication, so the value of each element must be the same as a unit-agnostic identity matrix.
+
+\begin{thm}For all n > 1, there is no unique identity matrix usable on all n x n dimensional value matrices.\end{thm}
+
+\begin{proof}
+Assume there exists some unique identity matrix $\hat I_n$ for all $n \times n$ matrices.
+
+Consider the $n \times n$ dimensional value matrices, $\hat A_n$ and $\hat B_n$.  Let each element of $\hat A_n$ be $1 \cdot m$ (one meter).  Let each element $\hat B_n$ be $1 \cdot m^{-1^{(i + 1) \mod 2} \times ((i + j) \mod 2)}$.  For example:
+ 
+\[ \hat A_2 = \left[ \begin{matrix} 
+  1 \cdot m & 1 \cdot m \\
+  1 \cdot m & 1 \cdot m
+ \end{matrix} \right],
+ \hat B_2 = \left[ \begin{matrix} 
+  \hat 1 & 1 \cdot m \\
+  1 \cdot m^{-1} & \hat 1
+ \end{matrix} \right], \]
+
+\[ \hat A_3 = \left[ \begin{matrix} 
+  1 \cdot m & 1 \cdot m & 1 \cdot m \\
+  1 \cdot m & 1 \cdot m & 1 \cdot m \\
+  1 \cdot m & 1 \cdot m & 1 \cdot m
+ \end{matrix} \right],
+ \hat B_3 = \left[ \begin{matrix} 
+  \hat 1 & 1 \cdot m & \hat 1 \\
+  1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} \\
+  \hat 1 & 1 \cdot m & \hat 1
+ \end{matrix} \right], \]
+
+\[ \hat A_4 = \left[ \begin{matrix} 
+  1 \cdot m & 1 \cdot m & 1 \cdot m & 1 \cdot m \\
+  1 \cdot m & 1 \cdot m & 1 \cdot m & 1 \cdot m \\
+  1 \cdot m & 1 \cdot m & 1 \cdot m & 1 \cdot m \\
+  1 \cdot m & 1 \cdot m & 1 \cdot m & 1 \cdot m
+ \end{matrix} \right],
+ \hat B_4 = \left[ \begin{matrix} 
+  \hat 1 & 1 \cdot m & \hat 1 & 1 \cdot m \\
+  1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} & \hat 1 \\
+  \hat 1 & 1 \cdot m & \hat 1 & 1 \cdot m \\
+  1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} & \hat 1
+ \end{matrix} \right], \]
+
+etc.  Now, consider the $n \times n$ dimensional value matrices $\hat I_{A_n}$ and $\hat I_{B_n}$.  Let the elements of $\hat I_{A_n}$ be $\hat 1$ on the diagonals, and $\hat 0$ elsewhere.  Let the elements of the $\hat I_{B_n}$ have values of 1 on the diagonals, and 0 elsewhere.  Let the units of the elements of $\hat I_{B_n}$ be $m^{(j + 1) \mod 2}$.  For example:
+
+\[ \hat I_{A_2} = \left[ \begin{matrix} 
+  \hat 1 & \hat 0 \\
+  \hat 0 & \hat 1
+ \end{matrix} \right] ,
+\hat I_{B_2} = \left[ \begin{matrix} 
+  \hat 1 & 0 \cdot m \\
+  \hat 0 & 1 \cdot m
+ \end{matrix} \right] , \]
+ 
+ \[ \hat I_{A_3} = \left[ \begin{matrix} 
+  \hat 1 & \hat 0 & \hat 0 \\
+  \hat 0 & \hat 1 & \hat 0 \\
+  \hat 0 & \hat 0 & \hat 1
+ \end{matrix} \right] ,
+ \hat I_{B_3} = \left[ \begin{matrix} 
+  \hat 1 & 0 \cdot m & \hat 0 \\
+  \hat 0 & 1 \cdot m & \hat 0 \\
+  \hat 0 & 0 \cdot m & \hat 1
+ \end{matrix} \right] , \]
+ 
+ \[ \hat I_{A_4} = \left[ \begin{matrix} 
+  \hat 1 & \hat 0 & \hat 0 & \hat 0 \\
+  \hat 0 & \hat 1 & \hat 0 & \hat 0 \\
+  \hat 0 & \hat 0 & \hat 1 & \hat 0 \\
+  \hat 0 & \hat 0 & \hat 0 & \hat 1
+ \end{matrix} \right] ,
+ \hat I_{B_4} = \left[ \begin{matrix} 
+  \hat 1 & 0 \cdot m & \hat 0 & 0 \cdot m \\
+  \hat 0 & 1 \cdot m & \hat 0 & 0 \cdot m \\
+  \hat 0 & 0 \cdot m & \hat 1 & 0 \cdot m \\
+  \hat 0 & 0 \cdot m & \hat 0 & 1 \cdot m
+ \end{matrix} \right] , \]
+ 
+etc.  A bit of arithmetic reveals that $\hat I_{A_n} \cdot \hat A_n = \hat A_n$ and $\hat I_{B_n} \cdot \hat B_n = \hat B_n$, so $\hat I_{A_n}$ and $\hat I_{B_n}$ are identity matrices for $\hat A_n$ and $\hat B_n$, respectively.  $\hat I_{A_n}$ and $\hat I_{B_n}$ are thus different identity matrices for two $n \times n$ matrices, a contradiction.
+\end{proof}
+
+Note that the upper-left elements of the products $\hat I_{B_2} \cdot \hat A_2$ and $\hat I_{A_2} \cdot \hat B_2$ would be respectively
+
+\[ (\hat I_{B_2} \cdot \hat A_2)_{11} = \hat 1 \times 1 \cdot m + 0 \cdot m \times 1 \cdot m = 1 \cdot m + 0 \cdot m^2 \mbox{ and} \]
+\[(\hat I_{A_2} \cdot \hat B_2)_{11} = \hat 1 \times \hat 1 + \hat 0 \times 1 \cdot m^{-1} = \hat 1 + 0 \cdot m^{-1} \]
+
+Neither of these calculations makes any sense, so the products $\hat I_{B_2} \cdot \hat A_2$ and $\hat I_{A_2} \cdot \hat B_2$ do not exist, so $\hat I_{A_2}$ and $\hat I_{B_2}$ are not identity matrices compatible with $\hat B_2$ and $\hat A_2$, respectively.  This incompatibility exists for all products $\hat I_{B_n} \cdot \hat A_n$ and $\hat I_{A_n} \cdot \hat B_n$ for $n > 1$.  This is shown later.
+
+\begin{lem} \label{terms_of_a_summation_have_equal_units} Any two terms in a summation over dimensional values must have the same units.\end{lem}
+
+The above must be true by the nature of addition of dimensional values.
+
+\begin{cor}Every term in the summation computing a dot product must have the same units as the first term in the summation.\end{cor}
+
+\begin{defn}The vector of coefficients of the dimensions of the units of a dimensional value vector is the \textbf{Dimensional Coefficients Vector} (DCV).\end{defn}
+
+Each element of the DCV represents the coefficient of a single dimension.  It is assumed that there exists some ordering of dimensions $O_d$, and that this ordering is used consistently to order the elements within every DCV.  It is also assumed that there exist a finite number of physical dimensions that may be found in a dimensional value.  The i-th position within the DCV represents the coefficient of the i-th dimension in $O_d$.  As a notational convenience, a DCV will be represented hereafter using only the dimensions relevant in the DCV's context.  For instance, in the examples below, only length and time appear, so in this context one only needs to write DCVs with two elements.  Below, the coefficient for length (meters) is placed in the first element of each DCV, and the coefficient for time (seconds) is placed in the second.
+
+The symbol $\vec{\emptyset}$ is used to denote a DCV of all zeros.
+
+The function that computes the DCV of a unit is $dcv(x)$.  For example,
+
+\[ dcv(\left\langle\hat 0 \right\rangle) = dcv(\left\langle\hat 1 \right\rangle) = \left[ \begin{matrix} 0 & 0 \end{matrix} \right] , \]
+
+\[ dcv(m) = \left[ \begin{matrix} 1 & 0 \end{matrix} \right] , \mbox{and} \]
+
+\[ dcv(m/s) = \left[ \begin{matrix} 1 & -1 \end{matrix} \right] . \]
+
+The function that computes the unit associated with a DCV is $unitof(x)$.  For example:
+
+\[  unitof(\left[ \begin{matrix} 0 & 0 \end{matrix} \right]) = \left\langle\hat 0 \right\rangle = \left\langle\hat 1 \right\rangle , \]
+
+\[ unitof(\left[ \begin{matrix} 1 & 0 \end{matrix} \right]) = m, \mbox{and} \]
+
+\[ unitof(\left[ \begin{matrix} 1 & -1 \end{matrix} \right]) = m/s. \]
+
+\begin{defn}The vector of differences between the DCVs of all the elements of a row or column and the DCV of the first element of that row or column is the \textbf{Dimensional Difference Vector} (DDV).\end{defn}
+
+The functions that compute these values are $ddr(M, row)$ and $ddc(M, column)$.  For example, for the matrix
+
+\[ \hat A = \left[ \begin{matrix} 
+  1 \cdot m & \hat 1 & 1 \cdot m^{-1} \\
+  \hat 1 & 1 \cdot m/s & 1 \cdot m^{-1}
+ \end{matrix} \right] , \]
+
+\[ ddr(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+
+\[ ddr(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & -1 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+
+\[ ddc(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+
+\[ ddc(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & -1 \end{matrix} \right] \end{matrix} \right] , \mbox{and} \]
+
+\[ ddc(\hat A, 3) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \end{matrix} \right] . \]
+
+As previously, each DCV above contains coefficients for length and time only.
+
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$ has a left-identity, then each column of $\hat M$ has the same DDV.\end{thm}
+
+\begin{proof}
+Let $\hat M$ be a $n \times n$ dimensional value matrix, and let $\hat I_L$ be its left identity:
+
+\[ \hat M = \left[ \begin{matrix} 
+  x_{11} \cdot U_{11} & x_{12} \cdot U_{12} & \cdots & x_{1n} \cdot U_{1n} \\
+  x_{21} \cdot U_{21} & x_{22} \cdot U_{22} & \cdots & x_{2n} \cdot U_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  x_{n1} \cdot U_{n1} & x_{n2} \cdot U_{n2} & \cdots & x_{nn} \cdot U_{nn}
+ \end{matrix} \right] \]
+
+\[ \hat I_L = \left[ \begin{matrix} 
+  1 \cdot T_{11} & 0 \cdot T_{12} & \cdots & 0 \cdot T_{1n} \\
+  0 \cdot T_{21} & 1 \cdot T_{22} & \cdots & 0 \cdot T_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  0 \cdot T_{n1} & 0 \cdot T_{n2} & \cdots & 1 \cdot T_{nn}
+ \end{matrix} \right] \]
+
+Consider the summation that computes the $(i, j)$ element of the result:
+
+\[ \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} = \hat M_{ij} \]
+
+From this, the units of this result are
+
+\[ \left\langle \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} \right\rangle = \left\langle \hat M_{ij} \right\rangle , \mbox{or} \]
+
+\[ T_{i1} \cdot U_{1j} + T_{i2} \cdot U_{2j} + \cdots + T_{in} \cdot U_{nj} = \left\langle \hat M_{ij} \right\rangle . \]
+
+Using Lemma \ref{terms_of_a_summation_have_equal_units}, for any term k of the summation:
+
+\[ T_{ik} \cdot U_{kj} = \left\langle \hat M_{ij} \right\rangle , \]
+
+and since the dimensional coefficients sum during dimensional value multiplication,
+
+\begin{equation} \label{basic_equation_1_for_left_identity_ddv_proof} dcv(T_{ik}) + dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{and} \end{equation}
+
+\begin{equation} \label{basic_equation_2_for_left_identity_ddv_proof} dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(T_{ik}) . \end{equation}
+
+Let $DCV_r$ be the DCV of the result's units:
+
+\[ DCV_r = dcv( \left\langle \hat M_{ij} \right\rangle ) , \]
+
+which allows (\ref{basic_equation_2_for_left_identity_ddv_proof}) to be rewritten as:
+
+\begin{equation} \label{simplified_equation_for_left_identity_ddv_proof} dcv(U_{kj}) = DCV_r - dcv(T_{ik}) . \end{equation}
+
+From the definition of DDV,
+
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & dcv(U_{2j}) - dcv(U_{1j}) & \cdots & dcv(U_{nj}) - dcv(U_{1j}) \end{matrix} \right] . \]
+
+Substituting from (\ref{simplified_equation_for_left_identity_ddv_proof}) gives
+
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & (DCV_r - dcv(T_{i2})) - (DCV_r - dcv(T_{i1})) & \cdots & (DCV_r - dcv(T_{in})) - (DCV_r - dcv(T_{i1})) \end{matrix} \right] , \]
+
+which reduces to
+
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & dcv(T_{i1}) - dcv(T_{i2}) & \cdots & dcv(T_{i1}) - dcv(T_{in}) \end{matrix} \right] , \]
+
+and finally to
+
+\begin{equation} \label{final_equation_for_left_identity_ddv_proof} ddc(\hat M, j) = -ddr(\hat I_L, i) . \end{equation} 
+
+Since the right side of this equation is invariant with respect to $j$, the left side is the same for all columns. \end{proof}
+
+\begin{cor}Since the $i$ used in (\ref{final_equation_for_left_identity_ddv_proof}) is arbitrary, the equation holds for any row $i$.  This implies that each row of $\hat I_L$ has the same DDV.\end{cor}
+
+\begin{thm}If an $n \times n$ dimensional value matrix has the same DDV for each of its columns, then it has a left-identity.\end{thm}
+
+\begin{proof} Consider equation (\ref{basic_equation_1_for_left_identity_ddv_proof}):
+
+\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{or} \]
+
+\begin{equation} dcv(T_{ik}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(U_{kj}) . \end{equation}
+
+Using (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$ can be constructed as follows.  Row $i$ consists of elements of 
+
+\[ 0 \cdot unitof( -(dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj}))) \]
+
+for all $k < i$, then  for the $i$-th element, then
+
+\[ 0 \cdot unitof( dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj})) \]
+
+for all $i < k <= n$. \end{proof}
+
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$ has a right-identity, then each row of $\hat M$ has the same DDV.\end{thm}
+
+\begin{proof}Let $\hat M$ be a $n \times n$ dimensional value matrix, and let $\hat I_R$ be its right identity:
+
+\[ \hat M = \left[ \begin{matrix} 
+  x_{11} \cdot U_{11} & x_{12} \cdot U_{12} & \cdots & x_{1n} \cdot U_{1n} \\
+  x_{21} \cdot U_{21} & x_{22} \cdot U_{22} & \cdots & x_{2n} \cdot U_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  x_{n1} \cdot U_{n1} & x_{n2} \cdot U_{n2} & \cdots & x_{nn} \cdot U_{nn}
+ \end{matrix} \right] \]
+
+\[ \hat I_R = \left[ \begin{matrix} 
+  1 \cdot T_{11} & 0 \cdot T_{12} & \cdots & 0 \cdot T_{1n} \\
+  0 \cdot T_{21} & 1 \cdot T_{22} & \cdots & 0 \cdot T_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  0 \cdot T_{n1} & 0 \cdot T_{n2} & \cdots & 1 \cdot T_{nn}
+ \end{matrix} \right] \]
+
+Consider the summation that computes the $(i, j)$ element of the result:
+
+\[ \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} = \hat M_{ij} \]
+
+From this, the units of this result are
+
+\[ \left\langle \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} \right\rangle = \left\langle \hat M_{ij} \right\rangle \]
+
+\[ U_{i1} \cdot T_{R1j} + U_{i2} \cdot T_{R2j} +\cdots + U_{in} \cdot T_{nj} = \left\langle \hat M_{ij} \right\rangle \]
+
+Using Lemma \ref{terms_of_a_summation_have_equal_units}, for any term k of the summation:
+
+\[ U_{ik} \cdot T_{kj} = \left\langle \hat M_{ij} \right\rangle , \]
+
+and since the dimensional coefficients sum during dimensional value multiplication,
+
+\begin{equation} \label{basic_equation_1_for_right_identity_ddv_proof} 
+dcv(U_{ik}) + dcv(T_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{and} \end{equation}
+
+\begin{equation} \label{basic_equation_2_for_right_identity_ddv_proof} dcv(U_{ik}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(T_{kj}). \end{equation}
+
+Let $DCV_r$ be the DCV of the result's units:
+
+\[ DCV_r = dcv( \left\langle \hat M_{ij} \right\rangle ) , \]
+
+which allows (\ref{basic_equation_2_for_right_identity_ddv_proof}) to be rewritten as:
+
+\begin{equation} \label{simplified_equation_for_right_identity_ddv_proof} dcv(U_{ik}) = DCV_r - dcv(T_{kj}) . \end{equation}
+
+From the definition of DDV,
+
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & dcv(U_{2j}) - dcv(U_{1j}) & \cdots & dcv(U_{nj}) - dcv(U_{1j}) \end{matrix} \right] . \]
+
+Substituting from (\ref{simplified_equation_for_right_identity_ddv_proof}) gives
+
+\[ ddr(\hat M, i) = \left[ \begin{matrix} \vec{\emptyset} & (DCV_r - dcv(U_{2j})) - (DCV_r - dcv(T_{1j})) & \cdots & (DCV_r - dcv(T_{nj})) - (DCV_r - dcv(T_{1j})) \end{matrix} \right] , \]
+
+which reduces to
+
+\[ ddr(\hat M, i) = \left[ \begin{matrix} \vec{\emptyset} & dcv(T_{1j}) - dcv(T_{2j}) & \cdots & dcv(T_{1j}) - dcv(T_{nj}) \end{matrix} \right] , \]
+
+and finally to
+
+\begin{equation} \label{final_equation_for_right_identity_ddv_proof} ddr(\hat M, i) = -ddc(\hat I_R, j) . \end{equation} 
+
+Since the right side of this equation is invariant with respect to $i$, the left side is the same for all columns. \end{proof}
+
+\end{document}
