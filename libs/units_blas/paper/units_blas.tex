@@ -51,13 +51,13 @@ This is the typical representation of such a correlation matrix in the literatur
 
 Consider now the same x-y-doppler correlation matrix, this time with its physical dimensions preserved
 
-\[ \widehat{XYD} = \left[ \begin{matrix}
+\[ \widehat{XYD}= \left[ \begin{matrix}
   xx \cdot m^2 & xy \cdot m^2 & xd \cdot m^2/s \\
   yx \cdot m^2 & yy \cdot m^2 & yd \cdot m^2/s \\
   dx \cdot m^2/s & dy \cdot m^2/s & dd \cdot m^2/s^2
 \end{matrix} \right]. \]
 
-Now, the set of matrix operations applicable to must take into account the dimensions of the values in the matrix.  However, this quickly leads to nontrivial questions.  For instance, what is the identity matrix that one can use with ?  Note that
+Now, the set of matrix operations applicable to must take into account the dimensions of the values in the matrix.  However, this quickly leads to nontrivial questions.  For instance, what is the identity matrix that one can use with $\widehat{XYD}$?  Note that
 
 \[ \hat I = \left[ \begin{matrix} 
   \hat 1 & \hat 0 & \hat 0 \\
@@ -83,7 +83,7 @@ and one can only be used on the right:
  
 This paper attempts to answer why this result, and other nontrivial results, are inherent to matrices containing physical quantities.
 
-\begin{defn} A value with an associated with one or more physical dimensions is a \textbf{dimensional value}. \end{defn}
+\begin{defn} A value associated with one or more physical dimensions is a \textbf{dimensional value}. \end{defn}
 
 Dimensional values are written as $x \cdot T$, where $x$ is the numeric value, and $T$ is the dimension of the value.  For instance, $1 \cdot m$, $2 \cdot m/s^2$, and $3 \cdot s$ are all dimensional values whose numerical values are respectively 1, 2, and 3, and whose dimensions are respectively meters, meters-per-second-squared, and seconds.
  
@@ -132,12 +132,9 @@ A new operation is defined on dimensional value matrices, the value-of operation
 
 The introduction of units does not change the arithmetic used in matrix multiplication, so the value of each element must be the same as a unit-agnostic identity matrix.
 
-\begin{thm}For all n > 1, there is no unique identity matrix usable on all n x n dimensional value matrices.\end{thm}
+\begin{thm}For all $n > 1$, there is no unique identity matrix usable on all $n \times n$ dimensional value matrices.\end{thm}
 
-\begin{proof}
-Assume there exists some unique identity matrix $\hat I_n$ for all $n \times n$ matrices.
-
-Consider the $n \times n$ dimensional value matrices, $\hat A_n$ and $\hat B_n$.  Let each element of $\hat A_n$ be $1 \cdot m$ (one meter).  Let each element $\hat B_n$ be $1 \cdot m^{-1^{(i + 1) \mod 2} \times ((i + j) \mod 2)}$.  For example:
+\begin{proof}Consider the $n \times n$ dimensional value matrices, $\hat A_n$ and $\hat B_n$.  Let each element of $\hat A_n$ be $1 \cdot m$ (one meter).  Let each element $\hat B_n$ be $1 \cdot m^{-1^{(i + 1) \mod 2} \times ((i + j) \mod 2)}$.  For example:
  
 \[ \hat A_2 = \left[ \begin{matrix} 
   1 \cdot m & 1 \cdot m \\
@@ -207,8 +204,7 @@ etc.  Now, consider the $n \times n$ dimensional value matrices $\hat I_{A_n}$ a
   \hat 0 & 0 \cdot m & \hat 0 & 1 \cdot m
  \end{matrix} \right] , \]
  
-etc.  A bit of arithmetic reveals that $\hat I_{A_n} \cdot \hat A_n = \hat A_n$ and $\hat I_{B_n} \cdot \hat B_n = \hat B_n$, so $\hat I_{A_n}$ and $\hat I_{B_n}$ are identity matrices for $\hat A_n$ and $\hat B_n$, respectively.  $\hat I_{A_n}$ and $\hat I_{B_n}$ are thus different identity matrices for two $n \times n$ matrices, a contradiction.
-\end{proof}
+etc.  A bit of arithmetic reveals that $\hat I_{A_n} \cdot \hat A_n = \hat A_n$ and $\hat I_{B_n} \cdot \hat B_n = \hat B_n$, so $\hat I_{A_n}$ and $\hat I_{B_n}$ are identity matrices for $\hat A_n$ and $\hat B_n$, respectively.  $\hat I_{A_n}$ and $\hat I_{B_n}$ are thus different identity matrices for two $n \times n$ matrices.\end{proof}
 
 Note that the upper-left elements of the products $\hat I_{B_2} \cdot \hat A_2$ and $\hat I_{A_2} \cdot \hat B_2$ would be respectively
 
@@ -254,7 +250,7 @@ The functions that compute these values are $ddr(M, row)$ and $ddc(M, column)$. 
   \hat 1 & 1 \cdot m/s & 1 \cdot m^{-1}
  \end{matrix} \right] , \]
 
-\[ ddr(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+\[ ddr(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \left[ \begin{matrix} -2 & 0 \end{matrix} \right] \end{matrix} \right] , \]
 
 \[ ddr(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & -1 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
 
@@ -415,5 +411,25 @@ and finally to
 \begin{equation} \label{final_equation_for_right_identity_ddv_proof} ddr(\hat M, i) = -ddc(\hat I_R, j) . \end{equation} 
 
 Since the right side of this equation is invariant with respect to $i$, the left side is the same for all columns. \end{proof}
+
+\begin{cor}Since the $j$ used in (\ref{final_equation_for_right_identity_ddv_proof}) is arbitrary, the equation holds for any row $j$.  This implies that each column of $\hat I_R$ has the same DDV.\end{cor}
+
+\begin{thm}If an $n \times n$ dimensional value matrix has the same DDV for each of its rows, then it has a right-identity.\end{thm}
+
+\begin{proof} Consider equation (\ref{basic_equation_1_for_right_identity_ddv_proof}):
+
+\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{or} \]
+
+\begin{equation} dcv(T_{ik}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(U_{kj}) . \end{equation}
+
+Using (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$ can be constructed as follows.  Row $i$ consists of elements of 
+
+\[ 0 \cdot unitof( -(dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj}))) \]
+
+for all $k < i$, then $\hat 1$ for the $i$-th element, then
+
+\[ 0 \cdot unitof( dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj})) \]
+
+for all $i < k <= n$. \end{proof}
 
 \end{document}
