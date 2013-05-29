@@ -23,7 +23,7 @@
 \begin{document}
 Need proof/discussion of:
 
-\[ \left\langle \hat{M}_{ij} = \hat{M}^{-1}_{ji}\right\rangle \]
+\[ \langle \hat{M}_{ij} = \hat{M}^{-1}_{ji}\rangle \]
 \[ \forall I_{n} \mbox{(left- or right-)} det(I_{n}) = 1 ? \]
 Every identity I has an inverse, $I^{-1} = I^{TV}$ and possibly $I \not= I^{-1}$?
 some numerically nonsingular matrices have no inverse due to units
@@ -100,7 +100,7 @@ Two new operations are defined on dimensional values.  This first is the value-o
 
 The second is the dimension-of operation, indicated with an angled bracket notation:
 
-\[ \left\langle x \cdot T \right\rangle \equiv T \]
+\[ \langle x \cdot T \rangle \equiv T \]
 
 Note that all other operations on real numbers apply to dimensional values as well, within the limits of the rules of dimensional analysis.  For instance, addition is not defined for two operands of different dimensions.
 
@@ -227,7 +227,7 @@ The symbol $\vec{\emptyset}$ is used to denote a DCV of all zeros.
 
 The function that computes the DCV of a unit is $dcv(x)$.  For example,
 
-\[ dcv(\left\langle\hat 0 \right\rangle) = dcv(\left\langle\hat 1 \right\rangle) = \left[ \begin{matrix} 0 & 0 \end{matrix} \right] , \]
+\[ dcv(\langle\hat 0 \rangle) = dcv(\langle\hat 1 \rangle) = \left[ \begin{matrix} 0 & 0 \end{matrix} \right] , \]
 
 \[ dcv(m) = \left[ \begin{matrix} 1 & 0 \end{matrix} \right] , \mbox{and} \]
 
@@ -235,7 +235,7 @@ The function that computes the DCV of a unit is $dcv(x)$.  For example,
 
 The function that computes the unit associated with a DCV is $unitof(x)$.  For example:
 
-\[  unitof(\left[ \begin{matrix} 0 & 0 \end{matrix} \right]) = \left\langle\hat 0 \right\rangle = \left\langle\hat 1 \right\rangle , \]
+\[  unitof(\left[ \begin{matrix} 0 & 0 \end{matrix} \right]) = \langle\hat 0 \rangle = \langle\hat 1 \rangle , \]
 
 \[ unitof(\left[ \begin{matrix} 1 & 0 \end{matrix} \right]) = m, \mbox{and} \]
 
@@ -287,23 +287,23 @@ Consider the summation that computes the $(i, j)$ element of the result:
 
 From this, the units of this result are
 
-\[ \left\langle \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} \right\rangle = \left\langle \hat M_{ij} \right\rangle , \mbox{or} \]
+\[ \langle \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} \rangle = \langle \hat M_{ij} \rangle , \mbox{or} \]
 
-\[ T_{i1} \cdot U_{1j} + T_{i2} \cdot U_{2j} + \cdots + T_{in} \cdot U_{nj} = \left\langle \hat M_{ij} \right\rangle . \]
+\[ T_{i1} \cdot U_{1j} + T_{i2} \cdot U_{2j} + \cdots + T_{in} \cdot U_{nj} = \langle \hat M_{ij} \rangle . \]
 
 Using Lemma \ref{terms_of_a_summation_have_equal_units}, for any term k of the summation:
 
-\[ T_{ik} \cdot U_{kj} = \left\langle \hat M_{ij} \right\rangle , \]
+\[ T_{ik} \cdot U_{kj} = \langle \hat M_{ij} \rangle , \]
 
 and since the dimensional coefficients sum during dimensional value multiplication,
 
-\begin{equation} \label{basic_equation_1_for_left_identity_ddv_proof} dcv(T_{ik}) + dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{and} \end{equation}
+\begin{equation} \label{basic_equation_1_for_left_identity_ddv_proof} dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{and} \end{equation}
 
-\begin{equation} \label{basic_equation_2_for_left_identity_ddv_proof} dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(T_{ik}) . \end{equation}
+\begin{equation} \label{basic_equation_2_for_left_identity_ddv_proof} dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(T_{ik}) . \end{equation}
 
 Let $DCV_r$ be the DCV of the result's units:
 
-\[ DCV_r = dcv( \left\langle \hat M_{ij} \right\rangle ) , \]
+\[ DCV_r = dcv( \langle \hat M_{ij} \rangle ) , \]
 
 which allows (\ref{basic_equation_2_for_left_identity_ddv_proof}) to be rewritten as:
 
@@ -333,17 +333,17 @@ Since the right side of this equation is invariant with respect to $j$, the left
 
 \begin{proof} Consider equation (\ref{basic_equation_1_for_left_identity_ddv_proof}):
 
-\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{or} \]
+\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{or} \]
 
-\begin{equation} dcv(T_{ik}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(U_{kj}) . \end{equation}
+\begin{equation} dcv(T_{ik}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(U_{kj}) . \end{equation}
 
 Using (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$ can be constructed as follows.  Row $i$ consists of elements of 
 
-\[ 0 \cdot unitof( -(dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj}))) \]
+\[ 0 \cdot unitof( -(dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj}))) \]
 
 for all $k < i$, then  for the $i$-th element, then
 
-\[ 0 \cdot unitof( dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj})) \]
+\[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj})) \]
 
 for all $i < k <= n$. \end{proof}
 
@@ -371,24 +371,24 @@ Consider the summation that computes the $(i, j)$ element of the result:
 
 From this, the units of this result are
 
-\[ \left\langle \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} \right\rangle = \left\langle \hat M_{ij} \right\rangle \]
+\[ \langle \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} \rangle = \langle \hat M_{ij} \rangle \]
 
-\[ U_{i1} \cdot T_{R1j} + U_{i2} \cdot T_{R2j} +\cdots + U_{in} \cdot T_{nj} = \left\langle \hat M_{ij} \right\rangle \]
+\[ U_{i1} \cdot T_{R1j} + U_{i2} \cdot T_{R2j} +\cdots + U_{in} \cdot T_{nj} = \langle \hat M_{ij} \rangle \]
 
 Using Lemma \ref{terms_of_a_summation_have_equal_units}, for any term k of the summation:
 
-\[ U_{ik} \cdot T_{kj} = \left\langle \hat M_{ij} \right\rangle , \]
+\[ U_{ik} \cdot T_{kj} = \langle \hat M_{ij} \rangle , \]
 
 and since the dimensional coefficients sum during dimensional value multiplication,
 
 \begin{equation} \label{basic_equation_1_for_right_identity_ddv_proof} 
-dcv(U_{ik}) + dcv(T_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{and} \end{equation}
+dcv(U_{ik}) + dcv(T_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{and} \end{equation}
 
-\begin{equation} \label{basic_equation_2_for_right_identity_ddv_proof} dcv(U_{ik}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(T_{kj}). \end{equation}
+\begin{equation} \label{basic_equation_2_for_right_identity_ddv_proof} dcv(U_{ik}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(T_{kj}). \end{equation}
 
 Let $DCV_r$ be the DCV of the result's units:
 
-\[ DCV_r = dcv( \left\langle \hat M_{ij} \right\rangle ) , \]
+\[ DCV_r = dcv( \langle \hat M_{ij} \rangle ) , \]
 
 which allows (\ref{basic_equation_2_for_right_identity_ddv_proof}) to be rewritten as:
 
@@ -418,17 +418,17 @@ Since the right side of this equation is invariant with respect to $i$, the left
 
 \begin{proof} Consider equation (\ref{basic_equation_1_for_right_identity_ddv_proof}):
 
-\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \left\langle \hat M_{ij} \right\rangle ) , \mbox{or} \]
+\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{or} \]
 
-\begin{equation} dcv(T_{ik}) = dcv( \left\langle \hat M_{ij} \right\rangle ) - dcv(U_{kj}) . \end{equation}
+\begin{equation} dcv(T_{ik}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(U_{kj}) . \end{equation}
 
 Using (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$ can be constructed as follows.  Row $i$ consists of elements of 
 
-\[ 0 \cdot unitof( -(dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj}))) \]
+\[ 0 \cdot unitof( -(dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj}))) \]
 
 for all $k < i$, then $\hat 1$ for the $i$-th element, then
 
-\[ 0 \cdot unitof( dcv( \left\langle \hat M_{ij} \right\rangle - dcv(U_{kj})) \]
+\[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj})) \]
 
 for all $i < k <= n$. \end{proof}
 
