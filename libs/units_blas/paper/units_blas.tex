@@ -96,7 +96,7 @@ The empty-set symbol $\emptyset$ is used to indicate that a dimensional value ha
 
 Two new operations are defined on dimensional values.  This first is the value-of operation, indicated with a double-vertical-bar notation:
 
-\[ \left\| x \cdot T \right\| \equiv x \]
+\[ \| x \cdot T \| \equiv x \]
 
 The second is the dimension-of operation, indicated with an angled bracket notation:
 
@@ -546,6 +546,33 @@ n$, and
 
 Notice that not only do all rows have the same DDV as each other,
 but also that all columns have the same DDV as each other.  Then by Theorem
-\ref{if_same_col_ddvs_then_IL}, $\hat M_n$ has a left-identity.\end{proof}
+\ref{if_same_col_ddvs_then_IL}, $\hat M_n$ has a
+left-identity.\end{proof}
+
+\begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$, the \textbf{transverse matrix} $\hat M^{TV}$ is formed such that
+
+\[ \| \hat M^{TV} \| = \| \hat M^T \| , \mbox{and} \]
+
+\[ \forall i,j \in [1, n] : \langle \hat M^{TV}_{ij} \cdot \hat M^T_{ji} \rangle = \emptyset . \] \end{defn}
+
+In other words, $\hat M^{TV}$ has the same numeric values as those
+found in $\hat M^T$, and the inverse units as those found in $\hat
+A^T$.  For example, if
+
+\[ \hat M = \left[ \begin{matrix}
+ \hat 0 & \hat 1 \\
+ 2 \cdot m & 3 \cdot s
+ \end{matrix} \right] , \mbox{then} \]
+
+\[ \hat M = \left[ \begin{matrix}
+ \hat 0 & 2 \cdot m^{-1} \\
+ \hat 1 & 3 \cdot s^{-1}
+ \end{matrix} \right] . \]
+
+\begin{defn}A square dimensional value matrix whose values' dimensions are symmetrical is said to be \textbf{dimensionally symmetric}. \end{defn}
+
+\begin{defn}An $n \times n$ dimensional value matrix $\hat M$ is said to be \textbf{dimensionally antisymmetric} iff
+
+\[ \forall i,j \in [1, n] : \langle \hat M_{ij} \cdot \hat M_{ji} \rangle = \emptyset . \] \end{defn}
 
 \end{document}
