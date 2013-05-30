@@ -435,83 +435,59 @@ for all $i < k <= n$. \end{proof}
 \begin{thm}If a square dimensional value matrix $\hat M$  has a
   left-identity, then $\hat M$ also has a right-identity.\end{thm}
 
-\begin{proof}This theorem can be proven by induction on the size of
- $\hat M$.  Consider a $2 \times 2$ matrix $\widehat{M2}$, and the matrix
-  $DM2$ that contains the DCVs of all of the values in $\widehat{M2}$:
+\begin{proof}Consider an $n \times n$ matrix $\hat M_n$, and the matrix
+  $DM_2$ that contains the DCVs of all of the values in $\hat M_2$:
 
-\[ \widehat{M2} = \left[ \begin{matrix} 
-  x & y \\
-  z & w
- \end{matrix} \right] , \]
+\[ \hat M_2 = \left[ \begin{matrix} 
+  x_{11} & x_{12} & \cdots & x_{1n} \\
+  x_{21} & x_{22} & \cdots & x_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  x_{n1} & x_{n2} & \cdots & x_{nn}
+ \end{matrix} \right] , \mbox{and} \]
 
-\[ DM2 = \left[ \begin{matrix} 
-  dcv(\langle x \rangle) & dcv(\langle y \rangle) \\
-  dcv(\langle z \rangle) & dcv(\langle w \rangle)
+\[ DM_2 = \left[ \begin{matrix} 
+  dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
+  dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
+  \vdots & \vdots & \ddots & \vdots \\
+  dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots & dcv(\langle x_{nn} \rangle)
  \end{matrix} \right] . \]
 
-This can be rewritten as
+The latter can be rewritten as
 
-\[ DM2 = \left[ \begin{matrix} 
-  v_{11} & v_{12} \\
-  v_{21} & v_{22}
- \end{matrix} \right] , \]
+\[ DM_2 = \left[ \begin{matrix} 
+  v_{11} & v_{12} & \cdots & v_{1n} \\
+  v_{21} & v_{22} & \cdots & v_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  v_{n1} & v_{n2} & \cdots & v_{nn}
+ \end{matrix} \right] \]
 
 in which each $v$ is a DCV.  We can rewrite this again as
 
-\[ DM2 = \left[ \begin{matrix} 
-  v_{11} & v_{11} + v_{12} \prime \\
-  v_{21} & v_{21} + v_{22} \prime
- \end{matrix} \right] , \]
-
-where for each $v_{ij} \prime = v_{ij} - v_{i1}$.  Since $\widehat{M2}$ has a left-identity, each column of $\widehat{M2}$ has
-the same DDV, by Theorem \ref{if_IL_then_same_col_ddvs}.  Thus,
-$v_{12} \prime = v_{22} \prime$, and
-
-\[ DM2 = \left[ \begin{matrix} 
-  v_{11} & v_{11} + v_{12} \prime \\
-  v_{21} & v_{21} + v_{12} \prime
- \end{matrix} \right] . \]
-
-Notice that not only do both columns have the same DDV as each other,
-but also that both rows have the same DDV as each other.  By Theorem
-\ref{if_same_row_ddvs_then_IR}, $\widehat{M2}$ then has a right-identity as well.
-
-Assume that this theorem is true for an $n \times n$ dimensional value
-matrix, $\widehat{MN}$:
-
-\[ \widehat{MN} = \left[ \begin{matrix} 
-  MN_{11} & MN_{12} & \cdots & MN_{1n} \\
-  MN_{21} & MN_{22} & \cdots & MN_{2n} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  MN_{n1} & MN_{n2} & \cdots & MN_{nn}
- \end{matrix} \right] , \mbox{and} \]
-
-\[ DMN = \left[ \begin{matrix} 
-  dcv(\langle MN_{11} \rangle) & dcv(\langle MN_{12} \rangle) & \cdots & dcv(\langle MN_{1n} \rangle) \\
-  dcv(\langle MN_{21} \rangle) & dcv(\langle MN_{22} \rangle) & \cdots & dcv(\langle MN_{2n} \rangle) \\
-  \vdots & \vdots & \ddots & \vdots \\
-  dcv(\langle MN_{n1} \rangle) & dcv(\langle MN_{n2} \rangle) & \cdots & dcv(\langle MN_{nn} \rangle)
- \end{matrix} \right] , \mbox{or} \]
-
-\[ DMN = \left[ \begin{matrix} 
+\[ DM_2 = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
   v_{21} & v_{21} + v_{22} \prime & \cdots & v_{21} + v_{2n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n1} + v_{n2} \prime & \cdots & v_{n1} + v_{nn} \prime
- \end{matrix} \right] . \]
+ \end{matrix} \right] , \]
 
-Again, since $\widehat{MN}$ has a left-identity, each column of
-$\widehat{MN}$ has the same DDV.  Thus, $v_{1k} \prime = v_{2k} \prime
-= \cdots =
-v_{nk}$, for all $2 <= k <= n$, and
+where
 
-\[ DMN = \left[ \begin{matrix} 
+\[ v_{ij} \prime = v_{ij} - v_{i1} . \]
+
+Since $\hat M_n$ has a left-identity, each column of $\hat M_n$ has
+the same DDV, by Theorem \ref{if_IL_then_same_col_ddvs}.  Thus,
+$v_{1k} \prime = v_{2k} \prime = \cdots = v_{nk} \prime$, for all $2 <= k <=
+n$, and
+
+\[ DM_2 = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
   v_{21} & v_{21} + v_{12} \prime & \cdots & v_{21} + v_{1n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n1} + v_{12} \prime & \cdots & v_{n1} + v_{1n} \prime
  \end{matrix} \right] \]
 
-f\end{proof}
+Notice that not only do all columns have the same DDV as each other,
+but also that all rows have the same DDV as each other.  By Theorem
+\ref{if_same_row_ddvs_then_IR}, $\hat M_n$ then has a right-identity as well.\end{proof}
 
 \end{document}
