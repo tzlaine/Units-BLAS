@@ -87,7 +87,7 @@ This paper attempts to answer why this result, and other nontrivial results, are
 
 Dimensional values are written as $x \cdot T$, where $x$ is the numeric value, and $T$ is the dimension of the value.  For instance, $1 \cdot m$, $2 \cdot m/s^2$, and $3 \cdot s$ are all dimensional values whose numerical values are respectively 1, 2, and 3, and whose dimensions are respectively meters, meters-per-second-squared, and seconds.
  
-Note that in this document we use the terms unit, units, dimension, and dimensions interchangeably.  While as a practical matter it may be important to distinguish between different units within a single dimension (feet versus meters, kilograms versus grams), we do not do so here.  It is assumed that all dimensional values of a given dimension are converted to the same units before they are used.
+Note that in this document I use the terms unit, units, dimension, and dimensions interchangeably.  While as a practical matter it may be important to distinguish between different units within a single dimension (feet versus meters, kilograms versus grams), I do not do so here.  It is assumed that all dimensional values of a given dimension are converted to the same units before they are used.
  
 The empty-set symbol $\emptyset$ is used to indicate that a dimensional value has no dimension – that it is dimensionless.  Note that $x \cdot \emptyset \equiv x$.  Two special symbols are used to indicate dimensionless-0 ($\hat 0$) and dimensionless-1 ($\hat 1$).  By definition,
  
@@ -128,7 +128,7 @@ A new operation is defined on dimensional value matrices, the value-of operation
 
 \begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$, $\hat I_R$, is said to be the \textbf{right-identity} of $\hat M$ iff $\hat M \cdot \hat I_R = \hat M$.\end{defn}
 
-\begin{lem}The values of the elements of any square dimensional value identity matrix $\hat I$ must be 1 on the diagonal, and 0 elsewhere.\end{lem}
+\begin{lem} \label{dimensional_identities_all_have_the_values_of_I} For any square dimensional value identity matrix $\hat I$, $\| \hat I \| = I$.\end{lem}
 
 The introduction of units does not change the arithmetic used in matrix multiplication, so the value of each element must be the same as a unit-agnostic identity matrix.
 
@@ -461,7 +461,7 @@ The latter can be rewritten as
   v_{n1} & v_{n2} & \cdots & v_{nn}
  \end{matrix} \right] \]
 
-in which each $v$ is a DCV.  We can rewrite this again as
+in which each $v$ is a DCV.  One can rewrite this again as
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
@@ -519,7 +519,7 @@ The latter can be rewritten as
   v_{n1} & v_{n2} & \cdots & v_{nn}
  \end{matrix} \right] \]
 
-in which each $v$ is a DCV.  We can rewrite this again as
+in which each $v$ is a DCV.  One can rewrite this again as
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
@@ -551,9 +551,9 @@ left-identity.\end{proof}
 
 \begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$, the \textbf{transverse matrix} $\hat M^{TV}$ is formed such that
 
-\[ \| \hat M^{TV} \| = \| \hat M^T \| , \mbox{and} \]
+\begin{equation}  \label{transverse_definition_part_1} \| \hat M^{TV} \| = \| \hat M^T \| , \mbox{and} \end{equation}
 
-\[ \forall i,j \in [1, n] : \langle \hat M^{TV}_{ij} \cdot \hat M^T_{ji} \rangle = \emptyset . \] \end{defn}
+\begin{equation} \label{transverse_definition_part_2} \forall i,j \in [1, n] : \langle \hat M^{TV}_{ij} \cdot \hat M^T_{ji} \rangle = \emptyset . \end{equation} \end{defn}
 
 In other words, $\hat M^{TV}$ has the same numeric values as those
 found in $\hat M^T$, and the inverse units as those found in $\hat
@@ -574,5 +574,46 @@ A^T$.  For example, if
 \begin{defn}An $n \times n$ dimensional value matrix $\hat M$ is said to be \textbf{dimensionally antisymmetric} iff
 
 \[ \forall i,j \in [1, n] : \langle \hat M_{ij} \cdot \hat M_{ji} \rangle = \emptyset . \] \end{defn}
+
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$ has a left-identity $\hat I_L$ and a right-identity $\hat I_R$, then $\hat I_R = \hat I^{TV}_L$. \end{thm}
+
+\begin{proof}By Lemma \ref{dimensional_identities_all_have_the_values_of_I}, $\| \hat I_L \| = \| \hat I_R \| = I$, so (\ref{transverse_definition_part_1}) holds for $\hat I^{TV}_L$ and $\hat I_R$.  What remains is to show that (\ref{transverse_definition_part_2}) holds for $\hat I^{TV}_L$ and $\hat I_R$. \end{proof}
+
+*** TODO ***
+
+\section{Matrix Inversion}
+
+Recall that for a purely numerical $n \times n$ matrix $M$, a
+determinant always exists, and $|M| \not= 0$ implies that $M$ is
+nonsingular.  However, even if $| \| \hat M \| | \not= 0$, $| \hat M |$ may not even exist.
+
+\begin{thm}For $ n > 1$, a determinant does not exist for every $n \times n$ dimensional value matrix $\hat M$. \end{thm}
+
+\begin{proof}Consider the matrix $\hat A$:
+
+\[ \hat A = \left[ \begin{matrix}
+ \hat 1 & \hat 1 \\
+ \hat 1 & 1 \cdot m
+ \end{matrix} \right] . \]
+
+It's determinant would be:
+
+\[ | \hat A | = 1 \cdot m + \hat 1 , \]
+
+if such a value existed; since it does not, neither does the
+determinant of $\hat A$.  This proves the theorem for the $2 \times 2$
+case.  More generally, every expression $AB – CD$
+occurring in the Laplacian expansion of $\hat M$ must be well-formed
+for $\hat M$ to have a determinant.
+
+Therefore, for an $n > 2$, one can construct an $n \times n$
+dimensional value matrix $\hat M$ that has no determinant by placing the elements
+of $\hat A$ in the upper-left $2 \times 2$ elements of $\hat M$. \end{proof}
+
+\begin{thm}For an $n \times n$ dimensional value matrix $\hat M$,
+
+\[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk} \rangle . \] \end{thm}
+
+***TODO***
 
 \end{document}
