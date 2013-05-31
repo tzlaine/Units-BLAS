@@ -173,10 +173,10 @@ as a unit-agnostic identity matrix.
 \begin{thm}For all $n > 1$, there is no unique identity matrix usable
   on all $n \times n$ dimensional value matrices.\end{thm}
 
-\begin{proof}Consider the $n \times n$ dimensional value matrices,
-  $\hat A_n$ and $\hat B_n$.  Let each element of $\hat A_n$ be $1
-  \cdot m$ (one meter).  Let each element $\hat B_n$ be $1 \cdot
-  m^{-1^{(i + 1) \mod 2} \times ((i + j) \mod 2)}$.  For example,
+\begin{proof}Let $\hat A_n$ and $\hat B_n$ be $n \times n$ dimensional
+  value matrices.  Let each element of $\hat A_n$ be $1 \cdot m$ (one
+  meter).  Let each element $\hat B_n$ be $1 \cdot m^{-1^{(i + 1) \mod
+      2} \times ((i + j) \mod 2)}$.  For example,
  
 \[ \hat A_2 = \left[ \begin{matrix} 
   1 \cdot m & 1 \cdot m \\
@@ -209,9 +209,9 @@ as a unit-agnostic identity matrix.
   1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} & \hat 1 \\
   \hat 1 & 1 \cdot m & \hat 1 & 1 \cdot m \\
   1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} & \hat 1
- \end{matrix} \right], \] etc.  Now, consider the $n \times n$
-dimensional value matrices $\hat I_{A_n}$ and $\hat I_{B_n}$.  Let the
-elements of $\hat I_{A_n}$ be $\hat 1$ on the diagonals, and $\hat 0$
+\end{matrix} \right], \] etc.  Now, let $\hat I_{A_n}$ and $\hat
+I_{B_n}$ be $n \times n$ dimensional value matrices.  Let the elements
+of $\hat I_{A_n}$ be $\hat 1$ on the diagonals, and $\hat 0$
 elsewhere.  Let the elements of the $\hat I_{B_n}$ have values of 1 on
 the diagonals, and 0 elsewhere.  Let the units of the elements of
 $\hat I_{B_n}$ be $m^{(j + 1) \mod 2}$.  For example,
@@ -442,7 +442,7 @@ $j$, the left side is the same for all columns. \end{proof}
   dimensional value matrix has the same DDV for each of its columns,
   then it has a left-identity.\end{thm}
 
-\begin{proof} Consider equation
+\begin{proof}Recall equation
   (\ref{basic_equation_1_for_left_identity_ddv_proof}):
 
   \[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) ,
@@ -546,7 +546,7 @@ $i$, the left side is the same for all columns. \end{proof}
   dimensional value matrix has the same DDV for each of its rows, then
   it has a right-identity.\end{thm}
 
-\begin{proof} Consider equation
+\begin{proof} Recall equation
   (\ref{basic_equation_1_for_right_identity_ddv_proof}):
 
   \[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) ,
@@ -564,11 +564,12 @@ $i$, the left side is the same for all columns. \end{proof}
   \[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle -
   dcv(U_{kj})) \] for all $i < k <= n$. \end{proof}
 
-\begin{thm}If a square dimensional value matrix $\hat M$  has a
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$  has a
   left-identity, then $\hat M$ also has a right-identity.\end{thm}
 
-\begin{proof}Consider an $n \times n$ matrix $\hat M_n$, and the matrix
-  $DM_n$ that contains the DCVs of all of the values in $\hat M_n$:
+\begin{proof}Let $\hat M_n$ be an $n \times n$ dimensional value
+  matrix, and let $DM_n$ be the matrix that contains the DCVs of all
+  of the values in $\hat M_n$:
 
 \[ \hat M_n = \left[ \begin{matrix} 
   x_{11} & x_{12} & \cdots & x_{1n} \\
@@ -617,11 +618,12 @@ same DDV as each other, but also that all rows have the same DDV as
 each other.  Then by Theorem \ref{if_same_row_ddvs_then_IR}, $\hat
 M_n$ has a right-identity.\end{proof}
 
-\begin{thm}If a square dimensional value matrix $\hat M$  has a
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$  has a
   right-identity, then $\hat M$ also has a left-identity.\end{thm}
 
-\begin{proof}Consider an $n \times n$ matrix $\hat M_n$, and the matrix
-  $DM_n$ that contains the DCVs of all of the values in $\hat M_n$:
+\begin{proof}Let $\hat M_n$ be an $n \times n$ dimensional value
+  matrix, and let $DM_n$ be the matrix that contains the DCVs of all
+  of the values in $\hat M_n$:
 
 \[ \hat M_n = \left[ \begin{matrix} 
   x_{11} & x_{12} & \cdots & x_{1n} \\
@@ -724,10 +726,10 @@ determinant always exists, and $|M| \not= 0$ implies that $M$ is
 nonsingular.  However, even if $| \| \hat M \| | \not= 0$, $| \hat M
 |$ may not even exist.
 
-\begin{thm}For $ n > 1$, a determinant does not exist for every $n
+\begin{thm}For $n > 1$, a determinant does not exist for every $n
   \times n$ dimensional value matrix $\hat M$. \end{thm}
 
-\begin{proof}Consider the matrix $\hat A$:
+\begin{proof}Let $\hat A$ be the matrix
 
 \[ \hat A = \left[ \begin{matrix}
  \hat 1 & \hat 1 \\
@@ -748,11 +750,12 @@ $\hat M$. \end{proof}
 \begin{cor}Some numerically nonsingular dimensional value matrices
   have no inverse, due to their units.\end{cor}
 
-\begin{thm}For an $n \times n$ dimensional value matrix $\hat M$,
+\begin{thm}For an $n \times n$ dimensional value matrix $\hat M$, if
+  $\hat M$ has a determinant, then
 
   \[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk}
   \rangle . \] \end{thm}
 
-***TODO***
+\begin{proof}***TODO***\end{proof}
 
 \end{document}
