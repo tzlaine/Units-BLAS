@@ -16,12 +16,10 @@
       \hskip1.5em plus0em minus0.5em \fi \nobreak
       \vrule height0.75em width0.5em depth0.25em\fi}
 
-\setlength{\parindent}{0mm}
-
 \numberwithin{equation}{section}
 
 \begin{document}
-Need proof/discussion of:
+Need proof/discussion of
 
 \[ \langle \hat{M}_{ij} = \hat{M}^{-1}_{ji}\rangle \]
 
@@ -70,20 +68,16 @@ matrix that one can use with $\widehat{XYD}$?  Note that
   \hat 1 & \hat 0 & \hat 0 \\
   \hat 0 & \hat 1 & \hat 0 \\
   \hat 0 & \hat 0 & \hat 1
- \end{matrix} \right]. \]
- 
-does not work.  Try to compute any element of the result of either
-$\hat I \cdot \widehat{XYD}$ or $\widehat{XYD} \cdot \hat I$ to see
-why.  As it turns out, there are two identities for $\widehat{XYD}$.
-One can only be used on the left:
+ \end{matrix} \right] \] does not work.  Try to compute any element of
+the result of either $\hat I \cdot \widehat{XYD}$ or $\widehat{XYD}
+\cdot \hat I$ to see why.  As it turns out, there are two identities
+for $\widehat{XYD}$.  One can only be used on the left:
  
  \[ \left[ \begin{matrix} 
   \hat 1 & \hat 0 & 0 \cdot s \\
   \hat 0 & \hat 1 & 0 \cdot s \\
   0 \cdot s^{-1} & 0 \cdot s^{-1} & \hat 1
- \end{matrix} \right] \]
-
-and one can only be used on the right:
+ \end{matrix} \right] \] and one can only be used on the right:
 
 \[ \left[ \begin{matrix} 
   \hat 1 & \hat 0 & 0 \cdot s^{-1} \\
@@ -120,9 +114,9 @@ By definition,
  \[ 0 \cdot \emptyset \equiv \hat 0, \mbox{and} \]
  \[ 1 \cdot \emptyset \equiv \hat 1. \]
 
- Two new operations are defined on dimensional values.  This first is
- the value-of operation, indicated with a double-vertical-bar
- notation:
+Two new operations are defined on dimensional values.  This first is
+the value-of operation, indicated with a double-vertical-bar
+notation:
 
 \[ \| x \cdot T \| \equiv x \]
 
@@ -138,9 +132,10 @@ different dimensions.
 
 
 \begin{defn}A matrix whose elements are dimensional values is a
-  \textbf{dimensional value matrix}.\end{defn} Such a matrix is
-indicated with a hat symbol above its name, for example $\hat M$, to
-distinguish it from a purely numerical matrix.
+  \textbf{dimensional value matrix}.\end{defn}
+
+Such a matrix is indicated with a hat symbol above its name, for
+example $\hat M$, to distinguish it from a purely numerical matrix.
 
 A new operation is defined on dimensional value matrices, the value-of
 operation, indicated with a double-vertical-bar notation; given
@@ -181,7 +176,7 @@ as a unit-agnostic identity matrix.
 \begin{proof}Consider the $n \times n$ dimensional value matrices,
   $\hat A_n$ and $\hat B_n$.  Let each element of $\hat A_n$ be $1
   \cdot m$ (one meter).  Let each element $\hat B_n$ be $1 \cdot
-  m^{-1^{(i + 1) \mod 2} \times ((i + j) \mod 2)}$.  For example:
+  m^{-1^{(i + 1) \mod 2} \times ((i + j) \mod 2)}$.  For example,
  
 \[ \hat A_2 = \left[ \begin{matrix} 
   1 \cdot m & 1 \cdot m \\
@@ -214,14 +209,12 @@ as a unit-agnostic identity matrix.
   1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} & \hat 1 \\
   \hat 1 & 1 \cdot m & \hat 1 & 1 \cdot m \\
   1 \cdot m^{-1} & \hat 1 & 1 \cdot m^{-1} & \hat 1
- \end{matrix} \right], \]
-
-etc.  Now, consider the $n \times n$ dimensional value matrices $\hat
-I_{A_n}$ and $\hat I_{B_n}$.  Let the elements of $\hat I_{A_n}$ be
-$\hat 1$ on the diagonals, and $\hat 0$ elsewhere.  Let the elements
-of the $\hat I_{B_n}$ have values of 1 on the diagonals, and 0
-elsewhere.  Let the units of the elements of $\hat I_{B_n}$ be $m^{(j
-  + 1) \mod 2}$.  For example:
+ \end{matrix} \right], \] etc.  Now, consider the $n \times n$
+dimensional value matrices $\hat I_{A_n}$ and $\hat I_{B_n}$.  Let the
+elements of $\hat I_{A_n}$ be $\hat 1$ on the diagonals, and $\hat 0$
+elsewhere.  Let the elements of the $\hat I_{B_n}$ have values of 1 on
+the diagonals, and 0 elsewhere.  Let the units of the elements of
+$\hat I_{B_n}$ be $m^{(j + 1) \mod 2}$.  For example,
 
 \[ \hat I_{A_2} = \left[ \begin{matrix} 
   \hat 1 & \hat 0 \\
@@ -254,19 +247,21 @@ elsewhere.  Let the units of the elements of $\hat I_{B_n}$ be $m^{(j
   \hat 0 & 1 \cdot m & \hat 0 & 0 \cdot m \\
   \hat 0 & 0 \cdot m & \hat 1 & 0 \cdot m \\
   \hat 0 & 0 \cdot m & \hat 0 & 1 \cdot m
- \end{matrix} \right] , \]
- 
-etc.  A bit of arithmetic reveals that $\hat I_{A_n} \cdot \hat A_n =
-\hat A_n$ and $\hat I_{B_n} \cdot \hat B_n = \hat B_n$, so $\hat
-I_{A_n}$ and $\hat I_{B_n}$ are identity matrices for $\hat A_n$ and
-$\hat B_n$, respectively.  $\hat I_{A_n}$ and $\hat I_{B_n}$ are thus
-different identity matrices for two $n \times n$ matrices.\end{proof}
+ \end{matrix} \right] , \] etc.  A bit of arithmetic reveals that
+$\hat I_{A_n} \cdot \hat A_n = \hat A_n$ and $\hat I_{B_n} \cdot \hat
+B_n = \hat B_n$, so $\hat I_{A_n}$ and $\hat I_{B_n}$ are identity
+matrices for $\hat A_n$ and $\hat B_n$, respectively.  $\hat I_{A_n}$
+and $\hat I_{B_n}$ are thus different identity matrices for two $n
+\times n$ matrices.\end{proof}
 
 Note that the upper-left elements of the products $\hat I_{B_2} \cdot
 \hat A_2$ and $\hat I_{A_2} \cdot \hat B_2$ would be respectively
 
-\[ (\hat I_{B_2} \cdot \hat A_2)_{11} = \hat 1 \times 1 \cdot m + 0 \cdot m \times 1 \cdot m = 1 \cdot m + 0 \cdot m^2 \mbox{ and} \]
-\[(\hat I_{A_2} \cdot \hat B_2)_{11} = \hat 1 \times \hat 1 + \hat 0 \times 1 \cdot m^{-1} = \hat 1 + 0 \cdot m^{-1} \]
+\[ (\hat I_{B_2} \cdot \hat A_2)_{11} = \hat 1 \times 1 \cdot m + 0
+\cdot m \times 1 \cdot m = 1 \cdot m + 0 \cdot m^2 \mbox{ and} \]
+
+\[(\hat I_{A_2} \cdot \hat B_2)_{11} = \hat 1 \times \hat 1 + \hat 0
+\times 1 \cdot m^{-1} = \hat 1 + 0 \cdot m^{-1} \]
 
 Neither of these calculations makes any sense, so the products $\hat
 I_{B_2} \cdot \hat A_2$ and $\hat I_{A_2} \cdot \hat B_2$ do not
@@ -307,16 +302,18 @@ The symbol $\vec{\emptyset}$ is used to denote a DCV of all zeros.
 The function that computes the DCV of a unit is $dcv(x)$.  For
 example,
 
-\[ dcv(\langle\hat 0 \rangle) = dcv(\langle\hat 1 \rangle) = \left[ \begin{matrix} 0 & 0 \end{matrix} \right] , \]
+\[ dcv(\langle\hat 0 \rangle) = dcv(\langle\hat 1 \rangle) =
+\left[ \begin{matrix} 0 & 0 \end{matrix} \right] , \]
 
 \[ dcv(m) = \left[ \begin{matrix} 1 & 0 \end{matrix} \right] , \mbox{and} \]
 
 \[ dcv(m/s) = \left[ \begin{matrix} 1 & -1 \end{matrix} \right] . \]
 
 The function that computes the unit associated with a DCV is
-$unitof(x)$.  For example:
+$unitof(x)$.  For example,
 
-\[  unitof(\left[ \begin{matrix} 0 & 0 \end{matrix} \right]) = \langle\hat 0 \rangle = \langle\hat 1 \rangle , \]
+\[ unitof(\left[ \begin{matrix} 0 & 0 \end{matrix} \right]) =
+\langle\hat 0 \rangle = \langle\hat 1 \rangle , \]
 
 \[ unitof(\left[ \begin{matrix} 1 & 0 \end{matrix} \right]) = m, \mbox{and} \]
 
@@ -335,18 +332,29 @@ column)$.  For example, for the matrix
   \hat 1 & 1 \cdot m/s & 1 \cdot m^{-1}
  \end{matrix} \right] , \]
 
-\[ ddr(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \left[ \begin{matrix} -2 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+\[ ddr(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 &
+        0 \end{matrix} \right] \left[ \begin{matrix} -1 &
+        0 \end{matrix} \right] \left[ \begin{matrix} -2 &
+        0 \end{matrix} \right] \end{matrix} \right] , \]
 
-\[ ddr(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & -1 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+\[ ddr(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 &
+        0 \end{matrix} \right] \left[ \begin{matrix} 1 &
+        -1 \end{matrix} \right] \left[ \begin{matrix} -1 &
+        0 \end{matrix} \right] \end{matrix} \right] , \]
 
-\[ ddc(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} -1 & 0 \end{matrix} \right] \end{matrix} \right] , \]
+\[ ddc(\hat A, 1) = \left[ \begin{matrix} \left[ \begin{matrix} 0 &
+        0 \end{matrix} \right] \left[ \begin{matrix} -1 &
+        0 \end{matrix} \right] \end{matrix} \right] , \]
 
-\[ ddc(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 1 & -1 \end{matrix} \right] \end{matrix} \right] , \mbox{and} \]
+\[ ddc(\hat A, 2) = \left[ \begin{matrix} \left[ \begin{matrix} 0 &
+        0 \end{matrix} \right] \left[ \begin{matrix} 1 &
+        -1 \end{matrix} \right] \end{matrix} \right] , \mbox{and} \]
 
-\[ ddc(\hat A, 3) = \left[ \begin{matrix} \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \left[ \begin{matrix} 0 & 0 \end{matrix} \right] \end{matrix} \right] . \]
-
-As previously, each DCV above contains coefficients for length and
-time only.
+\[ ddc(\hat A, 3) = \left[ \begin{matrix} \left[ \begin{matrix} 0 &
+        0 \end{matrix} \right] \left[ \begin{matrix} 0 &
+        0 \end{matrix} \right] \end{matrix} \right] . \] As
+previously, each DCV above contains coefficients for length and time
+only.
 
 \begin{thm} \label{if_IL_then_same_col_ddvs} If an $n \times n$
   dimensional value matrix $\hat M$ has a left-identity, then each
@@ -367,55 +375,60 @@ time only.
   0 \cdot T_{21} & 1 \cdot T_{22} & \cdots & 0 \cdot T_{2n} \\
   \vdots & \vdots & \ddots & \vdots \\
   0 \cdot T_{n1} & 0 \cdot T_{n2} & \cdots & 1 \cdot T_{nn}
- \end{matrix} \right] \]
+ \end{matrix} \right] . \]
 
 Consider the summation that computes the $(i, j)$ element of the
 result:
 
-\[ \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} = \hat M_{ij} \]
+\[ \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} +
+\cdots + \hat I_{Lin} \cdot \hat M_{nj} = \hat M_{ij} . \] From this,
+the units of this result are
 
-From this, the units of this result are
+\[ \langle \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat
+M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} \rangle = \langle
+\hat M_{ij} \rangle , \mbox{or} \]
 
-\[ \langle \hat I_{Li1} \cdot \hat M_{1j} + \hat I_{Li2} \cdot \hat M_{2j} + \cdots + \hat I_{Lin} \cdot \hat M_{nj} \rangle = \langle \hat M_{ij} \rangle , \mbox{or} \]
+\[ T_{i1} \cdot U_{1j} + T_{i2} \cdot U_{2j} + \cdots + T_{in} \cdot
+U_{nj} = \langle \hat M_{ij} \rangle . \] Using Lemma
+\ref{terms_of_a_summation_have_equal_units}, for any term k of the
+summation,
 
-\[ T_{i1} \cdot U_{1j} + T_{i2} \cdot U_{2j} + \cdots + T_{in} \cdot U_{nj} = \langle \hat M_{ij} \rangle . \]
-
-Using Lemma \ref{terms_of_a_summation_have_equal_units}, for any term
-k of the summation:
-
-\[ T_{ik} \cdot U_{kj} = \langle \hat M_{ij} \rangle , \]
-
-and since the dimensional coefficients sum during dimensional value
+\[ T_{ik} \cdot U_{kj} = \langle \hat M_{ij} \rangle , \] and since
+the dimensional coefficients sum during dimensional value
 multiplication,
 
-\begin{equation} \label{basic_equation_1_for_left_identity_ddv_proof} dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{and} \end{equation}
+\begin{equation} \label{basic_equation_1_for_left_identity_ddv_proof}
+  dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) ,
+  \mbox{and} \end{equation}
 
-\begin{equation} \label{basic_equation_2_for_left_identity_ddv_proof} dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(T_{ik}) . \end{equation}
+\begin{equation} \label{basic_equation_2_for_left_identity_ddv_proof}
+  dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(T_{ik})
+  . \end{equation} Let $DCV_r$ be the DCV of the result's units:
 
-Let $DCV_r$ be the DCV of the result's units:
+\[ DCV_r = dcv( \langle \hat M_{ij} \rangle ) , \] which allows
+(\ref{basic_equation_2_for_left_identity_ddv_proof}) to be rewritten
+as
 
-\[ DCV_r = dcv( \langle \hat M_{ij} \rangle ) , \]
+\begin{equation} \label{simplified_equation_for_left_identity_ddv_proof}
+  dcv(U_{kj}) = DCV_r - dcv(T_{ik}) . \end{equation} From the
+definition of DDV,
 
-which allows (\ref{basic_equation_2_for_left_identity_ddv_proof}) to
-be rewritten as:
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} &
+    dcv(U_{2j}) - dcv(U_{1j}) & \cdots & dcv(U_{nj}) -
+    dcv(U_{1j}) \end{matrix} \right] . \] Substituting from
+(\ref{simplified_equation_for_left_identity_ddv_proof}) gives
 
-\begin{equation} \label{simplified_equation_for_left_identity_ddv_proof} dcv(U_{kj}) = DCV_r - dcv(T_{ik}) . \end{equation}
-
-From the definition of DDV,
-
-\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & dcv(U_{2j}) - dcv(U_{1j}) & \cdots & dcv(U_{nj}) - dcv(U_{1j}) \end{matrix} \right] . \]
-
-Substituting from (\ref{simplified_equation_for_left_identity_ddv_proof}) gives
-
-\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & (DCV_r - dcv(T_{i2})) - (DCV_r - dcv(T_{i1})) & \cdots & (DCV_r - dcv(T_{in})) - (DCV_r - dcv(T_{i1})) \end{matrix} \right] , \]
-
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} \\ (DCV_r -
+    dcv(T_{i2})) - (DCV_r - dcv(T_{i1})) \\ \vdots \\ (DCV_r -
+    dcv(T_{in})) - (DCV_r - dcv(T_{i1})) \end{matrix} \right] ^T , \]
 which reduces to
 
-\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & dcv(T_{i1}) - dcv(T_{i2}) & \cdots & dcv(T_{i1}) - dcv(T_{in}) \end{matrix} \right] , \]
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} &
+    dcv(T_{i1}) - dcv(T_{i2}) & \cdots & dcv(T_{i1}) -
+    dcv(T_{in}) \end{matrix} \right] , \] and finally to
 
-and finally to
-
-\begin{equation} \label{final_equation_for_left_identity_ddv_proof} ddc(\hat M, j) = -ddr(\hat I_L, i) . \end{equation} 
+\begin{equation} \label{final_equation_for_left_identity_ddv_proof}
+  ddc(\hat M, j) = -ddr(\hat I_L, i) . \end{equation}
 
 Since the right side of this equation is invariant with respect to
 $j$, the left side is the same for all columns. \end{proof}
@@ -429,22 +442,22 @@ $j$, the left side is the same for all columns. \end{proof}
   dimensional value matrix has the same DDV for each of its columns,
   then it has a left-identity.\end{thm}
 
-\begin{proof} Consider equation (\ref{basic_equation_1_for_left_identity_ddv_proof}):
+\begin{proof} Consider equation
+  (\ref{basic_equation_1_for_left_identity_ddv_proof}):
 
-\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{or} \]
+  \[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) ,
+  \mbox{or} \]
 
-\begin{equation} dcv(T_{ik}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(U_{kj}) . \end{equation}
+  \begin{equation} dcv(T_{ik}) = dcv( \langle \hat M_{ij} \rangle ) -
+    dcv(U_{kj}) . \end{equation} Using
+  (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$ can
+  be constructed as follows.  Row $i$ consists of elements of
 
-Using (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$
-can be constructed as follows.  Row $i$ consists of elements of
+  \[ 0 \cdot unitof( -(dcv( \langle \hat M_{ij} \rangle -
+  dcv(U_{kj}))) \] for all $k < i$, then for the $i$-th element, then
 
-\[ 0 \cdot unitof( -(dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj}))) \]
-
-for all $k < i$, then  for the $i$-th element, then
-
-\[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj})) \]
-
-for all $i < k <= n$. \end{proof}
+  \[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle -
+  dcv(U_{kj})) \] for all $i < k <= n$. \end{proof}
 
 \begin{thm} \label{if_IR_then_same_row_ddvs} If an $n \times n$
   dimensional value matrix $\hat M$ has a right-identity, then each
@@ -470,51 +483,56 @@ for all $i < k <= n$. \end{proof}
 Consider the summation that computes the $(i, j)$ element of the
 result:
 
-\[ \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} = \hat M_{ij} \]
+\[ \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j}
++\cdots + \hat M_{in} \cdot \hat I_{Rnj} = \hat M_{ij} . \] From this,
+the units of this result are
 
-From this, the units of this result are
+\[ \langle \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat
+I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} \rangle = \langle
+\hat M_{ij} \rangle \]
 
-\[ \langle \hat M_{i1} \cdot \hat I_{R1j} + \hat M_{i2} \cdot \hat I_{R2j} +\cdots + \hat M_{in} \cdot \hat I_{Rnj} \rangle = \langle \hat M_{ij} \rangle \]
+\[ U_{i1} \cdot T_{R1j} + U_{i2} \cdot T_{R2j} +\cdots + U_{in} \cdot
+T_{nj} = \langle \hat M_{ij} \rangle \] Using Lemma
+\ref{terms_of_a_summation_have_equal_units}, for any term k of the
+summation,
 
-\[ U_{i1} \cdot T_{R1j} + U_{i2} \cdot T_{R2j} +\cdots + U_{in} \cdot T_{nj} = \langle \hat M_{ij} \rangle \]
-
-Using Lemma \ref{terms_of_a_summation_have_equal_units}, for any term
-k of the summation:
-
-\[ U_{ik} \cdot T_{kj} = \langle \hat M_{ij} \rangle , \]
-
-and since the dimensional coefficients sum during dimensional value
+\[ U_{ik} \cdot T_{kj} = \langle \hat M_{ij} \rangle , \] and since
+the dimensional coefficients sum during dimensional value
 multiplication,
 
-\begin{equation} \label{basic_equation_1_for_right_identity_ddv_proof} 
-dcv(U_{ik}) + dcv(T_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{and} \end{equation}
+\begin{equation} \label{basic_equation_1_for_right_identity_ddv_proof}
+  dcv(U_{ik}) + dcv(T_{kj}) = dcv( \langle \hat M_{ij} \rangle ) ,
+  \mbox{and} \end{equation}
 
-\begin{equation} \label{basic_equation_2_for_right_identity_ddv_proof} dcv(U_{ik}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(T_{kj}). \end{equation}
+\begin{equation} \label{basic_equation_2_for_right_identity_ddv_proof}
+  dcv(U_{ik}) = dcv( \langle \hat M_{ij} \rangle ) -
+  dcv(T_{kj}). \end{equation} Let $DCV_r$ be the DCV of the result's
+units:
 
-Let $DCV_r$ be the DCV of the result's units:
+\[ DCV_r = dcv( \langle \hat M_{ij} \rangle ) , \] which allows
+(\ref{basic_equation_2_for_right_identity_ddv_proof}) to be rewritten
+as
 
-\[ DCV_r = dcv( \langle \hat M_{ij} \rangle ) , \]
+\begin{equation} \label{simplified_equation_for_right_identity_ddv_proof}
+  dcv(U_{ik}) = DCV_r - dcv(T_{kj}) . \end{equation} From the
+definition of DDV,
 
-which allows (\ref{basic_equation_2_for_right_identity_ddv_proof}) to
-be rewritten as:
+\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} &
+    dcv(U_{2j}) - dcv(U_{1j}) & \cdots & dcv(U_{nj}) -
+    dcv(U_{1j}) \end{matrix} \right] . \] Substituting from
+(\ref{simplified_equation_for_right_identity_ddv_proof}) gives
 
-\begin{equation} \label{simplified_equation_for_right_identity_ddv_proof} dcv(U_{ik}) = DCV_r - dcv(T_{kj}) . \end{equation}
-
-From the definition of DDV,
-
-\[ ddc(\hat M, j) = \left[ \begin{matrix} \vec{\emptyset} & dcv(U_{2j}) - dcv(U_{1j}) & \cdots & dcv(U_{nj}) - dcv(U_{1j}) \end{matrix} \right] . \]
-
-Substituting from (\ref{simplified_equation_for_right_identity_ddv_proof}) gives
-
-\[ ddr(\hat M, i) = \left[ \begin{matrix} \vec{\emptyset} & (DCV_r - dcv(U_{2j})) - (DCV_r - dcv(T_{1j})) & \cdots & (DCV_r - dcv(T_{nj})) - (DCV_r - dcv(T_{1j})) \end{matrix} \right] , \]
-
+\[ ddr(\hat M, i) = \left[ \begin{matrix} \vec{\emptyset} \\ (DCV_r -
+    dcv(U_{2j})) - (DCV_r - dcv(T_{1j})) \\ \vdots \\ (DCV_r -
+    dcv(T_{nj})) - (DCV_r - dcv(T_{1j})) \end{matrix} \right] ^T , \]
 which reduces to
 
-\[ ddr(\hat M, i) = \left[ \begin{matrix} \vec{\emptyset} & dcv(T_{1j}) - dcv(T_{2j}) & \cdots & dcv(T_{1j}) - dcv(T_{nj}) \end{matrix} \right] , \]
+\[ ddr(\hat M, i) = \left[ \begin{matrix} \vec{\emptyset} &
+    dcv(T_{1j}) - dcv(T_{2j}) & \cdots & dcv(T_{1j}) -
+    dcv(T_{nj}) \end{matrix} \right] , \] and finally to
 
-and finally to
-
-\begin{equation} \label{final_equation_for_right_identity_ddv_proof} ddr(\hat M, i) = -ddc(\hat I_R, j) . \end{equation} 
+\begin{equation} \label{final_equation_for_right_identity_ddv_proof}
+  ddr(\hat M, i) = -ddc(\hat I_R, j) . \end{equation}
 
 Since the right side of this equation is invariant with respect to
 $i$, the left side is the same for all columns. \end{proof}
@@ -531,20 +549,20 @@ $i$, the left side is the same for all columns. \end{proof}
 \begin{proof} Consider equation
   (\ref{basic_equation_1_for_right_identity_ddv_proof}):
 
-\[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) , \mbox{or} \]
+  \[ dcv(T_{ik}) + dcv(U_{kj}) = dcv( \langle \hat M_{ij} \rangle ) ,
+  \mbox{or} \]
 
-\begin{equation} dcv(T_{ik}) = dcv( \langle \hat M_{ij} \rangle ) - dcv(U_{kj}) . \end{equation}
+  \begin{equation} dcv(T_{ik}) = dcv( \langle \hat M_{ij} \rangle ) -
+    dcv(U_{kj}) . \end{equation} Using
+  (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$ can
+  be constructed as follows.  Row $i$ consists of elements of
 
-Using (\ref{basic_equation_1_for_left_identity_ddv_proof}), $\hat I_L$
-can be constructed as follows.  Row $i$ consists of elements of
+  \[ 0 \cdot unitof( -(dcv( \langle \hat M_{ij} \rangle -
+  dcv(U_{kj}))) \] for all $k < i$, then $\hat 1$ for the $i$-th
+  element, then
 
-\[ 0 \cdot unitof( -(dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj}))) \]
-
-for all $k < i$, then $\hat 1$ for the $i$-th element, then
-
-\[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle - dcv(U_{kj})) \]
-
-for all $i < k <= n$. \end{proof}
+  \[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle -
+  dcv(U_{kj})) \] for all $i < k <= n$. \end{proof}
 
 \begin{thm}If a square dimensional value matrix $\hat M$  has a
   left-identity, then $\hat M$ also has a right-identity.\end{thm}
@@ -559,50 +577,45 @@ for all $i < k <= n$. \end{proof}
   x_{n1} & x_{n2} & \cdots & x_{nn}
  \end{matrix} \right] , \mbox{and} \]
 
-\[ DM_n = \left[ \begin{matrix} 
-  dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
-  dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
-  \vdots & \vdots & \ddots & \vdots \\
-  dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots & dcv(\langle x_{nn} \rangle)
- \end{matrix} \right] . \]
-
-The latter can be rewritten as
+\[ DM_n = \left[ \begin{matrix}
+    dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
+    dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
+    \vdots & \vdots & \ddots & \vdots \\
+    dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots
+    & dcv(\langle x_{nn} \rangle)
+ \end{matrix} \right] . \] The latter can be rewritten as
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{21} & v_{22} & \cdots & v_{2n} \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n2} & \cdots & v_{nn}
- \end{matrix} \right] \]
-
-in which each $v$ is a DCV.  One can rewrite this again as
+\end{matrix} \right] \] in which each $v$ is a DCV.  One can rewrite
+this again as
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
   v_{21} & v_{21} + v_{22} \prime & \cdots & v_{21} + v_{2n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n1} + v_{n2} \prime & \cdots & v_{n1} + v_{nn} \prime
- \end{matrix} \right] , \]
-
-where
+ \end{matrix} \right] , \] where
 
 \[ v_{ij} \prime = v_{ij} - v_{i1} . \]
 
 Since $\hat M_n$ has a left-identity, each column of $\hat M_n$ has
 the same DDV, by Theorem \ref{if_IL_then_same_col_ddvs}.  Thus,
-$v_{1k} \prime = v_{2k} \prime = \cdots = v_{nk} \prime$, for all $2 <= k <=
-n$, and
+$v_{1k} \prime = v_{2k} \prime = \cdots = v_{nk} \prime$, for all $2
+<= k <= n$, and
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
   v_{21} & v_{21} + v_{12} \prime & \cdots & v_{21} + v_{1n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n1} + v_{12} \prime & \cdots & v_{n1} + v_{1n} \prime
- \end{matrix} \right] \]
-
-Notice that not only do all columns have the same DDV as each other,
-but also that all rows have the same DDV as each other.  Then by Theorem
-\ref{if_same_row_ddvs_then_IR}, $\hat M_n$ has a right-identity.\end{proof}
+\end{matrix} \right] . \] Notice that not only do all columns have the
+same DDV as each other, but also that all rows have the same DDV as
+each other.  Then by Theorem \ref{if_same_row_ddvs_then_IR}, $\hat
+M_n$ has a right-identity.\end{proof}
 
 \begin{thm}If a square dimensional value matrix $\hat M$  has a
   right-identity, then $\hat M$ also has a left-identity.\end{thm}
@@ -617,32 +630,28 @@ but also that all rows have the same DDV as each other.  Then by Theorem
   x_{n1} & x_{n2} & \cdots & x_{nn}
  \end{matrix} \right] , \mbox{and} \]
 
-\[ DM_n = \left[ \begin{matrix} 
-  dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
-  dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
-  \vdots & \vdots & \ddots & \vdots \\
-  dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots & dcv(\langle x_{nn} \rangle)
- \end{matrix} \right] . \]
-
-The latter can be rewritten as
+\[ DM_n = \left[ \begin{matrix}
+    dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
+    dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
+    \vdots & \vdots & \ddots & \vdots \\
+    dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots
+    & dcv(\langle x_{nn} \rangle)
+ \end{matrix} \right] . \] The latter can be rewritten as
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{21} & v_{22} & \cdots & v_{2n} \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n2} & \cdots & v_{nn}
- \end{matrix} \right] \]
-
-in which each $v$ is a DCV.  One can rewrite this again as
+\end{matrix} \right] \] in which each $v$ is a DCV.  One can rewrite
+this again as
 
 \[ DM_n = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{11} + v_{21} \prime & v_{12} + v_{22} \prime & \cdots & v_{1n} + v_{2n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{11} + v_{n1} \prime & v_{12} + v_{n2} \prime & \cdots & v_{1n} + v_{nn} \prime
- \end{matrix} \right] , \]
-
-where
+ \end{matrix} \right] , \] where
 
 \[ v_{ij} \prime = v_{ij} - v_{1j} . \]
 
@@ -656,19 +665,20 @@ n$, and
   v_{11} + v_{21} \prime & v_{12} + v_{21} \prime & \cdots & v_{1n} + v_{21} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{11} + v_{n1} \prime & v_{12} + v_{n1} \prime & \cdots & v_{1n} + v_{n1} \prime
- \end{matrix} \right] , \]
-
-Notice that not only do all rows have the same DDV as each other, but
-also that all columns have the same DDV as each other.  Then by
-Theorem \ref{if_same_col_ddvs_then_IL}, $\hat M_n$ has a
-left-identity.\end{proof}
+\end{matrix} \right] . \] Notice that not only do all rows have the
+same DDV as each other, but also that all columns have the same DDV as
+each other.  Then by Theorem \ref{if_same_col_ddvs_then_IL}, $\hat
+M_n$ has a left-identity.\end{proof}
 
 \begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$,
   the \textbf{transverse matrix} $\hat M^{TV}$ is formed such that
 
-\begin{equation}  \label{transverse_definition_part_1} \| \hat M^{TV} \| = \| \hat M^T \| , \mbox{and} \end{equation}
+  \begin{equation} \label{transverse_definition_part_1} \| \hat M^{TV}
+    \| = \| \hat M^T \| , \mbox{and} \end{equation}
 
-\begin{equation} \label{transverse_definition_part_2} \forall i,j \in [1, n] : \langle \hat M^{TV}_{ij} \cdot \hat M^T_{ji} \rangle = \emptyset . \end{equation} \end{defn}
+\begin{equation} \label{transverse_definition_part_2} \forall i,j \in
+  [1, n] : \langle \hat M^{TV}_{ij} \cdot \hat M^T_{ji} \rangle =
+  \emptyset . \end{equation} \end{defn}
 
 In other words, $\hat M^{TV}$ has the same numeric values as those
 found in $\hat M^T$, and the inverse units as those found in $\hat
@@ -691,7 +701,8 @@ A^T$.  For example, if
 \begin{defn}An $n \times n$ dimensional value matrix $\hat M$ is said
   to be \textbf{dimensionally antisymmetric} iff
 
-\[ \forall i,j \in [1, n] : \langle \hat M_{ij} \cdot \hat M_{ji} \rangle = \emptyset . \] \end{defn}
+  \[ \forall i,j \in [1, n] : \langle \hat M_{ij} \cdot \hat M_{ji}
+  \rangle = \emptyset . \] \end{defn}
 
 \begin{thm}If an $n \times n$ dimensional value matrix $\hat M$ has a
   left-identity $\hat I_L$ and a right-identity $\hat I_R$, then $\hat
@@ -721,17 +732,13 @@ nonsingular.  However, even if $| \| \hat M \| | \not= 0$, $| \hat M
 \[ \hat A = \left[ \begin{matrix}
  \hat 1 & \hat 1 \\
  \hat 1 & 1 \cdot m
- \end{matrix} \right] . \]
+ \end{matrix} \right] . \] It's determinant would be
 
-It's determinant would be:
-
-\[ | \hat A | = 1 \cdot m + \hat 1 , \]
-
-if such a value existed; since it does not, neither does the
-determinant of $\hat A$.  This proves the theorem for the $2 \times 2$
-case.  More generally, every expression $AB – CD$ occurring in the
-Laplacian expansion of $\hat M$ must be well-formed for $\hat M$ to
-have a determinant.
+\[ | \hat A | = 1 \cdot m + \hat 1 , \] if such a value existed; since
+it does not, neither does the determinant of $\hat A$.  This proves
+the theorem for the $2 \times 2$ case.  More generally, every
+expression $AB – CD$ occurring in the Laplacian expansion of $\hat M$
+must be well-formed for $\hat M$ to have a determinant.
 
 Therefore, for an $n > 2$, one can construct an $n \times n$
 dimensional value matrix $\hat M$ that has no determinant by placing
@@ -743,7 +750,8 @@ $\hat M$. \end{proof}
 
 \begin{thm}For an $n \times n$ dimensional value matrix $\hat M$,
 
-\[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk} \rangle . \] \end{thm}
+  \[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk}
+  \rangle . \] \end{thm}
 
 ***TODO***
 
