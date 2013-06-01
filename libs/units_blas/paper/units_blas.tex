@@ -21,9 +21,6 @@
 \begin{document}
 Need proof/discussion of
 
-***TODO*** Break out fact that all ddc()'s the same implies that all
-ddr()'s the ame (and vice versa) into a proof.
-
 ***TODO*** Show that a dimensionally symetric matrix has $\hat I_R = \hat I_L$.
 
 ***TODO*** Show that a dimensionally antisymetric matrix has $\hat I_R =
@@ -577,29 +574,16 @@ $i$, the left side is the same for all columns. \end{proof}
   \[ 0 \cdot unitof( dcv( \langle \hat M_{ij} \rangle -
   dcv(U_{kj})) \] for all $i < k <= n$. \end{proof}
 
-\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$  has a
-  left-identity, then $\hat M$ also has a right-identity.\end{thm}
+\begin{thm} \label{if_same_col_ddvs_then_same_row_ddvs} If an $n
+  \times n$ dimensional value matrix $\hat M$ has the same DDV for all
+  of its columns, then $\hat M$ also has the same DDV for all of its
+  rows.\end{thm}
 
-\begin{proof}Let $\hat M_n$ be an $n \times n$ dimensional value
-  matrix, and let $DM_n$ be the matrix that contains the DCVs of all
-  of the values in $\hat M_n$:
+\begin{proof}Let $\hat M$ be an $n \times n$ dimensional value
+  matrix, and let $DM$ be the matrix that contains the DCVs of all
+  of the values in $\hat M$:
 
-\[ \hat M_n = \left[ \begin{matrix} 
-  x_{11} & x_{12} & \cdots & x_{1n} \\
-  x_{21} & x_{22} & \cdots & x_{2n} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  x_{n1} & x_{n2} & \cdots & x_{nn}
- \end{matrix} \right] , \mbox{and} \]
-
-\[ DM_n = \left[ \begin{matrix}
-    dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
-    dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
-    \vdots & \vdots & \ddots & \vdots \\
-    dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots
-    & dcv(\langle x_{nn} \rangle)
- \end{matrix} \right] . \] The latter can be rewritten as
-
-\[ DM_n = \left[ \begin{matrix} 
+\[ DM = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{21} & v_{22} & \cdots & v_{2n} \\
   \vdots & \vdots & \ddots & \vdots \\
@@ -607,7 +591,7 @@ $i$, the left side is the same for all columns. \end{proof}
 \end{matrix} \right] \] in which each $v$ is a DCV.  One can rewrite
 this again as
 
-\[ DM_n = \left[ \begin{matrix} 
+\[ DM = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
   v_{21} & v_{21} + v_{22} \prime & \cdots & v_{21} + v_{2n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
@@ -616,44 +600,28 @@ this again as
 
 \[ v_{ij} \prime = v_{ij} - v_{i1} . \]
 
-Since $\hat M_n$ has a left-identity, each column of $\hat M_n$ has
-the same DDV, by Theorem \ref{if_IL_then_same_col_ddvs}.  Thus,
-$v_{1k} \prime = v_{2k} \prime = \cdots = v_{nk} \prime$, for all $2
-<= k <= n$, and
+Since $\hat M$ has the same DDV for all of its columns, $v_{1k}
+\prime = v_{2k} \prime = \cdots = v_{nk} \prime$, for all $2 <= k <=
+n$, and
 
-\[ DM_n = \left[ \begin{matrix} 
+\[ DM = \left[ \begin{matrix} 
   v_{11} & v_{11} + v_{12} \prime & \cdots & v_{11} + v_{1n} \prime \\
   v_{21} & v_{21} + v_{12} \prime & \cdots & v_{21} + v_{1n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n1} + v_{12} \prime & \cdots & v_{n1} + v_{1n} \prime
-\end{matrix} \right] . \] Notice that not only do all columns have the
-same DDV as each other, but also that all rows have the same DDV as
-each other.  Then by Theorem \ref{if_same_row_ddvs_then_IR}, $\hat
-M_n$ has a right-identity.\end{proof}
+\end{matrix} \right] . \] Notice that this also forces all rows to
+have the same DDV as each other. \end{proof}
 
-\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$  has a
-  right-identity, then $\hat M$ also has a left-identity.\end{thm}
+\begin{thm} \label{if_same_row_ddvs_then_same_col_ddvs} If an $n
+  \times n$ dimensional value matrix $\hat M$ has the same DDV for all
+  of its rows, then $\hat M$ also has the same DDV for all of its
+  columns.\end{thm}
 
-\begin{proof}Let $\hat M_n$ be an $n \times n$ dimensional value
-  matrix, and let $DM_n$ be the matrix that contains the DCVs of all
-  of the values in $\hat M_n$:
+\begin{proof}Let $\hat M$ be an $n \times n$ dimensional value
+  matrix, and let $DM$ be the matrix that contains the DCVs of all
+  of the values in $\hat M$:
 
-\[ \hat M_n = \left[ \begin{matrix} 
-  x_{11} & x_{12} & \cdots & x_{1n} \\
-  x_{21} & x_{22} & \cdots & x_{2n} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  x_{n1} & x_{n2} & \cdots & x_{nn}
- \end{matrix} \right] , \mbox{and} \]
-
-\[ DM_n = \left[ \begin{matrix}
-    dcv(\langle x_{11} \rangle) & dcv(\langle x_{12} \rangle) & \cdots & dcv(\langle x_{1n} \rangle) \\
-    dcv(\langle x_{21} \rangle) & dcv(\langle x_{22} \rangle) & \cdots & dcv(\langle x_{2n} \rangle) \\
-    \vdots & \vdots & \ddots & \vdots \\
-    dcv(\langle x_{n1} \rangle) & dcv(\langle x_{n2} \rangle) & \cdots
-    & dcv(\langle x_{nn} \rangle)
- \end{matrix} \right] . \] The latter can be rewritten as
-
-\[ DM_n = \left[ \begin{matrix} 
+\[ DM = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{21} & v_{22} & \cdots & v_{2n} \\
   \vdots & \vdots & \ddots & \vdots \\
@@ -661,7 +629,7 @@ M_n$ has a right-identity.\end{proof}
 \end{matrix} \right] \] in which each $v$ is a DCV.  One can rewrite
 this again as
 
-\[ DM_n = \left[ \begin{matrix} 
+\[ DM = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{11} + v_{21} \prime & v_{12} + v_{22} \prime & \cdots & v_{1n} + v_{2n} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
@@ -670,33 +638,50 @@ this again as
 
 \[ v_{ij} \prime = v_{ij} - v_{1j} . \]
 
-Since $\hat M_n$ has a right-identity, each row of $\hat M_n$ has
-the same DDV, by Theorem \ref{if_IR_then_same_row_ddvs}.  Thus,
-$v_{k1} \prime = v_{k2} \prime = \cdots = v_{kn} \prime$, for all $2 <= k <=
-n$, and
+Since $\hat M$ has the same DDV for all of its rows, $v_{k1} \prime
+= v_{k2} \prime = \cdots = v_{kn} \prime$, for all $2 <= k <= n$, and
 
-\[ DM_n = \left[ \begin{matrix} 
+\[ DM = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{11} + v_{21} \prime & v_{12} + v_{21} \prime & \cdots & v_{1n} + v_{21} \prime \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{11} + v_{n1} \prime & v_{12} + v_{n1} \prime & \cdots & v_{1n} + v_{n1} \prime
-\end{matrix} \right] . \] Notice that not only do all rows have the
-same DDV as each other, but also that all columns have the same DDV as
-each other.  Then by Theorem \ref{if_same_col_ddvs_then_IL}, $\hat
-M_n$ has a left-identity.\end{proof}
+\end{matrix} \right] . \] Notice that this also forces all columns to
+have the same DDV as each other.  \end{proof}
+
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$  has a
+  left-identity, then $\hat M$ also has a right-identity.\end{thm}
+
+\begin{proof}Let $\hat M$ be an $n \times n$ dimensional value matrix.
+  Since $\hat M$ has a left-identity, all columns of $\hat M$ have the
+  same DDV as each other, by Theorem \ref{if_IL_then_same_col_ddvs}.
+  By Theorem \ref{if_same_row_ddvs_then_same_col_ddvs}, all rows also
+  have the same DDV as each other.  Then by Theorem
+  \ref{if_same_row_ddvs_then_IR}, $\hat M$ has a right-identity.  \end{proof}
+
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$  has a
+  right-identity, then $\hat M$ also has a left-identity.\end{thm}
+
+\begin{proof}Let $\hat M$ be an $n \times n$ dimensional value matrix.
+  Since $\hat M$ has a right-identity, all rows of $\hat M$ have the
+  same DDV as each other, by Theorem \ref{if_IR_then_same_row_ddvs}.
+  By Theorem \ref{if_same_col_ddvs_then_same_row_ddvs}, all columns
+  also have the same DDV as each other.  Then by Theorem
+  \ref{if_same_col_ddvs_then_IL}, $\hat M$ has a
+  left-identity. \end{proof}
 
 \begin{defn}Given an $n \times n$ dimensional value matrix $\hat M$,
   the \textbf{transverse matrix} $\hat M^{TV}$ is formed such that
 
-  \begin{equation} \label{transverse_definition_part_1} \| \hat M^{TV}
-    \| = \| \hat M^T \| , \mbox{and} \end{equation}
+\begin{equation} \label{transverse_definition_part_1} \| \hat M^{TV}
+  \| = \| \hat M^T \| , \mbox{and} \end{equation}
 
 \begin{equation} \label{transverse_definition_part_2} \forall i,j \in
   [1, n] : \langle \hat M^{TV}_{ij} \cdot \hat M^T_{ji} \rangle =
   \emptyset . \end{equation} \end{defn}
 
 In other words, $\hat M^{TV}$ has the same numeric values as those
-found in $\hat M^T$, and the inverse units as those found in $\hat
+found in $\hat M^T$, and the inverse units of those found in $\hat
 A^T$.  For example, if
 
 \[ \hat M = \left[ \begin{matrix}
