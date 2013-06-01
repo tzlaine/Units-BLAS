@@ -754,10 +754,45 @@ $\hat M$. \end{proof}
   $\hat M$ has a determinant, then
 
   \[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk}
-  \rangle . \] \end{thm}
+  \rangle . \]\end{thm}
 
 \begin{proof}Let $\hat M$ be a $n \times n$ dimensional value matrix.
+  Here is the determinant of $\hat M$, via Laplace expansion:
 
-***TODO***\end{proof}
+\[ | \hat M | = \sum_{k=1}^n \hat M_{kj} \cdot C_{kj} , \] where $C_{ij}$ is the
+cofactor of the minor matrix $\hat M_{ij}$:
+
+\[ C_{ij} = (-1)^{i + j} \cdot | \hat M_{ij} | \] In this case, the
+notation $\hat M_{ij}$ refers to the $(i, j)$ minor matrix of $\hat
+M$, not its $(i, j)$ element. Hereafter, unless otherwise indicated,
+$\hat M_{ij}$ will once again refer to the $(i, j)$ element.  From
+this,
+
+\[ \langle | \hat M | \rangle = \langle \hat M_{11} \cdot C_{11} +
+\hat M_{12} \cdot C_{12} + \cdots + \hat M_{1n} \cdot C_{1n}\rangle
+. \] By Lemma \ref{terms_of_a_summation_have_equal_units}, this
+reduces to
+
+\[ \langle | \hat M | \rangle = \langle \hat M_{11} \cdot C_{11}
+\rangle . \]
+
+Neglecting the value portion of the definition of cofactor, which is
+not relevant within the angle brackets, $\langle C_{11} \rangle$
+exapands to
+
+\[ \langle \hat M_{22} \cdot C_{11} + \hat M_{23} \cdot C_{12} +
+\cdots + \hat M_{2n} \cdot C_{1n} \rangle , \] where $C_{ij}$ now
+refers to the cofactor within the minor matrix $\hat M_{11}$.  Again
+applying Lemma \ref{terms_of_a_summation_have_equal_units}, this
+reduces to
+
+\[ \langle \hat M_{22} \cdot C_{11} \rangle . \]  Proceeding like
+this, the final units for $| \hat M |$ are
+
+\[ \langle | \hat M | \rangle = \langle \hat M_{11} \cdot \hat M_{22}
+\cdot \cdots \cdot \hat M_{nn} \rangle , \mbox{or} \]
+
+\[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk}
+\rangle . \] \end{proof}
 
 \end{document}
