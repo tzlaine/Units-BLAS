@@ -9,7 +9,6 @@
 #define BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS 1
 
 #include <boost/units_blas/matrix.hpp>
-#include <boost/units_blas/make_matrix.hpp>
 #include <boost/units_blas/operations.hpp>
 
 #include <boost/units/quantity.hpp>
@@ -22,34 +21,37 @@
 
 namespace bub = boost::units_blas;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double>,
-        boost::fusion::vector<double>,
-        boost::fusion::vector<double>
-    >
->::type A_matrix_3x1_fundamentals_type;
+typedef bub::matrix<
+    std::tuple<double>,
+    std::tuple<double>,
+    std::tuple<double>
+> A_matrix_3x1_fundamentals_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double, double, double>
-    >
->::type B_matrix_1x3_fundamentals_type;
+typedef bub::matrix<
+    std::tuple<double, double, double>
+> B_matrix_1x3_fundamentals_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double, double, double, double>,
-        boost::fusion::vector<double, double, double, double>,
-        boost::fusion::vector<double, double, double, double>,
-        boost::fusion::vector<double, double, double, double>
-    >
->::type D_matrix_4x4_fundamentals_type;
+#if 0 // TODO: This works around a bug in clang-3.4.
+typedef bub::matrix<
+    std::tuple<double, double, double, double>,
+    std::tuple<double, double, double, double>,
+    std::tuple<double, double, double, double>,
+    std::tuple<double, double, double, double>
+> D_matrix_4x4_fundamentals_type;
+#else
+typedef bub::matrix_t<
+    std::tuple<double, double, double, double,
+               double, double, double, double,
+               double, double, double, double,
+               double, double, double, double>,
+    4,
+    4
+> D_matrix_4x4_fundamentals_type;
+#endif
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double>
-    >
->::type E_matrix_1x1_fundamentals_type;
+typedef bub::matrix<
+    std::tuple<double>
+> E_matrix_1x1_fundamentals_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
 typedef boost::units::quantity<boost::units::si::length> length;
@@ -70,49 +72,37 @@ typedef boost::units::quantity<boost::units::si::time_length> time_length;
 typedef boost::units::quantity<boost::units::si::time_sq> time_sq;
 typedef boost::units::quantity<boost::units::si::length_sq> length_sq;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<time_>,
-        boost::fusion::vector<length>,
-        boost::fusion::vector<dimensionless>
-    >
->::type A_matrix_3x1_units_type;
+typedef bub::matrix<
+    std::tuple<time_>,
+    std::tuple<length>,
+    std::tuple<dimensionless>
+> A_matrix_3x1_units_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length>,
-        boost::fusion::vector<time_>,
-        boost::fusion::vector<time_length>
-    >
->::type A_matrix_3x1_units_type_2;
+typedef bub::matrix<
+    std::tuple<length>,
+    std::tuple<time_>,
+    std::tuple<time_length>
+> A_matrix_3x1_units_type_2;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<time_, time_, time_>
-    >
->::type B_matrix_1x3_units_type;
+typedef bub::matrix<
+    std::tuple<time_, time_, time_>
+> B_matrix_1x3_units_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<dimensionless>,
-        boost::fusion::vector<dimensionless>,
-        boost::fusion::vector<dimensionless>
-    >
->::type C_matrix_3x1_units_type;
+typedef bub::matrix<
+    std::tuple<dimensionless>,
+    std::tuple<dimensionless>,
+    std::tuple<dimensionless>
+> C_matrix_3x1_units_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, length, length, length>,
-        boost::fusion::vector<length, length, length, length>,
-        boost::fusion::vector<length, length, length, length>,
-        boost::fusion::vector<length, length, length, length>
-    >
->::type D_matrix_4x4_units_type;
+typedef bub::matrix<
+    std::tuple<length, length, length, length>,
+    std::tuple<length, length, length, length>,
+    std::tuple<length, length, length, length>,
+    std::tuple<length, length, length, length>
+> D_matrix_4x4_units_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length>
-    >
->::type E_matrix_1x1_units_type;
+typedef bub::matrix<
+    std::tuple<length>
+> E_matrix_1x1_units_type;
 
 #endif // BOOST_UNITS_BLAS_TEST_OPERATIONS_TESTS_HPP

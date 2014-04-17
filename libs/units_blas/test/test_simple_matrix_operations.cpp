@@ -31,30 +31,33 @@ struct derived_from_D_matrix_4x4_units_type :
 
 int test_main (int, char *[])
 {
+#if 0
+    auto seq = bub::detail::column_indices<D_matrix_4x4_units_type, 3>();
+    bub::detail::print_indices<decltype(seq)>::call();
+#endif
+
     // fundamental types
 
     A_matrix_3x1_fundamentals_type m_A1;
 
-    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1) = 3.0;
-    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1) = 1.0;
-    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1) = 2.0;
-    BOOST_CHECK((m_A1.at<0, 0>() == 3.0));
-    BOOST_CHECK((m_A1.at<1, 0>() == 1.0));
-    BOOST_CHECK((m_A1.at<2, 0>() == 2.0));
-
-    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1) = 2.0;
-    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1) = 3.0;
-    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1) = 1.0;
-    BOOST_CHECK((m_A1.at<0, 0>() == 2.0));
-    BOOST_CHECK((m_A1.at<1, 0>() == 3.0));
-    BOOST_CHECK((m_A1.at<2, 0>() == 1.0));
-
-    bub::at_c<0, 0>(m_A1) = 1.0;
-    bub::at_c<1, 0>(m_A1) = 2.0;
-    bub::at_c<2, 0>(m_A1) = 3.0;
+    bub::at<0, 0>(m_A1) = 1.0;
+    bub::at<1, 0>(m_A1) = 2.0;
+    bub::at<2, 0>(m_A1) = 3.0;
     BOOST_CHECK((m_A1.at<0, 0>() == 1.0));
     BOOST_CHECK((m_A1.at<1, 0>() == 2.0));
     BOOST_CHECK((m_A1.at<2, 0>() == 3.0));
+
+    auto r1 = bub::detail::row_tuple<0>(m_A1);
+    std::cerr << std::get<0>(r1) << "\n";
+    auto r2 = bub::detail::row_tuple<1>(m_A1);
+    std::cerr << std::get<0>(r2) << "\n";
+    auto r3 = bub::detail::row_tuple<2>(m_A1);
+    std::cerr << std::get<0>(r3) << "\n";
+
+    auto c1 = bub::detail::column_tuple<0>(m_A1);
+    std::cerr << std::get<0>(c1) << " "
+              << std::get<1>(c1) << " "
+              << std::get<2>(c1) << "\n";
 
     A_matrix_3x1_fundamentals_type m_A2 = prod(3.0, m_A1);
     BOOST_CHECK((m_A2.at<0, 0>() == 3.0));
@@ -83,6 +86,7 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A4.at<1, 0>() == 2.0 / 3.0));
     BOOST_CHECK((m_A4.at<2, 0>() == 3.0 / 3.0));
 
+#if 0
     A_matrix_3x1_fundamentals_type m_A5 = neg(m_A1);
     BOOST_CHECK((m_A5.at<0, 0>() == -1.0));
     BOOST_CHECK((m_A5.at<1, 0>() == -2.0));
@@ -91,6 +95,7 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A5.at<0, 0>() == -1.0));
     BOOST_CHECK((m_A5.at<1, 0>() == -2.0));
     BOOST_CHECK((m_A5.at<2, 0>() == -3.0));
+#endif
 
     D_matrix_4x4_fundamentals_type m_D1;
     m_D1.at<0, 0>() = 1.0;
@@ -128,6 +133,7 @@ int test_main (int, char *[])
     m_D1_d.at<3, 2>() = 15.0;
     m_D1_d.at<3, 3>() = 16.0;
 
+#if 0 // TODO
     D_matrix_4x4_fundamentals_type m_D2;
     m_D2 = transpose(m_D1);
     BOOST_CHECK((m_D2.at<0, 0>() == 1.0));
@@ -146,7 +152,9 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D2.at<1, 3>() == 14.0));
     BOOST_CHECK((m_D2.at<2, 3>() == 15.0));
     BOOST_CHECK((m_D2.at<3, 3>() == 16.0));
+#endif
 
+#if 0
     m_D2 = transpose(m_D1_d);
     BOOST_CHECK((m_D2.at<0, 0>() == 1.0));
     BOOST_CHECK((m_D2.at<1, 0>() == 2.0));
@@ -212,29 +220,15 @@ int test_main (int, char *[])
     m_D_slice_3 = bub::slice<rows_type_3, columns_type_3>(m_D1_d);
     BOOST_CHECK((m_D_slice_3.at<0, 0>() == 2.0));
     BOOST_CHECK((m_D_slice_3.at<0, 1>() == 4.0));
-
+#endif
 
     // unit types
 
     A_matrix_3x1_units_type m_A1_u;
 
-    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1_u) = time_::from_value(3.0);
-    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1_u) = length::from_value(1.0);
-    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1_u) = dimensionless::from_value(2.0);
-    BOOST_CHECK((m_A1_u.at<0, 0>().value() == 3.0));
-    BOOST_CHECK((m_A1_u.at<1, 0>().value() == 1.0));
-    BOOST_CHECK((m_A1_u.at<2, 0>().value() == 2.0));
-
-    bub::at<boost::mpl::size_t<0>, boost::mpl::size_t<0> >(m_A1_u) = time_::from_value(2.0);
-    bub::at<boost::mpl::size_t<1>, boost::mpl::size_t<0> >(m_A1_u) = length::from_value(3.0);
-    bub::at<boost::mpl::size_t<2>, boost::mpl::size_t<0> >(m_A1_u) = dimensionless::from_value(1.0);
-    BOOST_CHECK((m_A1_u.at<0, 0>().value() == 2.0));
-    BOOST_CHECK((m_A1_u.at<1, 0>().value() == 3.0));
-    BOOST_CHECK((m_A1_u.at<2, 0>().value() == 1.0));
-
-    bub::at_c<0, 0>(m_A1_u) = time_::from_value(1.0);
-    bub::at_c<1, 0>(m_A1_u) = length::from_value(2.0);
-    bub::at_c<2, 0>(m_A1_u) = dimensionless::from_value(3.0);
+    bub::at<0, 0>(m_A1_u) = time_::from_value(1.0);
+    bub::at<1, 0>(m_A1_u) = length::from_value(2.0);
+    bub::at<2, 0>(m_A1_u) = dimensionless::from_value(3.0);
     BOOST_CHECK((m_A1_u.at<0, 0>().value() == 1.0));
     BOOST_CHECK((m_A1_u.at<1, 0>().value() == 2.0));
     BOOST_CHECK((m_A1_u.at<2, 0>().value() == 3.0));
@@ -266,6 +260,7 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A4_u.at<1, 0>().value() == 2.0 / 3.0));
     BOOST_CHECK((m_A4_u.at<2, 0>().value() == 3.0 / 3.0));
 
+#if 0
     A_matrix_3x1_units_type m_A5_u = neg(m_A1_u);
     BOOST_CHECK((m_A5_u.at<0, 0>().value() == -1.0));
     BOOST_CHECK((m_A5_u.at<1, 0>().value() == -2.0));
@@ -274,6 +269,7 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A5_u.at<0, 0>().value() == -1.0));
     BOOST_CHECK((m_A5_u.at<1, 0>().value() == -2.0));
     BOOST_CHECK((m_A5_u.at<2, 0>().value() == -3.0));
+#endif
 
     D_matrix_4x4_units_type m_D1_u;
     m_D1_u.at<0, 0>() = length::from_value(1.0);
@@ -311,6 +307,7 @@ int test_main (int, char *[])
     m_D1_u_d.at<3, 2>() = length::from_value(15.0);
     m_D1_u_d.at<3, 3>() = length::from_value(16.0);
 
+#if 0
     D_matrix_4x4_units_type m_D2_u;
     m_D2_u = transpose(m_D1_u);
     BOOST_CHECK((m_D2_u.at<0, 0>().value() == 1.0));
@@ -395,6 +392,7 @@ int test_main (int, char *[])
     m_D_slice_3_u = bub::slice<rows_type_3, columns_type_3>(m_D1_u_d);
     BOOST_CHECK((m_D_slice_3_u.at<0, 0>().value() == 2.0));
     BOOST_CHECK((m_D_slice_3_u.at<0, 1>().value() == 4.0));
+#endif
 
     return 0;
 }

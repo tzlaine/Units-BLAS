@@ -10,15 +10,6 @@
 #define BOOST_UNITS_BLAS_OPERATIONS_HPP
 
 #include <boost/units_blas/config.hpp>
-#include <boost/units_blas/result_of.hpp>
-#include <boost/units_blas/traits.hpp>
-#include <boost/units_blas/detail/get_value_type.hpp>
-#include <boost/units_blas/detail/has_inverse.hpp>
-#include <boost/units_blas/detail/iteration.hpp>
-#include <boost/units_blas/detail/lu.hpp>
-#include <boost/units_blas/detail/one_value.hpp>
-#include <boost/units_blas/detail/simple_iteration.hpp>
-#include <boost/units_blas/detail/zero_value.hpp>
 
 #include <boost/array.hpp>
 #include <boost/type_traits/is_convertible.hpp>
@@ -29,6 +20,321 @@
 
 namespace boost { namespace units_blas {
 
+    namespace detail {
+
+        // matrix from tuple
+        template <typename Tuple, std::size_t Rows, std::size_t Columns>
+        auto make_matrix (Tuple t)
+        {
+            matrix_t<Tuple, Rows, Columns> retval;
+            tuple_access::assign(retval, t);
+            return retval;
+        }
+
+        // sequences
+        template <std::size_t ...I>
+        struct index_sequence
+        {
+            static const std::size_t size = sizeof...(I);
+        };
+
+        template <typename ...T>
+        struct type_sequence
+        {
+            static const std::size_t size = sizeof...(T);
+        };
+
+
+        // push_back
+        template <std::size_t Tail, std::size_t ...Head>
+        constexpr auto push_back (index_sequence<Head...>)
+        { return index_sequence<Head..., Tail>{}; }
+
+        template <typename Tail, typename ...Head>
+        constexpr auto push_back (type_sequence<Head...>)
+        { return type_sequence<Head..., Tail>{}; }
+
+
+#if 0
+        // TODO: Test transform()
+        // transform
+        template <typename Fn, typename PrevResult, typename Head, typename ...Tail>
+        struct transform_impl
+        {
+            static constexpr auto call (type_sequence<Head, Tail...>, PrevResult prev)
+            {
+                using step_type = typename Fn::template apply<Head>::type;
+                auto result = push_back<step_type>(prev);
+                return transform_impl<Fn, decltype(result), Tail...>::call(
+                    type_sequence<Tail...>{},
+                    result
+                );
+            }
+        };
+
+        template <typename Fn, typename PrevResult, typename Head>
+        struct transform_impl<Fn, PrevResult, Head>
+        {
+            static constexpr auto call (type_sequence<Head>, PrevResult prev)
+            {
+                using step_type = typename Fn::template apply<Head>::type;
+                return push_back<step_type>(prev);
+            }
+        };
+
+        template <typename Fn, typename ...T>
+        constexpr auto transform (type_sequence<T...> seq)
+        { return transform_impl<Fn, type_sequence<>, T...>::call(seq, type_sequence<>{}); }
+#endif
+
+
+        // TODO: Test foldl()
+        // foldl
+        template <std::size_t I, typename Fn, typename State>
+        constexpr auto foldl_impl (Fn, State state, type_sequence<>)
+        { return state; }
+
+        template <std::size_t I, typename Fn, typename State, typename Head, typename ...Tail>
+        constexpr auto foldl_impl (Fn f, State state, type_sequence<Head, Tail...>)
+        { return foldl_impl<I + 1>(f, f.template call<I, Head>(state), type_sequence<Tail...>{}); }
+
+        template <typename Fn, typename State, typename Head, typename ...Tail>
+        constexpr auto foldl (Fn f, State state, type_sequence<Head, Tail...> seq)
+        { return foldl_impl<0>(f, state, seq); }
+
+
+        // column indices and types
+        template <typename Matrix, std::size_t X, std::size_t Incr, std::size_t I, std::size_t N>
+        struct indices_and_types_impl
+        {
+            template <typename Indices, typename Types>
+            static constexpr auto call (std::pair<Indices, Types>)
+            {
+                return indices_and_types_impl<Matrix, X + Incr, Incr, I + 1, N>::call(
+                    std::pair<
+                        decltype(
+                            push_back<X>(Indices{})
+                        ),
+                        decltype(
+                            push_back<
+                                typename std::tuple_element<
+                                    X,
+                                    typename Matrix::value_types
+                                >::type
+                            >(Types{})
+                        )
+                    >{}
+                );
+            }
+        };
+
+        template <typename Matrix, std::size_t X, std::size_t Incr, std::size_t N>
+        struct indices_and_types_impl<Matrix, X, Incr, N, N>
+        {
+            template <typename Seqs>
+            static constexpr auto call (Seqs seqs)
+            { return seqs; }
+        };
+
+        template <typename Matrix, std::size_t R>
+        constexpr auto row_indices_and_types ()
+        {
+            return indices_and_types_impl<
+                Matrix,
+                R * Matrix::num_columns,
+                1,
+                0,
+                Matrix::num_columns
+            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+        }
+
+        template <typename Matrix, std::size_t C>
+        constexpr auto column_indices_and_types ()
+        {
+            return indices_and_types_impl<
+                Matrix,
+                C,
+                Matrix::num_columns,
+                0,
+                Matrix::num_rows
+            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+        }
+
+
+        // tuple from typelist
+        template <typename ...T>
+        constexpr auto tuple_from_types (type_sequence<T...>)
+        { return std::tuple<T...>{}; }
+
+
+        // indexed iteration
+        template <std::size_t I, typename F, std::size_t Head, std::size_t ...Tail>
+        struct iterate_indexed_impl;
+
+        template <std::size_t I, typename F, std::size_t Head, std::size_t ...Tail>
+        struct iterate_indexed_impl
+        {
+            static void call (F f, index_sequence<Head, Tail...>)
+            {
+                f.template call<I, Head>();
+                iterate_indexed_impl<I + 1, F, Tail...>::call(f, index_sequence<Tail...>{});
+            }
+        };
+
+        template <std::size_t I, typename F, std::size_t Head>
+        struct iterate_indexed_impl<I, F, Head>
+        {
+            static void call (F f, index_sequence<Head>)
+            { f.template call<I, Head>(); }
+        };
+
+        template <typename F, std::size_t ...I>
+        void iterate_indexed (F f, index_sequence<I...> seq)
+        { iterate_indexed_impl<0, F, I...>::call(f, seq); }
+
+
+        // row/column tuples
+        template <typename Tuple, typename Matrix>
+        struct tuple_assign
+        {
+            template <std::size_t I, std::size_t J>
+            void call ()
+            { std::get<I>(lhs) = tuple_access::get<J>(rhs); }
+
+            Tuple & lhs;
+            Matrix const & rhs;
+        };
+
+        template <std::size_t R, typename Matrix>
+        constexpr auto row_tuple (const Matrix & m)
+        {
+            auto seqs = indices_and_types_impl<
+                Matrix,
+                R * Matrix::num_columns,
+                1,
+                0,
+                Matrix::num_columns
+            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+            auto retval = tuple_from_types(seqs.second);
+            iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m}, seqs.first);
+            return retval;
+        }
+
+        template <std::size_t C, typename Matrix>
+        constexpr auto column_tuple (const Matrix & m)
+        {
+            auto seqs = indices_and_types_impl<
+                Matrix,
+                C,
+                Matrix::num_columns,
+                0,
+                Matrix::num_rows
+            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+            auto retval = tuple_from_types(seqs.second);
+            iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m}, seqs.first);
+            return retval;
+        }
+
+
+#if 0 // transpose indices
+        template <typename Matrix, std::size_t I, std::size_t N>
+        struct transpose_indices_impl
+        {
+            template <std::size_t ...I>
+            static constexpr auto call (index_sequence<I...>)
+            {
+                constexpr std::size_t row = I / Matrix::num_columns;
+                constexpr std::size_t column = I % Matrix::num_columns;
+                constexpr std::size_t transpose_i = column * Matrix::num_rows + row;
+                return transpose_indices_impl<Matrix, I + 1, N>::call(
+                    index_sequence<I..., transpose_i>{}
+                );
+            }
+        };
+
+        template <typename Matrix, std::size_t N>
+        struct transpose_indices_impl<Matrix, N, N>
+        {
+            template <std::size_t ...I>
+            static constexpr auto call (index_sequence<I...> seq)
+            { return seq; }
+        };
+
+
+        template <typename Matrix>
+        constexpr auto transpose_indices ()
+        {
+            return transpose_indices_impl<
+                Matrix,
+                0,
+                Matrix::num_rows * Matrix::num_columns
+            >::call(index_sequence<>{});
+        }
+#endif
+
+        // tuple dot product
+        template <typename Tuple1, typename Tuple2>
+        struct tuple_dot_impl
+        {
+            template <std::size_t I, typename T, typename State>
+            auto call (State prev)
+            { return prev + std::get<I>(t1_) * std::get<I>(t2_); }
+
+            Tuple1 t1_;
+            Tuple2 t2_;
+        };
+
+        template <typename Tuple1, typename Head, typename ...Tail>
+        auto tuple_dot (Tuple1 t1, std::tuple<Head, Tail...> t2)
+        {
+            static_assert(
+                std::tuple_size<Tuple1>::value ==
+                std::tuple_size<std::tuple<Head, Tail...>>::value,
+                "tuple_dot() must be given tuples of the same length"
+            );
+            auto state = std::get<0>(t1) * std::get<0>(t2);
+            using function_object =
+                tuple_dot_impl<Tuple1, std::tuple<Head, Tail...>>;
+            function_object f{t1, t2};
+            return foldl(f, state, type_sequence<Tail...>{}).result_;
+        }
+
+#if 1 // TODO: Remove
+        template <typename Seq>
+        struct print_indices;
+
+        template <std::size_t Head, std::size_t ...Tail>
+        struct print_indices<index_sequence<Head, Tail...>>
+        {
+            static void call ()
+            {
+                std::cerr << Head << " ";
+                print_indices<index_sequence<Tail...>>::call();
+            }
+        };
+
+        template <std::size_t Head>
+        struct print_indices<index_sequence<Head>>
+        {
+            static void call ()
+            { std::cerr << Head << "\n"; }
+        };
+#endif
+
+        template <typename Tuple>
+        struct neg_fold_impl
+        {
+            template <std::size_t I, typename T>
+            auto call (Tuple t)
+            {
+                std::get<I>(t) = -std::get<I>(t);
+                return t;
+            }
+        };
+
+    }
+
+#if 0
     /** Returns a @c matrix<> consisting of only the rows and columns of @c m
         specified by @c Rows and @c Columns.  @c m must be a @c matrix<>.
         @c Rows and @c Columns must be type sequences containing integral
@@ -51,21 +357,15 @@ namespace boost { namespace units_blas {
         );
         return retval;
     }
+#endif
 
     /** Returns a const-preserved reference to the element at row @c I, column
         @c J of @c m.  @c m must be a @c matrix<>. */
-    template <typename I, typename J, typename T>
-    typename result_of::at<matrix<T>, I, J>::type
-    at (matrix<T> & m)
-    { return m.template at<I::value, J::value>(); }
-
-    /** Returns a const-preserved reference to the element at row @c I, column
-        @c J of @c m.  @c m must be a @c matrix<>. */
-    template <std::size_t I, std::size_t J, typename T>
-    typename result_of::at_c<matrix<T>, I, J>::type
-    at_c (matrix<T> & m)
+    template <std::size_t I, std::size_t J, typename Matrix>
+    decltype(auto) at (Matrix && m)
     { return m.template at<I, J>(); }
 
+#if 0
     /** Returns the tranpose of @c m.  @c m must be a @c matrix<>. */
     template <typename T>
     typename result_of::transpose<matrix<T> >::type
@@ -79,30 +379,34 @@ namespace boost { namespace units_blas {
         );
         return retval;
     }
+#endif
 
     /** Returns the negation of @c m.  @c m must be a @c matrix<>. */
-    template <typename T>
-    matrix<T>
-    neg (matrix<T> const & m)
+    template <std::size_t Rows, std::size_t Columns, typename ...T>
+    auto neg (matrix_t<std::tuple<T...>, Rows, Columns> m)
     {
-        matrix<T> retval;
-        typedef fusion::vector<matrix<T> &, matrix<T> const &> ops;
-        iterate<size<matrix<T> > >(
-            ops(retval, m), detail::negate_assign()
-        );
-        return retval;
+#if 1
+        std::tuple<T...> negated_tuple =
+            detail::foldl<detail::neg_fold_impl>(
+                std::tuple<T...>{},
+                detail::type_sequence<T...>{}
+            );
+        return m; // TODO return make_matrix<Rows, Columns>(negated_tuple);
+#else
+        return m; // TODO
+#endif
     }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
     /** Returns the negation of @c m.  @c m must be a @c matrix<>. */
-    template <typename T>
-    matrix<T>
-    operator- (matrix<T> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    auto operator- (matrix_t<Tuple, Rows, Columns> m)
     { return neg(m); }
 
 #endif
 
+#if 0
     /** Returns the elementwise sum of @c lhs and @c rhs. @c lhs and @c rhs
         must be <c>matrix<></c>s with the same dimensions.  Also, every sum
         <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
@@ -195,55 +499,41 @@ namespace boost { namespace units_blas {
         >(ops(retval, lhs, rhs), detail::matrix_matrix_mul_assign());
         return retval;
     }
+#endif
 
     /** Returns the product of @c m and @c t.  @c m must be a @c matrix<>, and
         @c T must not be a @c matrix<>. */
-    template <typename T, typename U>
-    typename lazy_disable_if<
-        is_or_is_derived_from_matrix<T>,
-        result_of::scalar_product<matrix<U>, T>
-    >::type
-    prod (matrix<U> const & m, T const & t)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
+    auto prod (matrix_t<Tuple, Rows, Columns> m, T t)
     {
-        typedef typename result_of::scalar_product<matrix<U>, T>::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, matrix<U> const &, T const &> ops;
-        iterate<size<result_type> >(
-            ops(retval, m, t), detail::matrix_scalar_mul_assign()
-        );
+        // TODO: Improve this so that the (possibly promoted) type of m(i,j) * t
+        // is preserved.
+        matrix_t<Tuple, Rows, Columns> retval = m;
+        retval *= t;
         return retval;
     }
 
     /** Returns the product of @c t and @c m.  @c m must be a @c matrix<>, and
         @c T must not be a @c matrix<>. */
-    template <typename T, typename U>
-    typename lazy_disable_if<
-        is_or_is_derived_from_matrix<T>,
-        result_of::scalar_product<matrix<U>, T>
-    >::type
-    prod (T const & t, matrix<U> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
+    auto prod (T t, matrix_t<Tuple, Rows, Columns> m)
     { return prod(m, t); }
 
     /** Returns the result of dividing @c m by @c t.  @c m must be a @c
         matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename T, typename U>
-    typename lazy_disable_if<
-        is_or_is_derived_from_matrix<T>,
-        result_of::scalar_quotient<matrix<U>, T>
-    >::type
-    div (matrix<U> const & m, T const & t)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
+    auto div (matrix_t<Tuple, Rows, Columns> m, T t)
     {
-        typedef typename result_of::scalar_quotient<matrix<U>, T>::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, matrix<U> const &, T const &> ops;
-        iterate<size<result_type> >(
-            ops(retval, m, t), detail::matrix_scalar_div_assign()
-        );
+        // TODO: Improve this so that the (possibly promoted) type of m(i,j) / t
+        // is preserved.
+        matrix_t<Tuple, Rows, Columns> retval = m;
+        retval /= t;
         return retval;
     }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
+#if 0
     /** Returns the matrix-product of @c lhs and @c rhs. @c lhs and @c rhs
         must be <c>matrix<></c>s, and the number of columns in @c lhs must the
         same as the number of rows in @c rhs.  Also, a matrix-product type
@@ -260,39 +550,29 @@ namespace boost { namespace units_blas {
     >::type
     operator* (matrix<T> const & lhs, matrix<U> const & rhs)
     { return prod(lhs, rhs); }
+#endif
 
     /** Returns the product of @c m and @c t.  @c m must be a @c matrix<>, and
         @c T must not be a @c matrix<>. */
-    template <typename T, typename U>
-    typename lazy_disable_if<
-        is_or_is_derived_from_matrix<T>,
-        result_of::scalar_product<matrix<U>, T>
-    >::type
-    operator* (matrix<U> const & m, T const & t)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
+    auto operator* (matrix_t<Tuple, Rows, Columns> m, T t)
     { return prod(m, t); }
 
     /** Returns the product of @c t and @c m.  @c m must be a @c matrix<>, and
         @c T must not be a @c matrix<>. */
-    template <typename T, typename U>
-    typename lazy_disable_if<
-        is_or_is_derived_from_matrix<T>,
-        result_of::scalar_product<matrix<U>, T>
-    >::type
-    operator* (T const & t, matrix<U> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
+    auto operator* (T t, matrix_t<Tuple, Rows, Columns> m)
     { return prod(m, t); }
 
     /** Returns the result of dividing @c m by @c t.  @c m must be a @c
         matrix<>, and @c T must not be a @c matrix<>. */
-    template <typename T, typename U>
-    typename lazy_disable_if<
-        is_or_is_derived_from_matrix<T>,
-        result_of::scalar_quotient<matrix<U>, T>
-    >::type
-    operator/ (matrix<U> const & m, T const & t)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
+    auto operator/ (matrix_t<Tuple, Rows, Columns> m, T t)
     { return div(m, t); }
 
 #endif
 
+#if 0
     /** Returns the elementwise multiplication of the elements of @c lhs by
         the elements of @c rhs.  @c lhs and @c rhs must be <c>matrix<></c>s
         with the same dimensions. */
@@ -955,6 +1235,7 @@ namespace boost { namespace units_blas {
             ops3(x, temp_vector), detail::temp_vector_to_matrix_assign()
         );
     }
+#endif
 
 } } // namespace boost::units_blas
 

@@ -9,11 +9,13 @@
 #ifndef BOOST_UNITS_BLAS_MATRIX_FWD_HPP
 #define BOOST_UNITS_BLAS_MATRIX_FWD_HPP
 
+#include <cstddef>
+
 
 namespace boost { namespace units_blas {
 
-    template <typename Rows>
-    class matrix;
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    class matrix_t;
 
 } } // namespace boost::units_blas
 

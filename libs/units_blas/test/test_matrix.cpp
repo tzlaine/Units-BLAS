@@ -5,7 +5,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/units_blas/matrix.hpp>
-#include <boost/units_blas/make_matrix.hpp>
 
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/time.hpp>
@@ -17,42 +16,32 @@
 
 namespace bub = boost::units_blas;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<float>,
-        boost::fusion::vector<int>
-    >
->::type A_matrix_2x1_float_int_type;
+typedef bub::matrix<
+    std::tuple<float>,
+    std::tuple<int>
+> A_matrix_2x1_float_int_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<int>,
-        boost::fusion::vector<int>
-    >
->::type B_matrix_2x1_int_type;
+typedef bub::matrix<
+    std::tuple<int>,
+    std::tuple<int>
+> B_matrix_2x1_int_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double, double>
-    >
->::type C_matrix_1x2_double_type;
+typedef bub::matrix<
+    std::tuple<double, double>
+> C_matrix_1x2_double_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
 typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<time_>,
-        boost::fusion::vector<length>
-    >
->::type A_matrix_2x1_time_length_type;
+typedef bub::matrix<
+    std::tuple<time_>,
+    std::tuple<length>
+> A_matrix_2x1_time_length_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<dimensionless, dimensionless>
-    >
->::type B_matrix_2x1_length_type;
+typedef bub::matrix<
+    std::tuple<dimensionless, dimensionless>
+> B_matrix_2x1_length_type;
 
 int test_main (int, char *[])
 {
