@@ -216,10 +216,7 @@ int test_main (int, char *[])
     m_A_z_dir_u.at<1, 0>() = length::from_value(0.0);
     m_A_z_dir_u.at<2, 0>() = dimensionless::from_value(1.0);
 
-    typedef bub::result_of::cross_product<
-        A_matrix_3x1_units_type,
-        A_matrix_3x1_units_type
-    >::type A_units_cross_type;
+    using A_units_cross_type = decltype(cross(m_A_x_dir_u, m_A_y_dir_u));
     A_units_cross_type m_A_x_cross_y_u = cross(m_A_x_dir_u, m_A_y_dir_u);
     BOOST_CHECK((m_A_x_cross_y_u.at<0, 0>() == length::from_value(0.0)));
     BOOST_CHECK((m_A_x_cross_y_u.at<1, 0>() == time_::from_value(0.0)));
@@ -282,10 +279,7 @@ int test_main (int, char *[])
     m_B_z_dir_u.at<0, 1>() = time_::from_value(0.0);
     m_B_z_dir_u.at<0, 2>() = time_::from_value(1.0);
 
-    typedef bub::result_of::cross_product<
-        B_matrix_1x3_units_type,
-        B_matrix_1x3_units_type
-    >::type B_units_cross_type;
+    using B_units_cross_type = decltype(cross(m_B_x_dir_u, m_B_y_dir_u));
     B_units_cross_type m_B_x_cross_y_u = cross(m_B_x_dir_u, m_B_y_dir_u);
     BOOST_CHECK((m_B_x_cross_y_u.at<0, 0>() == time_sq::from_value(0.0)));
     BOOST_CHECK((m_B_x_cross_y_u.at<0, 1>() == time_sq::from_value(0.0)));

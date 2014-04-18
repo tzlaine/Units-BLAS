@@ -23,13 +23,14 @@ namespace boost { namespace units_blas {
     namespace detail {
 
         // matrix from tuple
-        template <typename Tuple, std::size_t Rows, std::size_t Columns>
+        template <std::size_t Rows, std::size_t Columns, typename Tuple>
         auto make_matrix (Tuple t)
         {
             matrix_t<Tuple, Rows, Columns> retval;
-            tuple_access::assign(retval, t);
+            tuple_access::all(retval) = t;
             return retval;
         }
+
 
         // sequences
         template <std::size_t ...I>
@@ -55,40 +56,6 @@ namespace boost { namespace units_blas {
         { return type_sequence<Head..., Tail>{}; }
 
 
-#if 0
-        // TODO: Test transform()
-        // transform
-        template <typename Fn, typename PrevResult, typename Head, typename ...Tail>
-        struct transform_impl
-        {
-            static constexpr auto call (type_sequence<Head, Tail...>, PrevResult prev)
-            {
-                using step_type = typename Fn::template apply<Head>::type;
-                auto result = push_back<step_type>(prev);
-                return transform_impl<Fn, decltype(result), Tail...>::call(
-                    type_sequence<Tail...>{},
-                    result
-                );
-            }
-        };
-
-        template <typename Fn, typename PrevResult, typename Head>
-        struct transform_impl<Fn, PrevResult, Head>
-        {
-            static constexpr auto call (type_sequence<Head>, PrevResult prev)
-            {
-                using step_type = typename Fn::template apply<Head>::type;
-                return push_back<step_type>(prev);
-            }
-        };
-
-        template <typename Fn, typename ...T>
-        constexpr auto transform (type_sequence<T...> seq)
-        { return transform_impl<Fn, type_sequence<>, T...>::call(seq, type_sequence<>{}); }
-#endif
-
-
-        // TODO: Test foldl()
         // foldl
         template <std::size_t I, typename Fn, typename State>
         constexpr auto foldl_impl (Fn, State state, type_sequence<>)
@@ -110,20 +77,14 @@ namespace boost { namespace units_blas {
             template <typename Indices, typename Types>
             static constexpr auto call (std::pair<Indices, Types>)
             {
+                using indices = decltype(push_back<X>(Indices{}));
+                using type = typename std::tuple_element<
+                    X,
+                    typename Matrix::value_types
+                >::type;
+                using types = decltype(push_back<type>(Types{}));
                 return indices_and_types_impl<Matrix, X + Incr, Incr, I + 1, N>::call(
-                    std::pair<
-                        decltype(
-                            push_back<X>(Indices{})
-                        ),
-                        decltype(
-                            push_back<
-                                typename std::tuple_element<
-                                    X,
-                                    typename Matrix::value_types
-                                >::type
-                            >(Types{})
-                        )
-                    >{}
+                    std::pair<indices, types>{}
                 );
             }
         };
@@ -296,7 +257,7 @@ namespace boost { namespace units_blas {
             using function_object =
                 tuple_dot_impl<Tuple1, std::tuple<Head, Tail...>>;
             function_object f{t1, t2};
-            return foldl(f, state, type_sequence<Tail...>{}).result_;
+            return foldl_impl<1>(f, state, type_sequence<Tail...>{});
         }
 
 #if 1 // TODO: Remove
@@ -321,15 +282,62 @@ namespace boost { namespace units_blas {
         };
 #endif
 
-        template <typename Tuple>
-        struct neg_fold_impl
+        template <typename Matrix>
+        struct negate
         {
-            template <std::size_t I, typename T>
-            auto call (Tuple t)
+            template <std::size_t I>
+            void call ()
+            { tuple_access::get<I>(m) = -tuple_access::get<I>(m); }
+
+            Matrix & m;
+        };
+
+        template <typename Tuple, bool Abs>
+        struct sum_impl
+        {
+            template <std::size_t I, typename T, typename State>
+            auto call (State prev)
             {
-                std::get<I>(t) = -std::get<I>(t);
-                return t;
+                auto value = std::get<I>(t_);
+                using std::abs;
+                if (Abs)
+                    value = abs(value);
+                return prev + value;
             }
+
+            Tuple t_;
+        };
+
+        template <typename Tuple>
+        struct norm_2_impl
+        {
+            template <std::size_t I, typename T, typename State>
+            auto call (State prev)
+            {
+                auto value = std::get<I>(t_);
+                return prev + value * value;
+            }
+
+            Tuple t_;
+        };
+
+        template <typename Tuple>
+        struct norm_inf_index_impl
+        {
+            template <std::size_t I, typename T, typename State>
+            auto call (State prev)
+            {
+                using common_type = decltype(prev.second + std::get<I>(t_));
+                using retval_type = std::pair<std::size_t, common_type>;
+                using std::abs;
+                auto value = abs(std::get<I>(t_));
+                return
+                    prev.second < value ?
+                    retval_type{I, value} :
+                    retval_type{prev.first, prev.second};
+            }
+
+            Tuple t_;
         };
 
     }
@@ -385,92 +393,57 @@ namespace boost { namespace units_blas {
     template <std::size_t Rows, std::size_t Columns, typename ...T>
     auto neg (matrix_t<std::tuple<T...>, Rows, Columns> m)
     {
-#if 1
-        std::tuple<T...> negated_tuple =
-            detail::foldl<detail::neg_fold_impl>(
-                std::tuple<T...>{},
-                detail::type_sequence<T...>{}
-            );
-        return m; // TODO return make_matrix<Rows, Columns>(negated_tuple);
-#else
-        return m; // TODO
-#endif
+        detail::iterate_simple<m.num_elements>(
+            detail::negate<matrix_t<std::tuple<T...>, Rows, Columns>>{m}
+        );
+        return m;
     }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
     /** Returns the negation of @c m.  @c m must be a @c matrix<>. */
     template <typename Tuple, std::size_t Rows, std::size_t Columns>
-    auto operator- (matrix_t<Tuple, Rows, Columns> m)
+    matrix_t<Tuple, Rows, Columns>
+    operator- (matrix_t<Tuple, Rows, Columns> m)
     { return neg(m); }
 
 #endif
 
-#if 0
     /** Returns the elementwise sum of @c lhs and @c rhs. @c lhs and @c rhs
         must be <c>matrix<></c>s with the same dimensions.  Also, every sum
         <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
-    template <typename T, typename U>
-    typename lazy_enable_if<
-        is_same_shape_matrix<matrix<T>, matrix<U> >,
-        result_of::matrix_element_sum<matrix<T>, matrix<U> >
-    >::type
-    sum (matrix<T> const & lhs, matrix<U> const & rhs)
-    {
-        typedef typename result_of::matrix_element_sum<matrix<T>, matrix<U> >::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
-        iterate<size<matrix<T> > >(
-            ops(retval, lhs, rhs), detail::matrix_matrix_elem_add_assign()
-        );
-        return retval;
-    }
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    auto sum (matrix_t<Tuple1, Rows, Columns> lhs, matrix_t<Tuple2, Rows, Columns> rhs)
+    { return lhs += rhs; }
 
     /** Returns the elementwise difference of @c lhs and @c rhs. @c lhs and @c
         rhs must be <c>matrix<></c>s with the same dimensions.  Also, every
         difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid operation.  */
-    template <typename T, typename U>
-    typename lazy_enable_if<
-        is_same_shape_matrix<matrix<T>, matrix<U> >,
-        result_of::matrix_element_sum<matrix<T>, matrix<U> >
-    >::type
-    diff (matrix<T> const & lhs, matrix<U> const & rhs)
-    {
-        typedef typename result_of::matrix_element_difference<matrix<T>, matrix<U> >::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
-        iterate<size<matrix<T> > >(
-            ops(retval, lhs, rhs), detail::matrix_matrix_elem_sub_assign()
-        );
-        return retval;
-    }
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    auto diff (matrix_t<Tuple1, Rows, Columns> lhs, matrix_t<Tuple2, Rows, Columns> rhs)
+    { return lhs -= rhs; }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
 
     /** Returns the elementwise sum of @c lhs and @c rhs. @c lhs and @c rhs
         must be <c>matrix<></c>s with the same dimensions.  Also, every sum
         <c>lhs(i, j) + rhs(i, j)</c> must be a valid operation.  */
-    template <typename T, typename U>
-    typename lazy_enable_if<
-        is_same_shape_matrix<matrix<T>, matrix<U> >,
-        result_of::matrix_element_sum<matrix<T>, matrix<U> >
-    >::type
-    operator+ (matrix<T> const & lhs, matrix<U> const & rhs)
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    matrix_t<Tuple1, Rows, Columns>
+    operator+ (matrix_t<Tuple1, Rows, Columns> lhs, matrix_t<Tuple2, Rows, Columns> rhs)
     { return sum(lhs, rhs); }
 
     /** Returns the elementwise difference of @c lhs and @c rhs. @c lhs and @c
         rhs must be <c>matrix<></c>s with the same dimensions.  Also, every
         difference <c>lhs(i, j) - rhs(i, j)</c> must be a valid operation.  */
-    template <typename T, typename U>
-    typename lazy_enable_if<
-        is_same_shape_matrix<matrix<T>, matrix<U> >,
-        result_of::matrix_element_difference<matrix<T>, matrix<U> >
-    >::type
-    operator- (matrix<T> const & lhs, matrix<U> const & rhs)
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    matrix_t<Tuple1, Rows, Columns>
+    operator- (matrix_t<Tuple1, Rows, Columns> lhs, matrix_t<Tuple2, Rows, Columns> rhs)
     { return diff(lhs, rhs); }
 
 #endif
 
+#if 0
     /** Returns the matrix-product of @c lhs and @c rhs. @c lhs and @c rhs
         must be <c>matrix<></c>s, and the number of columns in @c lhs must the
         same as the number of rows in @c rhs.  Also, a matrix-product type
@@ -506,8 +479,6 @@ namespace boost { namespace units_blas {
     template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
     auto prod (matrix_t<Tuple, Rows, Columns> m, T t)
     {
-        // TODO: Improve this so that the (possibly promoted) type of m(i,j) * t
-        // is preserved.
         matrix_t<Tuple, Rows, Columns> retval = m;
         retval *= t;
         return retval;
@@ -524,8 +495,6 @@ namespace boost { namespace units_blas {
     template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
     auto div (matrix_t<Tuple, Rows, Columns> m, T t)
     {
-        // TODO: Improve this so that the (possibly promoted) type of m(i,j) / t
-        // is preserved.
         matrix_t<Tuple, Rows, Columns> retval = m;
         retval /= t;
         return retval;
@@ -555,19 +524,22 @@ namespace boost { namespace units_blas {
     /** Returns the product of @c m and @c t.  @c m must be a @c matrix<>, and
         @c T must not be a @c matrix<>. */
     template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
-    auto operator* (matrix_t<Tuple, Rows, Columns> m, T t)
+    matrix_t<Tuple, Rows, Columns>
+    operator* (matrix_t<Tuple, Rows, Columns> m, T t)
     { return prod(m, t); }
 
     /** Returns the product of @c t and @c m.  @c m must be a @c matrix<>, and
         @c T must not be a @c matrix<>. */
     template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
-    auto operator* (T t, matrix_t<Tuple, Rows, Columns> m)
+    matrix_t<Tuple, Rows, Columns>
+    operator* (T t, matrix_t<Tuple, Rows, Columns> m)
     { return prod(m, t); }
 
     /** Returns the result of dividing @c m by @c t.  @c m must be a @c
         matrix<>, and @c T must not be a @c matrix<>. */
     template <typename Tuple, std::size_t Rows, std::size_t Columns, typename T>
-    auto operator/ (matrix_t<Tuple, Rows, Columns> m, T t)
+    matrix_t<Tuple, Rows, Columns>
+    operator/ (matrix_t<Tuple, Rows, Columns> m, T t)
     { return div(m, t); }
 
 #endif
@@ -622,63 +594,21 @@ namespace boost { namespace units_blas {
             ops(lhs, rhs), detail::swap()
         );
     }
+#endif
 
     /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
         must be <c>matrix<></c>s, and must have the same dimensions.
         Additionally, both <c>matrix<></c>s must be "vectors" of length greater
         than 1. */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_vector<VectorL, VectorR>,
-            mpl::not_equal_to<rows<VectorL>, mpl::size_t<1> >
-        >,
-        result_of::dot_product<VectorL, VectorR>
-    >::type
-    dot (VectorL const & lhs, VectorR const & rhs)
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    auto dot (matrix_t<Tuple1, Rows, Columns> lhs,
+              matrix_t<Tuple2, Rows, Columns> rhs,
+              typename std::enable_if<
+                  Columns == 1 && 1 < Rows || Rows == 1 && 1 < Columns
+              >::type* = 0)
     {
-        typedef typename result_of::detail::dot_product<
-            typename fusion::result_of::value_at_c<
-                typename result_of::transpose<VectorL>::type::value_types,
-                0
-            >::type,
-            typename fusion::result_of::value_at_c<
-                typename result_of::transpose<VectorR>::type::value_types,
-                0
-            >::type
-        >::type result_type;
-        result_type retval = detail::zero_value<result_type>::value();
-        typedef fusion::vector<result_type &, VectorL const &, VectorR const &> ops;
-        iterate<typename VectorL::num_rows_t>(
-            ops(retval, lhs, rhs), detail::vector_vector_dot_product_assign()
-        );
-        return retval;
-    }
-
-    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
-        must be <c>matrix<></c>s, and must have the same dimensions.
-        Additionally, both <c>matrix<></c>s must be "transpose vectors" of
-        length greater than 1. */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_transpose_vector<VectorL, VectorR>,
-            mpl::not_equal_to<columns<VectorL>, mpl::size_t<1> >
-        >,
-        result_of::dot_product<VectorL, VectorR>
-    >::type
-    dot (VectorL const & lhs, VectorR const & rhs)
-    {
-        typedef typename result_of::detail::dot_product<
-            typename fusion::result_of::value_at_c<typename VectorL::value_types, 0>::type,
-            typename fusion::result_of::value_at_c<typename VectorR::value_types, 0>::type
-        >::type result_type;
-        result_type retval = detail::zero_value<result_type>::value();
-        typedef fusion::vector<result_type &, VectorL const &, VectorR const &> ops;
-        iterate<typename VectorL::num_columns_t>(
-            ops(retval, lhs, rhs), detail::transpose_vector_transpose_vector_dot_product_assign()
-        );
-        return retval;
+        return detail::tuple_dot(detail::tuple_access::all(lhs),
+                                 detail::tuple_access::all(rhs));
     }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
@@ -687,30 +617,9 @@ namespace boost { namespace units_blas {
         must be <c>matrix<></c>s, and must have the same dimensions.
         Additionally, both <c>matrix<></c>s must be "vectors" of length greater
         than 1. */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_vector<VectorL, VectorR>,
-            mpl::not_equal_to<rows<VectorL>, mpl::size_t<1> >
-        >,
-        result_of::dot_product<VectorL, VectorR>
-    >::type
-    operator* (VectorL const & lhs, VectorR const & rhs)
-    { return dot(lhs, rhs); }
-
-    /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
-        must be <c>matrix<></c>s, and must have the same dimensions.
-        Additionally, both <c>matrix<></c>s must be "transpose vectors" of
-        length greater than 1. */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_transpose_vector<VectorL, VectorR>,
-            mpl::not_equal_to<columns<VectorL>, mpl::size_t<1> >
-        >,
-        result_of::dot_product<VectorL, VectorR>
-    >::type
-    operator* (VectorL const & lhs, VectorR const & rhs)
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    auto operator* (matrix_t<Tuple1, Rows, Columns> lhs,
+                    matrix_t<Tuple2, Rows, Columns> rhs) -> decltype(dot(lhs, rhs))
     { return dot(lhs, rhs); }
 
 #endif
@@ -721,54 +630,19 @@ namespace boost { namespace units_blas {
         @c VectorR (some otherwise-suitable pairs of <c>matrix<></c>s do not
         have a cross product that makes sense when their elements are unit
         types). */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_vector<VectorL, VectorR>,
-            mpl::equal_to<
-                typename VectorL::num_rows_t,
-                mpl::size_t<3>
-            >
-        >,
-        result_of::cross_product<VectorL, VectorR>
-    >::type
-    cross (VectorL const & lhs, VectorR const & rhs)
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    auto cross (matrix_t<Tuple1, Rows, Columns> lhs,
+                matrix_t<Tuple2, Rows, Columns> rhs,
+                typename std::enable_if<
+                    Columns == 3 && Rows == 1 || Rows == 3 && Columns == 1
+                >::type* = 0)
     {
-        typedef typename result_of::cross_product<VectorL, VectorR>::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, VectorL const &, VectorR const &> ops;
-        retval.template at<0, 0>() = lhs.template at<1, 0>() * rhs.template at<2, 0>() - lhs.template at<2, 0>() * rhs.template at<1, 0>();
-        retval.template at<1, 0>() = lhs.template at<2, 0>() * rhs.template at<0, 0>() - lhs.template at<0, 0>() * rhs.template at<2, 0>();
-        retval.template at<2, 0>() = lhs.template at<0, 0>() * rhs.template at<1, 0>() - lhs.template at<1, 0>() * rhs.template at<0, 0>();
-        return retval;
-    }
-
-    /** Returns the cross product of @c lhs with @c rhs.  @c VectorL and @c
-        VectorR must both be <c>matrix<></c>s, and must both be 1 x 3
-        "transpose vectors".  Also, a cross product type must exist for @c
-        VectorL and @c VectorR (some otherwise-suitable pairs of
-        <c>matrix<></c>s do not have a cross product that makes sense when
-        their elements are unit types). */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_transpose_vector<VectorL, VectorR>,
-            mpl::equal_to<
-                typename VectorL::num_columns_t,
-                mpl::size_t<3>
-            >
-        >,
-        result_of::cross_product<VectorL, VectorR>
-    >::type
-    cross (VectorL const & lhs, VectorR const & rhs)
-    {
-        typedef typename result_of::cross_product<VectorL, VectorR>::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, VectorL const &, VectorR const &> ops;
-        retval.template at<0, 0>() = lhs.template at<0, 1>() * rhs.template at<0, 2>() - lhs.template at<0, 2>() * rhs.template at<0, 1>();
-        retval.template at<0, 1>() = lhs.template at<0, 2>() * rhs.template at<0, 0>() - lhs.template at<0, 0>() * rhs.template at<0, 2>();
-        retval.template at<0, 2>() = lhs.template at<0, 0>() * rhs.template at<0, 1>() - lhs.template at<0, 1>() * rhs.template at<0, 0>();
-        return retval;
+        auto l = detail::tuple_access::all(lhs);
+        auto r = detail::tuple_access::all(rhs);
+        auto _0 = std::get<1>(l) * std::get<2>(r) - std::get<2>(l) * std::get<1>(r);
+        auto _1 = std::get<2>(l) * std::get<0>(r) - std::get<0>(l) * std::get<2>(r);
+        auto _2 = std::get<0>(l) * std::get<1>(r) - std::get<1>(l) * std::get<0>(r);
+        return detail::make_matrix<Rows, Columns>(std::make_tuple(_0, _1, _2));
     }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
@@ -779,38 +653,9 @@ namespace boost { namespace units_blas {
         @c VectorR (some otherwise-suitable pairs of <c>matrix<></c>s do not
         have a cross product that makes sense when their elements are unit
         types). */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_vector<VectorL, VectorR>,
-            mpl::equal_to<
-                typename VectorL::num_rows_t,
-                mpl::size_t<3>
-            >
-        >,
-        result_of::cross_product<VectorL, VectorR>
-    >::type
-    operator^ (VectorL const & lhs, VectorR const & rhs)
-    { return cross(lhs, rhs); }
-
-    /** Returns the cross product of @c lhs with @c rhs.  @c VectorL and @c
-        VectorR must both be <c>matrix<></c>s, and must both be 1 x 3
-        "transpose vectors".  Also, a cross product type must exist for @c
-        VectorL and @c VectorR (some otherwise-suitable pairs of
-        <c>matrix<></c>s do not have a cross product that makes sense when
-        their elements are unit types). */
-    template <typename VectorL, typename VectorR>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_same_length_transpose_vector<VectorL, VectorR>,
-            mpl::equal_to<
-                typename VectorL::num_columns_t,
-                mpl::size_t<3>
-            >
-        >,
-        result_of::cross_product<VectorL, VectorR>
-    >::type
-    operator^ (VectorL const & lhs, VectorR const & rhs)
+    template <typename Tuple1, typename Tuple2, std::size_t Rows, std::size_t Columns>
+    auto operator^ (matrix_t<Tuple1, Rows, Columns> lhs,
+                    matrix_t<Tuple2, Rows, Columns> rhs) -> decltype(cross(lhs, rhs))
     { return cross(lhs, rhs); }
 
 #endif
@@ -819,87 +664,35 @@ namespace boost { namespace units_blas {
         @c matrix<>.  Also, a sum type must exist for @c Vector (some
         otherwise-suitable <c>matrix<></c>s do not have a sum that makes sense
         when their elements are unit types). */
-    template <typename Vector>
-    typename lazy_enable_if<
-        is_vector<Vector>,
-        result_of::sum<Vector>
-    >::type
-    sum (Vector const & v)
+    template <std::size_t Rows, std::size_t Columns, typename Head, typename ...Tail>
+    auto sum (matrix_t<std::tuple<Head, Tail...>, Rows, Columns> v,
+              typename std::enable_if<
+                  Rows == 1 || Columns == 1
+              >::type* = 0)
     {
-        typedef typename result_of::sum<Vector>::type result_type;
-        result_type retval = detail::zero_value<result_type>::value();
-        typedef fusion::vector<result_type &, Vector const &> ops;
-        iterate<typename Vector::num_rows_t>(
-            ops(retval, v), detail::vector_sum<false>()
-        );
-        return retval;
-    }
-
-    /** Returns the sum of all elements in @c v.  @c Vector must be a "transpose
-        vector" @c matrix<> of length greater than 1.  Also, a sum type must
-        exist for @c Vector (some otherwise-suitable <c>matrix<></c>s do not
-        have a sum that makes sense when their elements are unit types). */
-    template <typename Vector>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_transpose_vector<Vector>,
-            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
-        >,
-        result_of::sum<Vector>
-    >::type
-    sum (Vector const & v)
-    {
-        typedef typename result_of::sum<Vector>::type result_type;
-        result_type retval = detail::zero_value<result_type>::value();
-        typedef fusion::vector<result_type &, Vector const &> ops;
-        iterate<typename Vector::num_columns_t>(
-            ops(retval, v), detail::transpose_vector_sum<false>()
-        );
-        return retval;
+        auto f = detail::sum_impl<std::tuple<Head, Tail...>, false>{
+            detail::tuple_access::all(v)
+        };
+        auto state = detail::tuple_access::get<0>(v);
+        return detail::foldl_impl<1>(f, state, detail::type_sequence<Tail...>{});
     }
 
     /** Returns the sum of the absolute values of all elements in @c v.  @c
         Vector must be a "vector" @c matrix<>.  Also, a sum type must exist
         for @c Vector (some otherwise-suitable <c>matrix<></c>s do not have a
         sum that makes sense when their elements are unit types). */
-    template <typename Vector>
-    typename lazy_enable_if<
-        is_vector<Vector>,
-        result_of::sum<Vector>
-    >::type
-    norm_1 (Vector const & v)
+    template <std::size_t Rows, std::size_t Columns, typename Head, typename ...Tail>
+    auto norm_1 (matrix_t<std::tuple<Head, Tail...>, Rows, Columns> v,
+                 typename std::enable_if<
+                     Rows == 1 || Columns == 1
+                 >::type* = 0)
     {
-        typedef typename result_of::sum<Vector>::type result_type;
-        result_type retval = detail::zero_value<result_type>::value();
-        typedef fusion::vector<result_type &, Vector const &> ops;
-        iterate<typename Vector::num_rows_t>(
-            ops(retval, v), detail::vector_sum<true>()
-        );
-        return retval;
-    }
-
-    /** Returns the sum of the absolute values of all elements in @c v.  @c
-        Vector must be a "transpose vector" @c matrix<> of length greater than
-        1.  Also, a sum type must exist for @c Vector (some otherwise-suitable
-        <c>matrix<></c>s do not have a sum that makes sense when their elements
-        are unit types). */
-    template <typename Vector>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_transpose_vector<Vector>,
-            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
-        >,
-        result_of::sum<Vector>
-    >::type
-    norm_1 (Vector const & v)
-    {
-        typedef typename result_of::sum<Vector>::type result_type;
-        result_type retval = detail::zero_value<result_type>::value();
-        typedef fusion::vector<result_type &, Vector const &> ops;
-        iterate<typename Vector::num_columns_t>(
-            ops(retval, v), detail::transpose_vector_sum<true>()
-        );
-        return retval;
+        auto f = detail::sum_impl<std::tuple<Head, Tail...>, true>{
+            detail::tuple_access::all(v)
+        };
+        using std::abs;
+        auto state = abs(detail::tuple_access::get<0>(v));
+        return detail::foldl_impl<1>(f, state, detail::type_sequence<Tail...>{});
     }
 
     /** Returns the square root of the sum of the squares of all elements in
@@ -907,138 +700,64 @@ namespace boost { namespace units_blas {
         must exist for @c Vector (some otherwise-suitable <c>matrix<></c>s do
         not have a sum that makes sense when their elements are unit
         types). */
-    template <typename Vector>
-    typename lazy_enable_if<
-        is_vector<Vector>,
-        result_of::sum<Vector>
-    >::type
-    norm_2 (Vector const & v)
+    template <std::size_t Rows, std::size_t Columns, typename Head, typename ...Tail>
+    auto norm_2 (matrix_t<std::tuple<Head, Tail...>, Rows, Columns> v,
+                 typename std::enable_if<
+                     Rows == 1 || Columns == 1
+                 >::type* = 0)
     {
-        typedef typename result_of::sum<Vector>::type result_type;
-        typedef typename result_of::detail::value_product<result_type, result_type>::type temp_type;
-        temp_type tmp = detail::zero_value<temp_type>::value();
-        typedef fusion::vector<temp_type &, Vector const &> ops;
-        iterate<typename Vector::num_rows_t>(
-            ops(tmp, v), detail::vector_norm_2()
-        );
+        auto f = detail::norm_2_impl<std::tuple<Head, Tail...>>{
+            detail::tuple_access::all(v)
+        };
+        auto first = detail::tuple_access::get<0>(v);
+        auto state = first * first;
+        auto sum = detail::foldl_impl<1>(f, state, detail::type_sequence<Tail...>{});
         using std::sqrt;
-        return sqrt(tmp);
-    }
-
-    /** Returns the square root of the sum of the squares of all elements in @c
-        v.  @c Vector must be a "transpose vector" @c matrix<> of length greater
-        than 1.  Also, a sum type must exist for @c Vector (some
-        otherwise-suitable <c>matrix<></c>s do not have a sum that makes sense
-        when their elements are unit types). */
-    template <typename Vector>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_transpose_vector<Vector>,
-            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
-        >,
-        result_of::sum<Vector>
-    >::type
-    norm_2 (Vector const & v)
-    {
-        typedef typename result_of::sum<Vector>::type result_type;
-        typedef typename result_of::detail::value_product<result_type, result_type>::type temp_type;
-        temp_type tmp = detail::zero_value<temp_type>::value();
-        typedef fusion::vector<temp_type &, Vector const &> ops;
-        iterate<typename Vector::num_columns_t>(
-            ops(tmp, v), detail::transpose_vector_norm_2()
-        );
-        using std::sqrt;
-        return sqrt(tmp);
+        return sqrt(sum);
     }
 
     /** Returns the max of the absolute values of all elements in @c v.  @c
-        Vector must be a "vector" @c matrix<>.  Also, @c operator< must must
-        exist for all pairs of elements in @c Vector. */
-    template <typename Vector>
-    typename lazy_enable_if<
-        is_vector<Vector>,
-        result_of::sum<Vector>
-    >::type
-    norm_inf (Vector const & v)
+        Vector must be a "vector" @c matrix<>.  Also, @c operator+ and @c
+        operator< must be defined for all pairs of elements in @c Vector. */
+    template <std::size_t Rows, std::size_t Columns, typename ...T>
+    auto norm_inf (matrix_t<std::tuple<T...>, Rows, Columns> v,
+                   typename std::enable_if<
+                       Rows == 1 || Columns == 1
+                   >::type* = 0)
     {
-        typedef typename result_of::sum<Vector>::type result_type;
-        typedef std::pair<result_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<result_type>(v.template at<0, 0>())), 0);
-        typedef fusion::vector<temp_type &, Vector const &> ops;
-        iterate<typename Vector::num_rows_t>(
-            ops(tmp, v), detail::vector_norm_inf()
+        auto f = detail::norm_inf_index_impl<std::tuple<T...>>{
+            detail::tuple_access::all(v)
+        };
+        using std::abs;
+        auto state = std::make_pair(
+            std::size_t{0},
+            abs(detail::tuple_access::get<0>(v))
         );
-        return tmp.first;
+        return detail::foldl(f, state, detail::type_sequence<T...>{}).second;
     }
 
-    /** Returns the max of the absolute values of all elements in @c v.  @c
-        Vector must be a "transpose vector" @c matrix<> of length greater than
-        1.  Also, @c operator< must must exist for all pairs of elements in @c
-        Vector. */
-    template <typename Vector>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_transpose_vector<Vector>,
-            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
-        >,
-        result_of::sum<Vector>
-    >::type
-    norm_inf (Vector const & v)
+    /** Returns the index of the first element in @c v equal to @c
+        norm_inf(v).  @c Vector must be a "vector" @c matrix<>.  Also, @c
+        operator+ and @c operator< must be defined for all pairs of elements
+        in @c Vector. */
+    template <std::size_t Rows, std::size_t Columns, typename ...T>
+    auto norm_inf_index (matrix_t<std::tuple<T...>, Rows, Columns> v,
+                         typename std::enable_if<
+                             Rows == 1 || Columns == 1
+                         >::type* = 0)
     {
-        typedef typename result_of::sum<Vector>::type result_type;
-        typedef std::pair<result_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<result_type>(v.template at<0, 0>())), 0);
-        typedef fusion::vector<temp_type &, Vector const &> ops;
-        iterate<typename Vector::num_columns_t>(
-            ops(tmp, v), detail::transpose_vector_norm_inf()
+        auto f = detail::norm_inf_index_impl<std::tuple<T...>>{
+            detail::tuple_access::all(v)
+        };
+        using std::abs;
+        auto state = std::make_pair(
+            std::size_t{0},
+            abs(detail::tuple_access::get<0>(v))
         );
-        return tmp.first;
+        return detail::foldl(f, state, detail::type_sequence<T...>{}).first;
     }
 
-    /** Returns the index of the first element in @c v equal to @c norm_inf(v).
-        @c Vector must be a "vector" @c matrix<>.  Also, @c operator< must must
-        exist for all pairs of elements in @c Vector. */
-    template <typename Vector>
-    typename enable_if<
-        is_vector<Vector>,
-        std::size_t
-    >::type
-    norm_inf_index (Vector const & v)
-    {
-        typedef typename result_of::sum<Vector>::type sum_type;
-        typedef std::pair<sum_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<sum_type>(v.template at<0, 0>())), 0);
-        typedef fusion::vector<temp_type &, Vector const &> ops;
-        iterate<typename Vector::num_rows_t>(
-            ops(tmp, v), detail::vector_norm_inf()
-        );
-        return tmp.second;
-    }
-
-    /** Returns the index of the first element in @c v equal to @c norm_inf(v).
-        @c Vector must be a "transpose vector" @c matrix<> of length greater
-        than 1.  Also, @c operator< must must exist for all pairs of elements in
-        @c Vector. */
-    template <typename Vector>
-    typename enable_if<
-        mpl::and_<
-            is_transpose_vector<Vector>,
-            mpl::not_equal_to<columns<Vector>, mpl::size_t<1> >
-        >,
-        std::size_t
-    >::type
-    norm_inf_index (Vector const & v)
-    {
-        typedef typename result_of::sum<Vector>::type sum_type;
-        typedef std::pair<sum_type, std::size_t> temp_type;
-        temp_type tmp(detail::abs_(static_cast<sum_type>(v.template at<0, 0>())), 0);
-        typedef fusion::vector<temp_type &, Vector const &> ops;
-        iterate<typename Vector::num_columns_t>(
-            ops(tmp, v), detail::transpose_vector_norm_inf()
-        );
-        return tmp.second;
-    }
-
+#if 0
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
     template <typename T>
     typename lazy_enable_if<

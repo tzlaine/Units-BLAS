@@ -27,9 +27,9 @@ namespace boost { namespace units_blas {
             static decltype(auto) get (Matrix && m)
             { return std::get<I>(m.data_); }
 
-            template <typename Tuple, std::size_t Rows, std::size_t Columns>
-            static void assign (matrix_t<Tuple, Rows, Columns> && m, Tuple t)
-            { m.data_ = t; }
+            template <typename Matrix>
+            static decltype(auto) all (Matrix && m)
+            { return (m.data_); }
         };
 
         template <std::size_t I, std::size_t N, typename F>
