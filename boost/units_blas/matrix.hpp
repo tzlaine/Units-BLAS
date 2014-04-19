@@ -297,11 +297,13 @@ namespace boost { namespace units_blas {
         );
         static_assert(
             0 < num_rows,
-            "matrix_t<> must be specified with a positive Rows template parameter"
+            "matrix_t<> must be specified with a positive Rows "
+            "template parameter"
         );
         static_assert(
             0 < num_columns,
-            "matrix_t<> must be specified with a positive Columns template parameter"
+            "matrix_t<> must be specified with a positive Columns "
+            "template parameter"
         );
 
         template <typename MatrixR>
@@ -315,6 +317,60 @@ namespace boost { namespace units_blas {
 
         value_types data_;
     };
+
+    template <typename T>
+    struct is_matrix :
+        std::false_type
+    {};
+
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    struct is_matrix<matrix_t<Tuple, Rows, Columns>> :
+        std::true_type
+    {};
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    struct is_matrix<matrix_t<Tuple, Rows, Columns> const> :
+        std::true_type
+    {};
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    struct is_matrix<matrix_t<Tuple, Rows, Columns> volatile> :
+        std::true_type
+    {};
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    struct is_matrix<matrix_t<Tuple, Rows, Columns> const volatile> :
+        std::true_type
+    {};
+
+    namespace detail {
+
+        std::false_type is_matrix_or_derived_impl(...);
+
+        template <typename Tuple, std::size_t Rows, std::size_t Columns>
+        std::true_type is_matrix_or_derived_impl(
+            matrix_t<Tuple, Rows, Columns> &
+        );
+        template <typename Tuple, std::size_t Rows, std::size_t Columns>
+        std::true_type is_matrix_or_derived_impl(
+            matrix_t<Tuple, Rows, Columns> const &
+        );
+        template <typename Tuple, std::size_t Rows, std::size_t Columns>
+        std::true_type is_matrix_or_derived_impl(
+            matrix_t<Tuple, Rows, Columns> volatile &
+        );
+        template <typename Tuple, std::size_t Rows, std::size_t Columns>
+        std::true_type is_matrix_or_derived_impl(
+            matrix_t<Tuple, Rows, Columns> const volatile &
+        );
+
+    }
+#endif
+
+    /** Returns true iff cv-unqualified @c T is, or is derived from, a @c
+        matrix<>. */
+    template <typename T>
+    struct is_matrix_or_derived :
+        decltype(detail::is_matrix_or_derived_impl(std::declval<T>()))
+    {};
 
     namespace detail {
 

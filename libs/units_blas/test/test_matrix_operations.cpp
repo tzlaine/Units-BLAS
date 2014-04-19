@@ -11,14 +11,12 @@
 #include <boost/test/floating_point_comparison.hpp>
 
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double>,
-        boost::fusion::vector<double>,
-        boost::fusion::vector<double>,
-        boost::fusion::vector<double>
-    >
->::type x_vector_type;
+typedef bub::matrix<
+    std::tuple<double>,
+    std::tuple<double>,
+    std::tuple<double>,
+    std::tuple<double>
+> x_vector_type;
 
 struct derived_from_x_vector_type :
     x_vector_type
@@ -28,10 +26,10 @@ struct derived_from_D_matrix_4x4_fundamentals_type :
     D_matrix_4x4_fundamentals_type
 {};
 
-typedef boost::units_blas::result_of::matrix_product<
-    D_matrix_4x4_fundamentals_type,
-    x_vector_type
->::type b_fundamentals_vector_type;
+using b_fundamentals_vector_type = decltype(
+    bub::prod(std::declval<D_matrix_4x4_fundamentals_type>(),
+              std::declval<x_vector_type>())
+);
 
 struct derived_from_b_fundamentals_vector_type :
     b_fundamentals_vector_type
@@ -41,10 +39,10 @@ struct derived_from_D_matrix_4x4_units_type :
     D_matrix_4x4_units_type
 {};
 
-typedef boost::units_blas::result_of::matrix_product<
-    D_matrix_4x4_units_type,
-    x_vector_type
->::type b_units_vector_type;
+using b_units_vector_type = decltype(
+    bub::prod(std::declval<D_matrix_4x4_units_type>(),
+              std::declval<x_vector_type>())
+);
 
 struct derived_from_b_units_vector_type :
     b_units_vector_type

@@ -114,7 +114,6 @@ int test_main (int, char *[])
     m_D1_d.at<3, 2>() = 15.0;
     m_D1_d.at<3, 3>() = 16.0;
 
-#if 0 // TODO
     D_matrix_4x4_fundamentals_type m_D2;
     m_D2 = transpose(m_D1);
     BOOST_CHECK((m_D2.at<0, 0>() == 1.0));
@@ -152,6 +151,7 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D2.at<2, 3>() == 15.0));
     BOOST_CHECK((m_D2.at<3, 3>() == 16.0));
 
+#if 0 // TODO
     typedef bub::result_of::slice<
         D_matrix_4x4_fundamentals_type,
         rows_type_1,
@@ -284,7 +284,6 @@ int test_main (int, char *[])
     m_D1_u_d.at<3, 2>() = length::from_value(15.0);
     m_D1_u_d.at<3, 3>() = length::from_value(16.0);
 
-#if 0
     D_matrix_4x4_units_type m_D2_u;
     m_D2_u = transpose(m_D1_u);
     BOOST_CHECK((m_D2_u.at<0, 0>().value() == 1.0));
@@ -322,6 +321,7 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D2_u.at<2, 3>().value() == 15.0));
     BOOST_CHECK((m_D2_u.at<3, 3>().value() == 16.0));
 
+#if 0
     typedef bub::result_of::slice<
         D_matrix_4x4_units_type,
         rows_type_1,
