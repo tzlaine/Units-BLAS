@@ -12,7 +12,6 @@
 #include <boost/units_blas/config.hpp>
 
 #include <boost/array.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/units/cmath.hpp>
 
 #include <cmath>
@@ -147,10 +146,14 @@ namespace boost { namespace units_blas {
         }
 
 
-        // tuple from typelist
+        // tuple <--> typelist
         template <typename ...T>
         constexpr auto tuple_from_types (type_sequence<T...>)
         { return std::tuple<T...>{}; }
+
+        template <typename ...T>
+        constexpr auto types_from_tuple (std::tuple<T...>)
+        { return type_sequence<T...>{}; }
 
 
         // indexed iteration
@@ -336,6 +339,74 @@ namespace boost { namespace units_blas {
         };
 
 
+        // elementwise product types
+        template <typename MatrixLHS,
+                  typename MatrixRHS,
+                  std::size_t I,
+                  std::size_t N>
+        struct element_product_types_impl
+        {
+            template <typename Types>
+            static constexpr auto call (Types)
+            {
+                using type = decltype(
+                    tuple_access::get<I>(std::declval<MatrixLHS>()) *
+                    tuple_access::get<I>(std::declval<MatrixRHS>())
+                );
+                using types = decltype(push_back<type>(Types{}));
+
+                return element_product_types_impl<
+                    MatrixLHS,
+                    MatrixRHS,
+                    I + 1,
+                    N
+                >::call(types{});
+            }
+        };
+
+        template <typename MatrixLHS, typename MatrixRHS, std::size_t N>
+        struct element_product_types_impl<MatrixLHS, MatrixRHS, N, N>
+        {
+            template <typename Seq>
+            static constexpr auto call (Seq seq)
+            { return seq; }
+        };
+
+
+        // elementwise product types
+        template <typename MatrixLHS,
+                  typename MatrixRHS,
+                  std::size_t I,
+                  std::size_t N>
+        struct element_division_types_impl
+        {
+            template <typename Types>
+            static constexpr auto call (Types)
+            {
+                using type = decltype(
+                    tuple_access::get<I>(std::declval<MatrixLHS>()) /
+                    tuple_access::get<I>(std::declval<MatrixRHS>())
+                );
+                using types = decltype(push_back<type>(Types{}));
+
+                return element_division_types_impl<
+                    MatrixLHS,
+                    MatrixRHS,
+                    I + 1,
+                    N
+                >::call(types{});
+            }
+        };
+
+        template <typename MatrixLHS, typename MatrixRHS, std::size_t N>
+        struct element_division_types_impl<MatrixLHS, MatrixRHS, N, N>
+        {
+            template <typename Seq>
+            static constexpr auto call (Seq seq)
+            { return seq; }
+        };
+
+
 #if 1 // TODO: Remove
         template <typename Seq>
         struct print_indices;
@@ -360,6 +431,20 @@ namespace boost { namespace units_blas {
 
 
         template <typename Matrix>
+        struct swap
+        {
+            template <std::size_t I>
+            void call ()
+            {
+                using std::swap;
+                swap(tuple_access::get<I>(lhs), tuple_access::get<I>(rhs));
+            }
+
+            Matrix & lhs;
+            Matrix & rhs;
+        };
+
+        template <typename Matrix>
         struct negate
         {
             template <std::size_t I>
@@ -379,6 +464,36 @@ namespace boost { namespace units_blas {
                 constexpr std::size_t column = I % ResultMatrix::num_columns;
                 tuple_access::get<I>(m) = tuple_dot(row_tuple<row>(lhs),
                                                     column_tuple<column>(rhs));
+            }
+
+            ResultMatrix & m;
+            MatrixLHS lhs;
+            MatrixRHS rhs;
+        };
+
+        template <typename ResultMatrix, typename MatrixLHS, typename MatrixRHS>
+        struct element_prod
+        {
+            template <std::size_t I>
+            void call ()
+            {
+                tuple_access::get<I>(m) =
+                    tuple_access::get<I>(lhs) * tuple_access::get<I>(rhs);
+            }
+
+            ResultMatrix & m;
+            MatrixLHS lhs;
+            MatrixRHS rhs;
+        };
+
+        template <typename ResultMatrix, typename MatrixLHS, typename MatrixRHS>
+        struct element_div
+        {
+            template <std::size_t I>
+            void call ()
+            {
+                tuple_access::get<I>(m) =
+                    tuple_access::get<I>(lhs) / tuple_access::get<I>(rhs);
             }
 
             ResultMatrix & m;
@@ -567,7 +682,7 @@ namespace boost { namespace units_blas {
                matrix_t<Tuple2, Inner, Columns2> rhs)
     {
         using lhs_type = matrix_t<Tuple1, Rows1, Inner>;
-        using rhs_type = matrix_t<Tuple1, Inner, Columns2>;
+        using rhs_type = matrix_t<Tuple2, Inner, Columns2>;
         auto seq = detail::matrix_product_types_impl<
             lhs_type,
             rhs_type,
@@ -659,22 +774,32 @@ namespace boost { namespace units_blas {
 
 #endif
 
-#if 0
     /** Returns the elementwise multiplication of the elements of @c lhs by
         the elements of @c rhs.  @c lhs and @c rhs must be <c>matrix<></c>s
         with the same dimensions. */
-    template <typename T, typename U>
-    typename lazy_enable_if<
-        is_same_shape_matrix<matrix<T>, matrix<U> >,
-        result_of::matrix_element_product<matrix<T>, matrix<U> >
-    >::type
-    element_prod (matrix<T> const & lhs, matrix<U> const & rhs)
+    template <typename Tuple1,
+              typename Tuple2,
+              std::size_t Rows,
+              std::size_t Columns>
+    auto element_prod (matrix_t<Tuple1, Rows, Columns> lhs,
+                       matrix_t<Tuple2, Rows, Columns> rhs)
     {
-        typedef typename result_of::matrix_element_product<matrix<T>, matrix<U> >::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
-        iterate<size<result_type> >(
-            ops(retval, lhs, rhs), detail::matrix_matrix_elem_mul_assign()
+        using lhs_type = matrix_t<Tuple1, Rows, Columns>;
+        using rhs_type = matrix_t<Tuple2, Rows, Columns>;
+        auto seq = detail::element_product_types_impl<
+            lhs_type,
+            rhs_type,
+            0,
+            Rows * Columns
+        >::call(detail::type_sequence<>{});
+        auto retval =
+            detail::make_matrix<Rows, Columns>(tuple_from_types(seq));
+        detail::iterate_simple<Rows * Columns>(
+            detail::element_prod<
+                decltype(retval),
+                lhs_type,
+                rhs_type
+            >{retval, lhs, rhs}
         );
         return retval;
     }
@@ -682,34 +807,44 @@ namespace boost { namespace units_blas {
     /** Returns the elementwise division of the elements of @c lhs by the
         elements of @c rhs.  @c lhs and @c rhs must be <c>matrix<></c>s with
         the same dimensions. */
-    template <typename T, typename U>
-    typename lazy_enable_if<
-        is_same_shape_matrix<matrix<T>, matrix<U> >,
-        result_of::matrix_element_quotient<matrix<T>, matrix<U> >
-    >::type
-    element_div (matrix<T> const & lhs, matrix<U> const & rhs)
+    template <typename Tuple1,
+              typename Tuple2,
+              std::size_t Rows,
+              std::size_t Columns>
+    auto element_div (matrix_t<Tuple1, Rows, Columns> lhs,
+                      matrix_t<Tuple2, Rows, Columns> rhs)
     {
-        typedef typename result_of::matrix_element_quotient<matrix<T>, matrix<U> >::type result_type;
-        result_type retval;
-        typedef fusion::vector<result_type &, matrix<T> const &, matrix<U> const &> ops;
-        iterate<size<result_type> >(
-            ops(retval, lhs, rhs), detail::matrix_matrix_elem_div_assign()
+        using lhs_type = matrix_t<Tuple1, Rows, Columns>;
+        using rhs_type = matrix_t<Tuple2, Rows, Columns>;
+        auto seq = detail::element_division_types_impl<
+            lhs_type,
+            rhs_type,
+            0,
+            Rows * Columns
+        >::call(detail::type_sequence<>{});
+        auto retval =
+            detail::make_matrix<Rows, Columns>(tuple_from_types(seq));
+        detail::iterate_simple<Rows * Columns>(
+            detail::element_div<
+                decltype(retval),
+                lhs_type,
+                rhs_type
+            >{retval, lhs, rhs}
         );
         return retval;
     }
 
     /** Swaps the values in @c lhs and @c rhs.  Note that this is an
         O(@c size<matrix<T> >::value) operation. */
-    template <typename T>
-    void
-    swap (matrix<T> & lhs, matrix<T> & rhs)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    void swap (matrix_t<Tuple, Rows, Columns> & lhs,
+               matrix_t<Tuple, Rows, Columns> & rhs)
     {
-        typedef fusion::vector<matrix<T> &, matrix<T> &> ops;
-        iterate<size<matrix<T> > >(
-            ops(lhs, rhs), detail::swap()
+        using matrix_type = matrix_t<Tuple, Rows, Columns>;
+        detail::iterate_simple<matrix_type::num_elements>(
+            detail::swap<matrix_type>{lhs, rhs}
         );
     }
-#endif
 
     /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
         must be <c>matrix<></c>s, and must have the same dimensions.
@@ -1082,7 +1217,7 @@ namespace boost { namespace units_blas {
     solve (matrix<T> const & A, matrix<V> const & b, matrix<U> & x)
     {
         typedef BOOST_TYPEOF((matrix<T>() * matrix<U>())) a_times_b_type;
-        BOOST_MPL_ASSERT((is_convertible<a_times_b_type, matrix<V> >));
+        BOOST_MPL_ASSERT((std::is_convertible<a_times_b_type, matrix<V> >));
 
         // If you're seeing an error here, you're trying to perform LU
         // decomposition on a matrix that has mixed units of the same

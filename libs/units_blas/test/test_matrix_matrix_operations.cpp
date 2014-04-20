@@ -43,7 +43,6 @@ int test_main (int, char *[])
     m_A2_d.at<1, 0>() = 2.0;
     m_A2_d.at<2, 0>() = 1.0;
 
-#if 0
     swap(m_A1, m_A2);
     BOOST_CHECK((m_A1.at<0, 0>() == 3.0));
     BOOST_CHECK((m_A1.at<1, 0>() == 2.0));
@@ -79,7 +78,6 @@ int test_main (int, char *[])
     BOOST_CHECK((m_A2_d.at<1, 0>() == 2.0));
     BOOST_CHECK((m_A2_d.at<2, 0>() == 3.0));
     swap(m_A1_d, m_A2_d);
-#endif
 
     A_matrix_3x1_fundamentals_type m_A1_plus_A2;
     m_A1_plus_A2 = sum(m_A1, m_A2);
@@ -175,7 +173,6 @@ int test_main (int, char *[])
     m_B2_d.at<0, 1>() = 2.0;
     m_B2_d.at<0, 2>() = 1.0;
 
-#if 0
     swap(m_B1, m_B2);
     BOOST_CHECK((m_B1.at<0, 0>() == 3.0));
     BOOST_CHECK((m_B1.at<0, 1>() == 2.0));
@@ -184,7 +181,6 @@ int test_main (int, char *[])
     BOOST_CHECK((m_B2.at<0, 1>() == 2.0));
     BOOST_CHECK((m_B2.at<0, 2>() == 3.0));
     swap(m_B1, m_B2);
-#endif
 
     B_matrix_1x3_fundamentals_type m_B1_plus_B2 = sum(m_B1, m_B2);
     BOOST_CHECK((m_B1_plus_B2.at<0, 0>() == 1.0 + 3.0));
@@ -337,7 +333,6 @@ int test_main (int, char *[])
     m_E_times_E = m_E * m_E;
     BOOST_CHECK((m_E_times_E.at<0, 0>() == 4.0));
 
-#if 0
     A_matrix_3x1_fundamentals_type m_A1_elem_times_A2;
     m_A1_elem_times_A2 = element_prod(m_A1, m_A2);
     BOOST_CHECK((m_A1_elem_times_A2.at<0, 0>() == 1.0 * 3.0));
@@ -492,8 +487,8 @@ int test_main (int, char *[])
     BOOST_CHECK((m_B1_u_minus_B2_u.at<0, 2>().value() == 3.0 - 1.0));
 
     using CxB_type = decltype(
-        bub::prod(std::declval<C_matrix_3x1_fundamentals_type>(),
-                  std::declval<B_matrix_1x3_fundamentals_type>())
+        bub::prod(std::declval<C_matrix_3x1_units_type>(),
+                  std::declval<B_matrix_1x3_units_type>())
     );
     CxB_type m_C1_u_times_B1_u = prod(m_C1_u, m_B1_u);
     BOOST_CHECK((m_C1_u_times_B1_u.size() == 9));
@@ -519,9 +514,9 @@ int test_main (int, char *[])
 
     E_matrix_1x1_units_type m_E_u;
     m_E_u.at<0, 0>() = length::from_value(-2.0);
-    using ExE_type = decltype(
-        bub::prod(std::declval<E_matrix_1x1_fundamentals_type>(),
-                  std::declval<E_matrix_1x1_fundamentals_type>())
+    using ExE_units_type = decltype(
+        bub::prod(std::declval<E_matrix_1x1_units_type>(),
+                  std::declval<E_matrix_1x1_units_type>())
     );
     ExE_units_type m_E_times_E_u = prod(m_E_u, m_E_u);
     BOOST_CHECK((m_E_times_E_u.at<0, 0>().value() == 4.0));
@@ -529,8 +524,8 @@ int test_main (int, char *[])
     BOOST_CHECK((m_E_times_E_u.at<0, 0>().value() == 4.0));
 
     using BxC_type = decltype(
-        bub::prod(std::declval<B_matrix_1x3_fundamentals_type>(),
-                  std::declval<C_matrix_3x1_fundamentals_type>())
+        bub::prod(std::declval<B_matrix_1x3_units_type>(),
+                  std::declval<C_matrix_3x1_units_type>())
     );
     BxC_type m_B1_u_times_C1_u = prod(m_B1_u, m_C1_u);
     BOOST_CHECK((m_B1_u_times_C1_u.size() == 1));
@@ -539,16 +534,16 @@ int test_main (int, char *[])
     BOOST_CHECK((m_B1_u_times_C1_u.at<0, 0>().value() == 1.0 * 1.0 + 2.0 * 2.0 + 3.0 * 3.0));
 
     using CxC_type = decltype(
-        bub::element_prod(std::declval<C_matrix_3x1_fundamentals_type>(),
-                          std::declval<C_matrix_3x1_fundamentals_type>())
+        bub::element_prod(std::declval<C_matrix_3x1_units_type>(),
+                          std::declval<C_matrix_3x1_units_type>())
     );
     CxC_type m_C1_u_elem_times_C2_u = element_prod(m_C1_u, m_C2_u);
     BOOST_CHECK((m_C1_u_elem_times_C2_u.at<0, 0>().value() == 1.0 * 3.0));
     BOOST_CHECK((m_C1_u_elem_times_C2_u.at<1, 0>().value() == 2.0 * 2.0));
     BOOST_CHECK((m_C1_u_elem_times_C2_u.at<2, 0>().value() == 3.0 * 1.0));
     using CdC_type = decltype(
-        bub::element_div(std::declval<C_matrix_3x1_fundamentals_type>(),
-                         std::declval<C_matrix_3x1_fundamentals_type>())
+        bub::element_div(std::declval<C_matrix_3x1_units_type>(),
+                         std::declval<C_matrix_3x1_units_type>())
     );
     CdC_type m_C1_u_elem_div_C2_u = element_div(m_C1_u, m_C2_u);
     BOOST_CHECK((m_C1_u_elem_div_C2_u.at<0, 0>().value() == 1.0 / 3.0));
@@ -556,22 +551,21 @@ int test_main (int, char *[])
     BOOST_CHECK((m_C1_u_elem_div_C2_u.at<2, 0>().value() == 3.0 / 1.0));
 
     using BxB_type = decltype(
-        bub::element_prod(std::declval<B_matrix_1x3_fundamentals_type>(),
-                          std::declval<B_matrix_1x3_fundamentals_type>())
+        bub::element_prod(std::declval<B_matrix_1x3_units_type>(),
+                          std::declval<B_matrix_1x3_units_type>())
     );
     BxB_type m_B1_u_elem_times_B2_u = element_prod(m_B1_u, m_B2_u);
     BOOST_CHECK((m_B1_u_elem_times_B2_u.at<0, 0>().value() == 1.0 * 3.0));
     BOOST_CHECK((m_B1_u_elem_times_B2_u.at<0, 1>().value() == 2.0 * 2.0));
     BOOST_CHECK((m_B1_u_elem_times_B2_u.at<0, 2>().value() == 3.0 * 1.0));
     using BdB_type = decltype(
-        bub::element_div(std::declval<B_matrix_1x3_fundamentals_type>(),
-                         std::declval<B_matrix_1x3_fundamentals_type>())
+        bub::element_div(std::declval<B_matrix_1x3_units_type>(),
+                         std::declval<B_matrix_1x3_units_type>())
     );
     BdB_type m_B1_u_elem_div_B2_u = element_div(m_B1_u, m_B2_u);
     BOOST_CHECK((m_B1_u_elem_div_B2_u.at<0, 0>().value() == 1.0 / 3.0));
     BOOST_CHECK((m_B1_u_elem_div_B2_u.at<0, 1>().value() == 2.0 / 2.0));
     BOOST_CHECK((m_B1_u_elem_div_B2_u.at<0, 2>().value() == 3.0 / 1.0));
-#endif
 
     return 0;
 }
