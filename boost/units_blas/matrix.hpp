@@ -21,6 +21,7 @@ namespace boost { namespace units_blas {
 
     namespace detail {
 
+        // tuple access
         struct tuple_access
         {
             template <std::size_t I, typename Matrix>
@@ -32,6 +33,52 @@ namespace boost { namespace units_blas {
             { return (m.data_); }
         };
 
+
+        // sequences
+        template <std::size_t ...I>
+        struct index_sequence
+        {
+            static const std::size_t size = sizeof...(I);
+        };
+
+        template <typename ...T>
+        struct type_sequence
+        {
+            static const std::size_t size = sizeof...(T);
+        };
+
+
+        // push_back
+        template <std::size_t Tail, std::size_t ...Head>
+        constexpr auto push_back (index_sequence<Head...>)
+        { return index_sequence<Head..., Tail>{}; }
+
+        template <typename Tail, typename ...Head>
+        constexpr auto push_back (type_sequence<Head...>)
+        { return type_sequence<Head..., Tail>{}; }
+
+
+        // tuple <--> typelist
+        template <typename ...T>
+        constexpr auto tuple_from_types (type_sequence<T...>)
+        { return std::tuple<T...>{}; }
+
+        template <typename ...T>
+        constexpr auto types_from_tuple (std::tuple<T...>)
+        { return type_sequence<T...>{}; }
+
+
+        // matrix from tuple
+        template <std::size_t Rows, std::size_t Columns, typename Tuple>
+        auto make_matrix (Tuple t)
+        {
+            matrix_t<Tuple, Rows, Columns> retval;
+            tuple_access::all(retval) = t;
+            return retval;
+        }
+
+
+        // iterate simple
         template <std::size_t I, std::size_t N, typename F>
         struct iterate_simple_impl;
 
@@ -54,6 +101,9 @@ namespace boost { namespace units_blas {
         template <std::size_t N, typename F>
         void iterate_simple (F f)
         { iterate_simple_impl<0, N, F>::call(f); }
+
+
+        // iterate_simple function objects
 
         template <typename MatrixL, typename MatrixR>
         struct assign
@@ -190,13 +240,10 @@ namespace boost { namespace units_blas {
         auto at () const
         { return std::get<I * num_columns + J>(data_); }
 
-#if 0
         /** Prints @c *this to stream @c os.  Note that this function remains
             unimplemented unless @c boost/units_blas/io.hpp is also
             included. */
         std::ostream & print (std::ostream & os) const;
-#endif
-
 
         /** Returns a non-const reference to the element at row @c I, column @c
             J. */
@@ -269,26 +316,6 @@ namespace boost { namespace units_blas {
         friend class matrix_t;
 
         friend struct detail::tuple_access;
-
-#ifndef BOOST_UNITS_BLAS_DOXYGEN
-#if 0 // TODO
-        struct column_lengths_equal :
-            fusion::result_of::equal_to<
-                typename fusion::result_of::find_if<
-                    value_types,
-                    mpl::not_equal_to<
-                        fusion::result_of::size<mpl::_1>,
-                        mpl::int_<num_columns_t::value>
-                    >
-                >::type,
-                typename fusion::result_of::end<value_types>::type
-            >
-        {};
-
-        // If you're seeing an error here, it's because you defined two or
-        // more rows that have different numbers of columns.
-        BOOST_MPL_ASSERT((column_lengths_equal));
-#endif
 
         static_assert(
             std::tuple_size<Tuple>::value == num_elements,
@@ -377,6 +404,7 @@ namespace boost { namespace units_blas {
         template <typename HeadRow, typename ...TailRows>
         struct matrix_type
         {
+// TODO: Check that all rows have equal length.
             using tuple = decltype(std::tuple_cat(
                 std::declval<HeadRow>(),
                 std::declval<TailRows>()...

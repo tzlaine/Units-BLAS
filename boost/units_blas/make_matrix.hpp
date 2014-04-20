@@ -9,24 +9,30 @@
 #ifndef BOOST_UNITS_BLAS_MAKE_MATRIX_HPP
 #define BOOST_UNITS_BLAS_MAKE_MATRIX_HPP
 
-#include <boost/units_blas/matrix_fwd.hpp>
-
-#include <boost/fusion/include/as_vector.hpp>
-#include <boost/mpl/quote.hpp>
-#include <boost/mpl/transform_view.hpp>
-#include <boost/mpl/range_c.hpp>
+#include <boost/units_blas/matrix.hpp>
 
 
 namespace boost { namespace units_blas {
 
-    /** Convenience metafunction that returns @c matrix<X>, where @c X is the
-        template parameter @c Rows, converted to a @c fusion::vector of
-        @c fusion::vectors. */
-    template <typename Rows>
-    struct make_matrix
-    {
-        typedef matrix<typename detail::deep_as_vector<Rows>::type> type;
-    };
+    namespace detail {
+
+        template <typename T, std::size_t N>
+        struct repeat_type
+        {
+            template <typename Seq>
+            static auto call (Seq seq)
+            { return repeat_type<T, N - 1>::call(push_back<T>(seq)); }
+        };
+
+        template <typename T>
+        struct repeat_type<T, 0>
+        {
+            template <typename Seq>
+            static auto call (Seq seq)
+            { return seq; }
+        };
+
+    }
 
     /** Convenience metafunction that returns a @c matrix<> of dimension @c
         Rows x @c Columns, in which each element is of type @c T. */
@@ -34,81 +40,54 @@ namespace boost { namespace units_blas {
     struct make_uniform_matrix
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-        typedef typename fusion::result_of::as_vector<
-            typename mpl::transform_view<
-                mpl::range_c<std::size_t, 0, Columns>,
-                mpl::bind1<mpl::quote1<mpl::identity>, T>
-            >::type
-        >::type row_type;
-
-        typedef typename fusion::result_of::as_vector<
-            typename mpl::transform_view<
-                mpl::range_c<std::size_t, 0, Rows>,
-                mpl::bind1<mpl::quote1<mpl::identity>, row_type>
-            >::type
-        >::type all_rows_type;
-
-        typedef matrix<all_rows_type> type;
+        using type = decltype(
+            detail::make_matrix<Rows, Columns>(
+                detail::tuple_from_types(
+                    detail::repeat_type<T, Rows * Columns>::call(
+                        detail::type_sequence<>{}
+                    )
+                )
+            )
+        );
 #else
-        typedef detail::unspecified type;
+        using type = detail::unspecified;
 #endif
     };
 
-    namespace detail {
-        struct make_fusion_vector
-        {
-            template <
-                BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(
-                    FUSION_MAX_VECTOR_SIZE, typename T, fusion::void_)
-            >
-            struct apply
-            {
-                typedef typename fusion::result_of::as_vector<
-                    fusion::vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>
-                >::type type;
-            };
-        };
-    }
-
+#if 0
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1.  Specifically, the resulting @c matrix<>'s dimensions
-        are size(@c Elements) x 1, and each element (i, 0) is the ith type in
-        @c Elements. */
-    template <typename Elements>
+        are size(@c Tuple) x 1, and each element (i, 0) is the ith type in
+        @c Tuple. */
+    template <typename Tuple>
     struct make_vector
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
         typedef typename fusion::result_of::as_vector<
             typename mpl::transform_view<
-                Elements,
+                Tuple,
                 mpl::bind1<detail::make_fusion_vector, mpl::_1>
             >::type
         >::type all_rows_type;
 
         typedef matrix<all_rows_type> type;
 #else
-        typedef detail::unspecified type;
+        using type = detail::unspecified;
 #endif
     };
+#endif
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N.  Specifically, the resulting @c
-        matrix<>'s dimensions are 1 x size(@c Elements), and each element
-        (0, i) is the ith type in @c Elements. */
-    template <typename Elements>
+        matrix<>'s dimensions are 1 x size(@c Tuple), and each element
+        (0, i) is the ith type in @c Tuple. */
+    template <typename Tuple>
     struct make_transpose_vector
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-        typedef typename fusion::result_of::as_vector<
-            typename mpl::transform_view<
-                Elements,
-                mpl::quote1<mpl::identity>
-            >::type
-        >::type elements_as_fusion_vector;
-
-        typedef matrix<fusion::vector1<elements_as_fusion_vector> > type;
+        using type = matrix_t<std::tuple<Tuple>, 1, std::tuple_size<Tuple>::value>;
 #else
-        typedef detail::unspecified type;
+        using type = detail::unspecified;
 #endif
     };
 
@@ -117,7 +96,7 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t N>
     struct make_uniform_vector
     {
-        typedef typename make_uniform_matrix<T, N, 1>::type type;
+        using type = typename make_uniform_matrix<T, N, 1>::type;
     };
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
@@ -125,7 +104,7 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t N>
     struct make_uniform_transpose_vector
     {
-        typedef typename make_uniform_matrix<T, 1, N>::type type;
+        using type = typename make_uniform_matrix<T, 1, N>::type;
     };
 
 } } // namespace boost::units_blas

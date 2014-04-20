@@ -20,43 +20,37 @@ namespace boost { namespace units_blas {
 
     namespace detail {
 
-        struct print_value
+        template <typename Matrix>
+        struct print
         {
-            print_value (std::ostream & os) : os_ (os) {}
-
-            template <typename T>
-            void operator() (T const & t) const
-                { os_ << t << " "; }
-
-            std::ostream & os_;
-        };
-
-        struct print_row
-        {
-            print_row (std::ostream & os) : os_ (os) {}
-
-            template <typename T>
-            void operator() (T const & r) const
+            template <std::size_t I>
+            void call ()
                 {
-                    fusion::for_each(r, print_value(os_));
-                    os_ << "\n";
+                    if (I % Matrix::num_columns == 1)
+                        os_ << '\n';
+                    os_ << tuple_access::get<I>(m_) << ' ';
                 }
 
+            Matrix m_;
             std::ostream & os_;
         };
 
     } // namespace detail
 
-    template <typename T>
-    std::ostream & matrix<T>::print (std::ostream & os) const
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    std::ostream &
+    matrix_t<Tuple, Rows, Columns>::print (std::ostream & os) const
     {
-        fusion::for_each(data_, detail::print_row(os));
+        detail::iterate_simple<num_elements>(
+            detail::print<self_type>{*this, os}
+        );
         return os;
     }
 
     /** Writes matrix<> @c m to stream @c os, using @c matrix<>::print(). */
-    template <typename T>
-    std::ostream & operator<< (std::ostream & os, matrix<T> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    std::ostream &
+    operator<< (std::ostream & os, matrix_t<Tuple, Rows, Columns> m)
     {
         m.print(os);
         return os;

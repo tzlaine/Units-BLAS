@@ -21,40 +21,6 @@ namespace boost { namespace units_blas {
 
     namespace detail {
 
-        // matrix from tuple
-        template <std::size_t Rows, std::size_t Columns, typename Tuple>
-        auto make_matrix (Tuple t)
-        {
-            matrix_t<Tuple, Rows, Columns> retval;
-            tuple_access::all(retval) = t;
-            return retval;
-        }
-
-
-        // sequences
-        template <std::size_t ...I>
-        struct index_sequence
-        {
-            static const std::size_t size = sizeof...(I);
-        };
-
-        template <typename ...T>
-        struct type_sequence
-        {
-            static const std::size_t size = sizeof...(T);
-        };
-
-
-        // push_back
-        template <std::size_t Tail, std::size_t ...Head>
-        constexpr auto push_back (index_sequence<Head...>)
-        { return index_sequence<Head..., Tail>{}; }
-
-        template <typename Tail, typename ...Head>
-        constexpr auto push_back (type_sequence<Head...>)
-        { return type_sequence<Head..., Tail>{}; }
-
-
         // foldl
         template <std::size_t I, typename Fn, typename State>
         constexpr auto foldl_impl (Fn, State state, type_sequence<>)
@@ -144,16 +110,6 @@ namespace boost { namespace units_blas {
                 Matrix::num_rows
             >::call(std::pair<index_sequence<>, type_sequence<>>{});
         }
-
-
-        // tuple <--> typelist
-        template <typename ...T>
-        constexpr auto tuple_from_types (type_sequence<T...>)
-        { return std::tuple<T...>{}; }
-
-        template <typename ...T>
-        constexpr auto types_from_tuple (std::tuple<T...>)
-        { return type_sequence<T...>{}; }
 
 
         // indexed iteration
@@ -405,29 +361,6 @@ namespace boost { namespace units_blas {
             static constexpr auto call (Seq seq)
             { return seq; }
         };
-
-
-#if 1 // TODO: Remove
-        template <typename Seq>
-        struct print_indices;
-
-        template <std::size_t Head, std::size_t ...Tail>
-        struct print_indices<index_sequence<Head, Tail...>>
-        {
-            static void call ()
-            {
-                std::cerr << Head << " ";
-                print_indices<index_sequence<Tail...>>::call();
-            }
-        };
-
-        template <std::size_t Head>
-        struct print_indices<index_sequence<Head>>
-        {
-            static void call ()
-            { std::cerr << Head << "\n"; }
-        };
-#endif
 
 
         template <typename Matrix>
