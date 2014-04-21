@@ -483,6 +483,47 @@ namespace boost { namespace units_blas {
             Tuple t_;
         };
 
+        template <typename Matrix>
+        struct determinant_type
+        {
+            using type = double; // TODO
+        };
+
+        template <typename T, typename ValueType>
+        struct get_value
+        {
+            static ValueType call (T t)
+            { return static_cast<ValueType>(t); }
+        };
+
+        template <typename Unit, typename T, typename ValueType>
+        struct get_value<units::quantity<Unit, T>, ValueType>
+        {
+            static ValueType call (units::quantity<Unit, T> u)
+            { return static_cast<ValueType>(u.value()); }
+        };
+
+        template <typename Array, typename Matrix>
+        struct assign_to_temp_array
+        {
+            template <std::size_t I>
+            void call ()
+            {
+                constexpr std::size_t row = I / Matrix::num_columns;
+                constexpr std::size_t column = I % Matrix::num_columns;
+                a[row][column] = get_value<
+                    typename std::tuple_element<
+                        I,
+                        typename Matrix::value_types
+                    >::type,
+                    typename Array::value_type::value_type
+                >::call(tuple_access::get<I>(m));
+            }
+
+            Array & a;
+            Matrix m;
+        };
+
     }
 
 #if 0
@@ -1024,7 +1065,6 @@ namespace boost { namespace units_blas {
     }
 #endif
 
-#if 0
     /** Returns the determinant of @c m.  @c m must be a @c matrix<>, and must
         be square.  Also, a determinant type must exist for @c m (some
         otherwise-suitable <c>matrix<></c>s do not have a determinant that
@@ -1057,7 +1097,10 @@ namespace boost { namespace units_blas {
             >{temp_matrix, m}
         );
 
+        result_type retval; // TODO: = detail::zero<result_type>{};
+
         std::array<std::size_t, Rows> indices;
+#if 0
         auto result = detail::lu_decompose(temp_matrix, indices);
         if (result.second) {
             detail::iterate_simple<Rows>(
@@ -1067,10 +1110,12 @@ namespace boost { namespace units_blas {
                 >{retval, temp_matrix}
             );
         }
+#endif
 
         return retval;
     }
 
+#if 0
     /** Returns the inverse of @c m.  Throws @c singular_matrix if @c m is
         found to be singular.  @c m must be a @c matrix<>, and must be
         square. */

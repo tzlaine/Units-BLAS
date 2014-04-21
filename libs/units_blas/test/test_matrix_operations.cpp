@@ -92,6 +92,7 @@ int test_main (int, char *[])
 
     BOOST_CHECK_CLOSE(determinant(m_D_d), -32.0, epsilon);
 
+#if 0
     typedef bub::result_of::inverse<
         D_matrix_4x4_fundamentals_type
     >::type D_matrix_4x4_fundamentals_type_inverse;
@@ -355,6 +356,7 @@ int test_main (int, char *[])
     BOOST_CHECK((determinant(m_D_u_zero_d).value() == 0.0));
     BOOST_CHECK_THROW(inverse(m_D_u_zero_d), bub::singular_matrix);
     BOOST_CHECK_THROW(solve(m_D_u_zero_d, m_b_u, m_x_u), bub::singular_matrix);
+#endif
 
     return 0;
 }

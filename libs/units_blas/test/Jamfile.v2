@@ -36,7 +36,7 @@ import testing ;
     [ run test_vector_operations.cpp ]
     [ run test_simple_matrix_operations.cpp ]
     [ run test_matrix_matrix_operations.cpp ]
-#   [ run test_matrix_operations.cpp ]
+    [ run test_matrix_operations.cpp ]
 #   [ compile-fail fail_differing_dimensions_copy_1.cpp ]
 #   [ compile-fail fail_differing_dimensions_copy_2.cpp ]
 #   [ compile-fail fail_differing_dimensions_assignment_1.cpp ]
