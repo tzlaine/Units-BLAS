@@ -23,13 +23,9 @@ namespace bub = boost::units_blas;
 
 int test_main (int, char *[])
 {
-    BOOST_MPL_ASSERT((bub::detail::has_value_type<value_type_haver>));
-    BOOST_MPL_ASSERT((bub::detail::has_value_type<length>));
-    BOOST_MPL_ASSERT_NOT((bub::detail::has_value_type<int>));
-
-    BOOST_MPL_ASSERT((boost::is_same<bub::detail::get_value_type<int>::type, int>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::detail::get_value_type<value_type_haver>::type, int>));
-    BOOST_MPL_ASSERT((boost::is_same<bub::detail::get_value_type<length>::type, float>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::detail::value_type<int>::type, int>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::detail::value_type<value_type_haver>::type, int>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::detail::value_type<length>::type, float>));
 
     return 0;
 }

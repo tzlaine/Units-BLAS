@@ -10,6 +10,7 @@
 #define BOOST_UNITS_BLAS_OPERATIONS_HPP
 
 #include <boost/units_blas/config.hpp>
+#include <boost/units_blas/detail/get_value_type.hpp>
 
 #include <boost/array.hpp>
 #include <boost/units/cmath.hpp>
@@ -985,100 +986,88 @@ namespace boost { namespace units_blas {
         return detail::foldl(f, state, detail::type_sequence<T...>{}).first;
     }
 
-#if 0
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-    template <typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_square_matrix<matrix<T> >,
-            mpl::equal_to<
-                typename matrix<T>::num_rows_t,
-                mpl::size_t<1>
-            >
-        >,
-        result_of::determinant<matrix<T> >
-    >::type
-    determinant (matrix<T> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    auto determinant (matrix_t<Tuple, Rows, Columns> m,
+                      typename std::enable_if<
+                          Rows == 1 && Columns == 1
+                      >::type* = 0)
     { return m.template at<0, 0>(); }
 
-    template <typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_square_matrix<matrix<T> >,
-            mpl::equal_to<
-                typename matrix<T>::num_rows_t,
-                mpl::size_t<2>
-            >
-        >,
-        result_of::determinant<matrix<T> >
-    >::type
-    determinant (matrix<T> const & m)
-    { return m.template at<0, 0>() * m.template at<1, 1>() - m.template at<0, 1>() * m.template at<1, 0>(); }
-
-    template <typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_square_matrix<matrix<T> >,
-            mpl::equal_to<
-                typename matrix<T>::num_rows_t,
-                mpl::size_t<3>
-            >
-        >,
-        result_of::determinant<matrix<T> >
-    >::type
-    determinant (matrix<T> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    auto determinant (matrix_t<Tuple, Rows, Columns> m,
+                      typename std::enable_if<
+                          Rows == 2 && Columns == 2
+                      >::type* = 0)
     {
         return
-            m.template at<0, 0>() * (m.template at<1, 1>() * m.template at<2, 2>() - m.template at<1, 2>() * m.template at<2, 1>()) -
-            m.template at<0, 1>() * (m.template at<1, 0>() * m.template at<2, 2>() - m.template at<1, 2>() * m.template at<2, 0>()) +
-            m.template at<0, 2>() * (m.template at<1, 0>() * m.template at<2, 1>() - m.template at<1, 1>() * m.template at<2, 0>());
+            m.template at<0, 0>() * m.template at<1, 1>() -
+            m.template at<0, 1>() * m.template at<1, 0>();
+    }
+
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    auto determinant (matrix_t<Tuple, Rows, Columns> m,
+                      typename std::enable_if<
+                          Rows == 3 && Columns == 3
+                      >::type* = 0)
+    {
+        return
+            m.template at<0, 0>() *
+            (m.template at<1, 1>() * m.template at<2, 2>() -
+             m.template at<1, 2>() * m.template at<2, 1>()) -
+            m.template at<0, 1>() *
+            (m.template at<1, 0>() * m.template at<2, 2>() -
+             m.template at<1, 2>() * m.template at<2, 0>()) +
+            m.template at<0, 2>() *
+            (m.template at<1, 0>() * m.template at<2, 1>() -
+             m.template at<1, 1>() * m.template at<2, 0>());
     }
 #endif
 
+#if 0
     /** Returns the determinant of @c m.  @c m must be a @c matrix<>, and must
         be square.  Also, a determinant type must exist for @c m (some
         otherwise-suitable <c>matrix<></c>s do not have a determinant that
         makes sense when their elements are unit types).  */
-    template <typename T>
-    typename lazy_enable_if<
-        mpl::and_<
-            is_square_matrix<matrix<T> >,
-            mpl::less<
-                mpl::size_t<3>,
-                typename matrix<T>::num_rows_t
-            >
-        >,
-        result_of::determinant<matrix<T> >
-    >::type
-    determinant (matrix<T> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    auto determinant (matrix_t<Tuple, Rows, Columns> m,
+                      typename std::enable_if<
+                          Rows == Columns && 4 <= Rows
+                      >::type* = 0)
     {
+#if 0 // TODO
         // If you're seeing an error here, you're trying to perform LU
         // decomposition on a matrix that has mixed units of the same
         // dimension (e.g. centimeters and meters in the same matrix).
         BOOST_MPL_ASSERT((detail::is_lu_decomposable<matrix<T> >));
+#endif
 
-        typedef typename result_of::determinant<matrix<T> >::type result_type;
-        result_type retval = detail::one_value<result_type>::value();
-        typedef typename detail::get_value_type<result_type>::type raw_value_type;
-        typedef array<
-            array<raw_value_type, matrix<T>::num_columns_t::value>,
-            matrix<T>::num_rows_t::value
-        > temp_matrix_type;
+        using matrix_type = matrix_t<Tuple, Rows, Columns>;
+        using result_type =
+            typename detail::determinant_type<matrix_type>::type;
+        using raw_value_type = typename detail::value_type<result_type>::type;
+        using temp_matrix_type =
+            std::array<std::array<raw_value_type, Columns>, Rows>;
+
         temp_matrix_type temp_matrix;
-        typedef fusion::vector<temp_matrix_type &, matrix<T> const &> ops1;
-        iterate<size<matrix<T> > >(
-            ops1(temp_matrix, m), detail::matrix_to_temp_assign<result_type>()
+        detail::iterate_simple<Rows * Columns>(
+            detail::assign_to_temp_array<
+                temp_matrix_type,
+                matrix_type
+            >{temp_matrix, m}
         );
-        array<std::size_t, matrix<T>::num_rows_t::value> indices;
-        try {
-            retval *= detail::lu_decompose(temp_matrix, indices);
-            typedef fusion::vector<result_type &, temp_matrix_type const &> ops2;
-            iterate<typename matrix<T>::num_rows_t>(
-                ops2(retval, temp_matrix), detail::accumulate_determinant()
+
+        std::array<std::size_t, Rows> indices;
+        auto result = detail::lu_decompose(temp_matrix, indices);
+        if (result.second) {
+            detail::iterate_simple<Rows>(
+                detail::accumulate_determinant<
+                    decltype(result.first),
+                    temp_matrix_type
+                >{retval, temp_matrix}
             );
-        } catch (singular_matrix const &) {
-            retval = detail::zero_value<result_type>::value();
         }
+
         return retval;
     }
 

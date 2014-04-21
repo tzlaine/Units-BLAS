@@ -340,7 +340,6 @@ namespace boost { namespace units_blas {
                 detail::assign<self_type, MatrixR>{*this, rhs}
             );
         }
-#endif
 
         value_types data_;
     };

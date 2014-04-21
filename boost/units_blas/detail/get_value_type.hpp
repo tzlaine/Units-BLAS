@@ -6,33 +6,42 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_UNITS_BLAS_DETAIL_GET_VALUE_TYPE_HPP
-#define BOOST_UNITS_BLAS_DETAIL_GET_VALUE_TYPE_HPP
+#ifndef BOOST_UNITS_BLAS_DETAIL_VALUE_TYPE_HPP
+#define BOOST_UNITS_BLAS_DETAIL_VALUE_TYPE_HPP
 
-#include <boost/units_blas/detail/has_value_type.hpp>
-
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
+#include <type_traits>
+#include <utility>
 
 
 namespace boost { namespace units_blas { namespace detail {
 
+    auto has_value_type (...)
+    { return std::false_type{}; }
+
     template <typename T>
-    struct value_type
+    auto has_value_type (T, typename T::value_type* = 0)
+    { return std::true_type{}; }
+
+    template <typename T>
+    struct value_type_wrapper
     {
-        typedef typename T::value_type type;
+        using value_type = T;
     };
 
     template <typename T>
-    struct get_value_type
+    struct value_type
     {
-        typedef typename mpl::eval_if<
-            has_value_type<T>,
-            value_type<T>,
-            mpl::identity<T>
-        >::type type;
+        using selector = typename std::conditional<
+            std::is_same<
+                std::true_type,
+                decltype(has_value_type(std::declval<T>()))
+            >::value,
+            T,
+            value_type_wrapper<T>
+        >::type;
+        using type = typename selector::value_type;
     };
 
 } } } // namespace boost::units_blas::detail
 
-#endif // BOOST_UNITS_BLAS_DETAIL_GET_VALUE_TYPE_HPP
+#endif // BOOST_UNITS_BLAS_DETAIL_VALUE_TYPE_HPP
