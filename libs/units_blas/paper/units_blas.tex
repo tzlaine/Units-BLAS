@@ -69,10 +69,10 @@ its physical dimensions preserved
   dx \cdot m^2/s & dy \cdot m^2/s & dd \cdot m^2/s^2
 \end{matrix} \right]. \]
 
-Now, the set of matrix operations applicable to must take into account
-the dimensions of the values in the matrix.  However, this quickly
-leads to nontrivial questions.  For instance, what is the identity
-matrix that one can use with $\widehat{XYD}$?  Note that
+Now, the set of matrix operations applicable to $\widehat{XYD}$ must take into
+account the dimensions of the values in the matrix.  However, this quickly
+leads to nontrivial questions.  For instance, what is the identity matrix that
+one can use with $\widehat{XYD}$?  Note that
 
 \[ \hat I = \left[ \begin{matrix} 
   \hat 1 & \hat 0 & \hat 0 \\
@@ -222,8 +222,8 @@ as a unit-agnostic identity matrix.
 \end{matrix} \right], \] etc.  Now, let $\hat I_{A_n}$ and $\hat
 I_{B_n}$ be $n \times n$ dimensional value matrices.  Let the elements
 of $\hat I_{A_n}$ be $\hat 1$ on the diagonals, and $\hat 0$
-elsewhere.  Let the elements of the $\hat I_{B_n}$ have values of 1 on
-the diagonals, and 0 elsewhere.  Let the units of the elements of
+elsewhere.  Let the elements of the $\hat I_{B_n}$ have values of $\hat 1$ on
+the diagonals, and $\hat 0$ elsewhere.  Let the units of the elements of
 $\hat I_{B_n}$ be $m^{(j + 1) \mod 2}$.  For example,
 
 \[ \hat I_{A_2} = \left[ \begin{matrix} 
@@ -763,7 +763,7 @@ reduces to
 
 Neglecting the value portion of the definition of cofactor, which is
 not relevant within the angle brackets, $\langle C_{11} \rangle$
-exapands to
+expands to
 
 \[ \langle \hat M_{22} \cdot C_{11} + \hat M_{23} \cdot C_{12} +
 \cdots + \hat M_{2n} \cdot C_{1n} \rangle , \] where $C_{ij}$ now
