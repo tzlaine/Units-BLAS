@@ -11,11 +11,11 @@
 
 #include <boost/units_blas/config.hpp>
 #include <boost/units_blas/exception.hpp>
-#include <boost/units_blas/detail/get_value_type.hpp>
 #include <boost/units_blas/detail/has_inverse.hpp>
 #include <boost/units_blas/detail/inverse_type.hpp>
 #include <boost/units_blas/detail/lu.hpp>
 #include <boost/units_blas/detail/one_value.hpp>
+#include <boost/units_blas/detail/value_type.hpp>
 #include <boost/units_blas/detail/zero_value.hpp>
 
 #include <boost/throw_exception.hpp>

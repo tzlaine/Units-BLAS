@@ -86,8 +86,6 @@ int test_main (int, char *[])
 
         auto identity_matrix = bub::make_identity_matrix<matrix_2x2_units_type>();
 
-        std::cerr << "units I:\n" << identity_matrix << "\n";
-
         BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<0, 0>()))>));
         BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<0, 1>()))>));
         BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<1, 0>()))>));

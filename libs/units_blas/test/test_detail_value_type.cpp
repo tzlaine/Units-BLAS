@@ -4,7 +4,7 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/units_blas/detail/get_value_type.hpp>
+#include <boost/units_blas/detail/value_type.hpp>
 
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/length.hpp>

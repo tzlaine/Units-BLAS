@@ -10,7 +10,7 @@
 #define BOOST_UNITS_BLAS_INVERSE_TYPE_HPP
 
 #include <boost/units_blas/matrix.hpp>
-#include <boost/units_blas/detail/get_value_type.hpp>
+#include <boost/units_blas/detail/value_type.hpp>
 
 
 namespace boost { namespace units_blas { namespace detail {
