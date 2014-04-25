@@ -25,9 +25,36 @@
 
 namespace boost { namespace units_blas {
 
+    template <typename Tuple>
+    auto determinant (matrix_t<Tuple, 3, 3> m);
+
     namespace detail {
 
-        // foldl
+        // compile-time foldl
+        template <typename F, typename State, typename Seq>
+        struct static_foldl;
+
+        template <typename F, typename State, typename Head, typename ...Tail>
+        struct static_foldl<F, State, type_sequence<Head, Tail...>>
+        {
+            using type = typename static_foldl<
+                F,
+                typename F::template apply<State, Head>::type,
+                type_sequence<Tail...>
+            >::type;
+        };
+
+        template <typename F, typename State>
+        struct static_foldl<F, State, type_sequence<>>
+        {
+            using type = State;
+        };
+
+        template <typename F, typename State, typename Seq>
+        using static_foldl_t = typename static_foldl<F, State, Seq>::type;
+
+
+        // run-time foldl
         template <std::size_t I, typename Fn, typename State>
         constexpr auto foldl_impl (Fn, State state, type_sequence<>)
         { return state; }
@@ -450,7 +477,7 @@ namespace boost { namespace units_blas {
 
 
         // matrix determinant type
-#if 1 // TODO BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE
+#if BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE
         template <typename Matrix, std::size_t I, std::size_t N>
         struct simplified_determinant_type_impl
         {
@@ -489,14 +516,104 @@ namespace boost { namespace units_blas {
         };
 #else
         template <typename Matrix>
-        struct determinant_type
-        {
-            using type = double; // TODO
-        };
-#endif
+        struct determinant_type;
 
         template <typename Matrix>
         using determinant_type_t = typename determinant_type<Matrix>::type;
+
+        template <std::size_t N, typename InSeq, typename OutSeq>
+        struct filter_out_n;
+
+        template <std::size_t N,
+                  typename OutSeq,
+                  std::size_t Head,
+                  std::size_t ...Tail>
+        struct filter_out_n<N, std::index_sequence<Head, Tail...>, OutSeq>
+        {
+            using type = typename filter_out_n<
+                N,
+                std::index_sequence<Tail...>,
+                typename std::conditional<
+                    Head == N,
+                    OutSeq,
+                    decltype(push_back<Head>(OutSeq{}))
+                >::type
+            >::type;
+        };
+
+        template <std::size_t N, typename OutSeq>
+        struct filter_out_n<N, std::index_sequence<>, OutSeq>
+        {
+            using type = OutSeq;
+        };
+
+        template <typename Rows, std::size_t Column, typename Matrix>
+        constexpr auto subdeterminant (Matrix m)
+        {
+            using columns = typename filter_out_n<
+                Column,
+                decltype(std::make_index_sequence<Matrix::num_columns>()),
+                std::index_sequence<>
+            >::type;
+            constexpr auto seqs = slice_indices_and_types<Matrix, columns>(
+                std::pair<std::index_sequence<>, type_sequence<>>{},
+                Rows{}
+            );
+            using minor_matrix = matrix_t<
+                decltype(tuple_from_types(seqs.second)),
+                Matrix::num_rows - 1,
+                Matrix::num_columns - 1
+            >;
+            return determinant_type_t<minor_matrix>{};
+        }
+
+        struct sum_type
+        {
+            template <typename T1, typename T2>
+            struct apply
+            {
+                using type = decltype(std::declval<T1>() + std::declval<T2>());
+            };
+        };
+
+        template <typename Matrix, std::size_t Head, std::size_t ...Tail>
+        constexpr auto
+        determinant_type_impl (Matrix m, std::index_sequence<Head, Tail...>)
+        {
+            using rows = std::index_sequence<Tail...>;
+            using tuple = std::tuple<
+                decltype(tuple_access::get<Head>(m) *
+                         subdeterminant<rows, Head>(m)),
+                decltype(tuple_access::get<Tail>(m) *
+                         subdeterminant<rows, Tail>(m))...
+            >;
+
+            using sum = static_foldl_t<
+                sum_type,
+                typename std::tuple_element<0, tuple>::type,
+                decltype(types_from_tuple(tuple{}))
+            >;
+
+            return sum{};
+        }
+
+        template <typename Matrix>
+        struct determinant_type
+        {
+            using type = decltype(
+                determinant_type_impl(
+                    Matrix{},
+                    std::make_index_sequence<Matrix::num_columns>()
+                )
+            );
+        };
+
+        template <typename Tuple>
+        struct determinant_type<matrix_t<Tuple, 3, 3>>
+        {
+            using type = decltype(determinant(matrix_t<Tuple, 3, 3>{}));
+        };
+#endif
 
 
         // get value
