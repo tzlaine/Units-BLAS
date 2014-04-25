@@ -11,15 +11,15 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef boost::mpl::vector_c<std::size_t, 0, 1> rows_type_1;
-typedef boost::mpl::vector_c<std::size_t, 0, 1> columns_type_1;
+typedef bub::index_sequence<0, 1> rows_type_1;
+typedef bub::index_sequence<0, 1> columns_type_1;
 
 // note that rows_type_2 reorders rows 2 and 3
-typedef boost::mpl::vector_c<std::size_t, 0, 3, 2> rows_type_2;
-typedef boost::mpl::vector_c<std::size_t, 2> columns_type_2;
+typedef bub::index_sequence<0, 3, 2> rows_type_2;
+typedef bub::index_sequence<2> columns_type_2;
 
-typedef boost::mpl::vector_c<std::size_t, 0> rows_type_3;
-typedef boost::mpl::vector_c<std::size_t, 1, 3> columns_type_3;
+typedef bub::index_sequence<0> rows_type_3;
+typedef bub::index_sequence<1, 3> columns_type_3;
 
 struct derived_from_D_matrix_4x4_fundamentals_type :
     D_matrix_4x4_fundamentals_type
@@ -151,12 +151,11 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D2.at<2, 3>() == 15.0));
     BOOST_CHECK((m_D2.at<3, 3>() == 16.0));
 
-#if 0 // TODO
-    typedef bub::result_of::slice<
-        D_matrix_4x4_fundamentals_type,
-        rows_type_1,
-        columns_type_1
-    >::type D_fundamentals_slice_type_1;
+    using D_fundamentals_slice_type_1 = decltype(
+        bub::slice<rows_type_1, columns_type_1>(
+            std::declval<D_matrix_4x4_fundamentals_type>()
+        )
+    );
     D_fundamentals_slice_type_1 m_D_slice_1;
     m_D_slice_1 = bub::slice<rows_type_1, columns_type_1>(m_D1);
     BOOST_CHECK((m_D_slice_1.at<0, 0>() == 1.0));
@@ -170,11 +169,11 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D_slice_1.at<1, 0>() == 5.0));
     BOOST_CHECK((m_D_slice_1.at<1, 1>() == 6.0));
 
-    typedef bub::result_of::slice<
-        D_matrix_4x4_fundamentals_type,
-        rows_type_2,
-        columns_type_2
-    >::type D_fundamentals_slice_type_2;
+    using D_fundamentals_slice_type_2 = decltype(
+        bub::slice<rows_type_2, columns_type_2>(
+            std::declval<D_matrix_4x4_fundamentals_type>()
+        )
+    );
     D_fundamentals_slice_type_2 m_D_slice_2;
     m_D_slice_2 = bub::slice<rows_type_2, columns_type_2>(m_D1);
     BOOST_CHECK((m_D_slice_2.at<0, 0>() == 3.0));
@@ -186,11 +185,11 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D_slice_2.at<1, 0>() == 15.0));
     BOOST_CHECK((m_D_slice_2.at<2, 0>() == 11.0));
 
-    typedef bub::result_of::slice<
-        D_matrix_4x4_fundamentals_type,
-        rows_type_3,
-        columns_type_3
-    >::type D_fundamentals_slice_type_3;
+    using D_fundamentals_slice_type_3 = decltype(
+        bub::slice<rows_type_3, columns_type_3>(
+            std::declval<D_matrix_4x4_fundamentals_type>()
+        )
+    );
     D_fundamentals_slice_type_3 m_D_slice_3;
     m_D_slice_3 = bub::slice<rows_type_3, columns_type_3>(m_D1);
     BOOST_CHECK((m_D_slice_3.at<0, 0>() == 2.0));
@@ -199,7 +198,7 @@ int test_main (int, char *[])
     m_D_slice_3 = bub::slice<rows_type_3, columns_type_3>(m_D1_d);
     BOOST_CHECK((m_D_slice_3.at<0, 0>() == 2.0));
     BOOST_CHECK((m_D_slice_3.at<0, 1>() == 4.0));
-#endif
+
 
     // unit types
 
@@ -321,12 +320,11 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D2_u.at<2, 3>().value() == 15.0));
     BOOST_CHECK((m_D2_u.at<3, 3>().value() == 16.0));
 
-#if 0
-    typedef bub::result_of::slice<
-        D_matrix_4x4_units_type,
-        rows_type_1,
-        columns_type_1
-    >::type D_units_slice_type_1;
+    using D_units_slice_type_1 = decltype(
+        bub::slice<rows_type_1, columns_type_1>(
+            std::declval<D_matrix_4x4_units_type>()
+        )
+    );
     D_units_slice_type_1 m_D_slice_1_u;
     m_D_slice_1_u = bub::slice<rows_type_1, columns_type_1>(m_D1_u);
     BOOST_CHECK((m_D_slice_1_u.at<0, 0>().value() == 1.0));
@@ -340,11 +338,11 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D_slice_1_u.at<1, 0>().value() == 5.0));
     BOOST_CHECK((m_D_slice_1_u.at<1, 1>().value() == 6.0));
 
-    typedef bub::result_of::slice<
-        D_matrix_4x4_units_type,
-        rows_type_2,
-        columns_type_2
-    >::type D_units_slice_type_2;
+    using D_units_slice_type_2 = decltype(
+        bub::slice<rows_type_2, columns_type_2>(
+            std::declval<D_matrix_4x4_units_type>()
+        )
+    );
     D_units_slice_type_2 m_D_slice_2_u;
     m_D_slice_2_u = bub::slice<rows_type_2, columns_type_2>(m_D1_u);
     BOOST_CHECK((m_D_slice_2_u.at<0, 0>().value() == 3.0));
@@ -356,11 +354,11 @@ int test_main (int, char *[])
     BOOST_CHECK((m_D_slice_2_u.at<1, 0>().value() == 15.0));
     BOOST_CHECK((m_D_slice_2_u.at<2, 0>().value() == 11.0));
 
-    typedef bub::result_of::slice<
-        D_matrix_4x4_units_type,
-        rows_type_3,
-        columns_type_3
-    >::type D_units_slice_type_3;
+    using D_units_slice_type_3 = decltype(
+        bub::slice<rows_type_3, columns_type_3>(
+            std::declval<D_matrix_4x4_units_type>()
+        )
+    );
     D_units_slice_type_3 m_D_slice_3_u;
     m_D_slice_3_u = bub::slice<rows_type_3, columns_type_3>(m_D1_u);
     BOOST_CHECK((m_D_slice_3_u.at<0, 0>().value() == 2.0));
@@ -369,7 +367,6 @@ int test_main (int, char *[])
     m_D_slice_3_u = bub::slice<rows_type_3, columns_type_3>(m_D1_u_d);
     BOOST_CHECK((m_D_slice_3_u.at<0, 0>().value() == 2.0));
     BOOST_CHECK((m_D_slice_3_u.at<0, 1>().value() == 4.0));
-#endif
 
     return 0;
 }

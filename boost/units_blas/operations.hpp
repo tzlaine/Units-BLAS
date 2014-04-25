@@ -764,7 +764,6 @@ namespace boost { namespace units_blas {
 
     }
 
-#if 0
     /** Returns a @c matrix<> consisting of only the rows and columns of @c m
         specified by @c RowIndices and @c ColumnIndices.  @c m must be a @c
         matrix<>.  Both of @c RowIndices and @c ColumnIndices must be an @c
@@ -773,11 +772,11 @@ namespace boost { namespace units_blas {
         that duplication and order preservation are not enforced for the values
         in @c RowIndices and @c ColumnIndices.  It is therefore possible to use
         @c slice<>() to rearrange and/or duplicate rows and/or columns. */
-    template <typename Tuple,
-              typename Rows,
-              typename Columns,
-              typename RowIndices,
-              typename ColumnIndices>
+    template <typename RowIndices,
+              typename ColumnIndices,
+              typename Tuple,
+              std::size_t Rows,
+              std::size_t Columns>
     auto slice (matrix_t<Tuple, Rows, Columns> m)
     {
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
@@ -788,12 +787,12 @@ namespace boost { namespace units_blas {
         );
 
         static_assert(
-            0 < RowIndices::size,
+            0 < ColumnIndices::size,
             "slice() requires at least one column index to compute its result"
         );
 
         auto seqs = detail::slice_indices_and_types_impl<
-            Matrix,
+            matrix_type,
             RowIndices,
             ColumnIndices,
             0
@@ -804,8 +803,10 @@ namespace boost { namespace units_blas {
             detail::tuple_assign<decltype(tuple), matrix_type>{tuple, m},
             seqs.first
         );
+
+        return
+            detail::make_matrix<RowIndices::size, ColumnIndices::size>(tuple);
     }
-#endif
 
     /** Returns a const-preserved reference to the element at row @c I, column
         @c J of @c m.  @c m must be a @c matrix<>. */
