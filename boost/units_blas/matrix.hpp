@@ -19,12 +19,6 @@
 
 namespace boost { namespace units_blas {
 
-    template <std::size_t ...I>
-    struct index_sequence
-    {
-        static const std::size_t size = sizeof...(I);
-    };
-
     namespace detail {
 
         // tuple access
@@ -50,8 +44,8 @@ namespace boost { namespace units_blas {
 
         // push_back
         template <std::size_t Tail, std::size_t ...Head>
-        constexpr auto push_back (index_sequence<Head...>)
-        { return index_sequence<Head..., Tail>{}; }
+        constexpr auto push_back (std::index_sequence<Head...>)
+        { return std::index_sequence<Head..., Tail>{}; }
 
         template <typename Tail, typename ...Head>
         constexpr auto push_back (type_sequence<Head...>)

@@ -11,15 +11,15 @@
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::index_sequence<0, 1> rows_type_1;
-typedef bub::index_sequence<0, 1> columns_type_1;
+typedef std::index_sequence<0, 1> rows_type_1;
+typedef std::index_sequence<0, 1> columns_type_1;
 
 // note that rows_type_2 reorders rows 2 and 3
-typedef bub::index_sequence<0, 3, 2> rows_type_2;
-typedef bub::index_sequence<2> columns_type_2;
+typedef std::index_sequence<0, 3, 2> rows_type_2;
+typedef std::index_sequence<2> columns_type_2;
 
-typedef bub::index_sequence<0> rows_type_3;
-typedef bub::index_sequence<1, 3> columns_type_3;
+typedef std::index_sequence<0> rows_type_3;
+typedef std::index_sequence<1, 3> columns_type_3;
 
 struct derived_from_D_matrix_4x4_fundamentals_type :
     D_matrix_4x4_fundamentals_type

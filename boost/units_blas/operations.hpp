@@ -109,7 +109,7 @@ namespace boost { namespace units_blas {
                 1,
                 0,
                 Matrix::num_columns
-            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+            >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
         }
 
         template <typename Matrix, std::size_t C>
@@ -121,7 +121,7 @@ namespace boost { namespace units_blas {
                 Matrix::num_columns,
                 0,
                 Matrix::num_rows
-            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+            >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
         }
 
 
@@ -138,12 +138,12 @@ namespace boost { namespace units_blas {
                   std::size_t ...Tail>
         struct iterate_indexed_impl
         {
-            static void call (F f, index_sequence<Head, Tail...>)
+            static void call (F f, std::index_sequence<Head, Tail...>)
             {
                 f.template call<I, Head>();
                 iterate_indexed_impl<I + 1, F, Tail...>::call(
                     f,
-                    index_sequence<Tail...>{}
+                    std::index_sequence<Tail...>{}
                 );
             }
         };
@@ -151,12 +151,12 @@ namespace boost { namespace units_blas {
         template <std::size_t I, typename F, std::size_t Head>
         struct iterate_indexed_impl<I, F, Head>
         {
-            static void call (F f, index_sequence<Head>)
+            static void call (F f, std::index_sequence<Head>)
             { f.template call<I, Head>(); }
         };
 
         template <typename F, std::size_t ...I>
-        void iterate_indexed (F f, index_sequence<I...> seq)
+        void iterate_indexed (F f, std::index_sequence<I...> seq)
         { iterate_indexed_impl<0, F, I...>::call(f, seq); }
 
 
@@ -181,7 +181,7 @@ namespace boost { namespace units_blas {
                 1,
                 0,
                 Matrix::num_columns
-            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+            >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
             auto retval = tuple_from_types(seqs.second);
             iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m},
                             seqs.first);
@@ -197,7 +197,7 @@ namespace boost { namespace units_blas {
                 Matrix::num_columns,
                 0,
                 Matrix::num_rows
-            >::call(std::pair<index_sequence<>, type_sequence<>>{});
+            >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
             auto retval = tuple_from_types(seqs.second);
             iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m},
                             seqs.first);
@@ -266,12 +266,12 @@ namespace boost { namespace units_blas {
 
         // matrix slice
         template <std::size_t Head, std::size_t ...Tail>
-        constexpr auto head (index_sequence<Head, Tail...>)
+        constexpr auto head (std::index_sequence<Head, Tail...>)
         { return Head; }
 
         template <std::size_t Head, std::size_t ...Tail>
-        constexpr auto tail (index_sequence<Head, Tail...>)
-        { return index_sequence<Tail...>{}; }
+        constexpr auto tail (std::index_sequence<Head, Tail...>)
+        { return std::index_sequence<Tail...>{}; }
 
         template <typename Matrix,
                   std::size_t Row,
@@ -303,7 +303,7 @@ namespace boost { namespace units_blas {
         struct slice_indices_and_types_row_impl<
             Matrix,
             Row,
-            index_sequence<>,
+            std::index_sequence<>,
             X
         > {
             template <typename Seqs>
@@ -331,7 +331,7 @@ namespace boost { namespace units_blas {
                     Matrix,
                     decltype(tail(RowIndices{})),
                     ColumnIndices,
-                    X + ColumnIndices::size
+                    X + ColumnIndices::size()
                 >::call(new_seqs);
             }
         };
@@ -341,7 +341,7 @@ namespace boost { namespace units_blas {
                   std::size_t X>
         struct slice_indices_and_types_impl<
             Matrix,
-            index_sequence<>,
+            std::index_sequence<>,
             ColumnIndices,
             X
         > {
@@ -665,12 +665,13 @@ namespace boost { namespace units_blas {
 
     /** Returns a @c matrix<> consisting of only the rows and columns of @c m
         specified by @c RowIndices and @c ColumnIndices.  @c m must be a @c
-        matrix<>.  Both of @c RowIndices and @c ColumnIndices must be an @c
-        index_sequence<> ; all values in @c RowIndices and @c ColumnIndices must
-        be less than the number of rows and columns in @c m, respectively.  Note
-        that duplication and order preservation are not enforced for the values
-        in @c RowIndices and @c ColumnIndices.  It is therefore possible to use
-        @c slice<>() to rearrange and/or duplicate rows and/or columns. */
+        matrix<>.  Both of @c RowIndices and @c ColumnIndices must be a @c
+        std::index_sequence<> ; all values in @c RowIndices and @c ColumnIndices
+        must be less than the number of rows and columns in @c m, respectively.
+        Note that duplication and order preservation are not enforced for the
+        values in @c RowIndices and @c ColumnIndices.  It is therefore possible
+        to use @c slice<>() to rearrange and/or duplicate rows and/or
+        columns. */
     template <typename RowIndices,
               typename ColumnIndices,
               typename Tuple,
@@ -681,12 +682,12 @@ namespace boost { namespace units_blas {
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
 
         static_assert(
-            0 < RowIndices::size,
+            0 < RowIndices::size(),
             "slice() requires at least one row index to compute its result"
         );
 
         static_assert(
-            0 < ColumnIndices::size,
+            0 < ColumnIndices::size(),
             "slice() requires at least one column index to compute its result"
         );
 
@@ -695,7 +696,7 @@ namespace boost { namespace units_blas {
             RowIndices,
             ColumnIndices,
             0
-        >::call(std::pair<index_sequence<>, detail::type_sequence<>>{});
+        >::call(std::pair<std::index_sequence<>, detail::type_sequence<>>{});
 
         auto tuple = detail::tuple_from_types(seqs.second);
         iterate_indexed(
@@ -703,8 +704,9 @@ namespace boost { namespace units_blas {
             seqs.first
         );
 
-        return
-            detail::make_matrix<RowIndices::size, ColumnIndices::size>(tuple);
+        return detail::make_matrix<RowIndices::size(), ColumnIndices::size()>(
+            tuple
+        );
     }
 
     /** Returns a const-preserved reference to the element at row @c I, column
@@ -722,7 +724,7 @@ namespace boost { namespace units_blas {
             matrix_type,
             0,
             matrix_type::num_elements
-        >::call(std::pair<index_sequence<>, detail::type_sequence<>>{});
+        >::call(std::pair<std::index_sequence<>, detail::type_sequence<>>{});
         auto tuple = tuple_from_types(seqs.second);
         iterate_indexed(
             detail::tuple_assign<decltype(tuple), matrix_type>{tuple, m},
