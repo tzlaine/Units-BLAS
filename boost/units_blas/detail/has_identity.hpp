@@ -10,7 +10,6 @@
 #define BOOST_UNITS_BLAS_HAS_IDENTITY_HPP
 
 #include <boost/units_blas/traits.hpp>
-#include <boost/units_blas/detail/inverse_type.hpp>
 
 
 namespace boost { namespace units_blas { namespace detail {
@@ -18,7 +17,7 @@ namespace boost { namespace units_blas { namespace detail {
     // TODO: Implement in terms of row-wise DDV equality.
     template <typename Matrix>
     struct has_identity :
-        std::true_type
+        is_matrix_or_derived<Matrix>::type
     {};
 
 } } } // namespace boost::units_blas::detail

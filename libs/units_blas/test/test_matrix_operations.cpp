@@ -114,7 +114,6 @@ int test_main (int, char *[])
     BOOST_CHECK_CLOSE((m_D_inv.at<3, 2>()), 0.5, epsilon);
     BOOST_CHECK_CLOSE((m_D_inv.at<3, 3>()), -0.75, epsilon);
 
-#if 0
     m_D_inv = inverse(m_D_d);
     BOOST_CHECK_CLOSE((m_D_inv.at<0, 0>()), -0.5, epsilon);
     BOOST_CHECK_CLOSE((m_D_inv.at<0, 1>()), 0.75, epsilon);
@@ -204,7 +203,6 @@ int test_main (int, char *[])
     BOOST_CHECK((determinant(m_D_zero_d) == 0.0));
     BOOST_CHECK_THROW(inverse(m_D_zero_d), bub::singular_matrix);
     BOOST_CHECK_THROW(solve(m_D_zero_d, m_b, m_x), bub::singular_matrix);
-#endif
 
     D_matrix_4x4_units_type m_D_u;
     m_D_u.at<0, 0>() = length::from_value(-1.0);
@@ -286,7 +284,6 @@ int test_main (int, char *[])
     BOOST_CHECK_CLOSE((m_D_u_inv.at<3, 2>()).value(), 0.5, epsilon);
     BOOST_CHECK_CLOSE((m_D_u_inv.at<3, 3>()).value(), -0.75, epsilon);
 
-#if 0
     b_units_vector_type m_b_u;
     m_b_u.at<0, 0>() = length::from_value(1.0);
     m_b_u.at<1, 0>() = length::from_value(1.0);
@@ -358,7 +355,6 @@ int test_main (int, char *[])
     BOOST_CHECK((determinant(m_D_u_zero_d).value() == 0.0));
     BOOST_CHECK_THROW(inverse(m_D_u_zero_d), bub::singular_matrix);
     BOOST_CHECK_THROW(solve(m_D_u_zero_d, m_b_u, m_x_u), bub::singular_matrix);
-#endif
 
     return 0;
 }
