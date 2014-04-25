@@ -27,10 +27,7 @@ namespace boost { namespace units_blas {
             {
                 constexpr std::size_t row = I / Matrix::num_columns;
                 constexpr std::size_t column = I % Matrix::num_columns;
-                using type = typename std::tuple_element<
-                    I,
-                    typename Matrix::value_types
-                >::type;
+                using type = tuple_element_t<I, Matrix>;
                 tuple_access::get<I>(m_) =
                     row == column ?
                     one_value<type>::value() :

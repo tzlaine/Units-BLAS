@@ -503,11 +503,11 @@ namespace boost { namespace units_blas {
             using type = typename filter_out_n<
                 N,
                 std::index_sequence<Tail...>,
-                typename std::conditional<
+                std::conditional_t<
                     Head == N,
                     OutSeq,
                     decltype(push_back<Head>(OutSeq{}))
-                >::type
+                >
             >::type;
         };
 

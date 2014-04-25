@@ -31,14 +31,14 @@ namespace boost { namespace units_blas { namespace detail {
     template <typename T>
     struct value_type
     {
-        using selector = typename std::conditional<
+        using selector = std::conditional_t<
             std::is_same<
                 std::true_type,
                 decltype(has_value_type(std::declval<T>()))
             >::value,
             T,
             value_type_wrapper<T>
-        >::type;
+        >;
         using type = typename selector::value_type;
     };
 

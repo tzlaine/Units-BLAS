@@ -63,7 +63,7 @@ namespace boost { namespace units_blas {
     template <typename T>
     struct is_matrix_or_derived :
         decltype(detail::is_matrix_or_derived_impl(
-            std::declval<typename std::remove_cv<T>::type>()
+            std::declval<std::remove_cv_t<T>>()
         ))
     {};
 

@@ -21,7 +21,7 @@ namespace boost { namespace units_blas {
     {
     public:
         virtual const char * what () const throw()
-            { return "singluar_matrix"; }
+        { return "singluar_matrix"; }
     };
 
 } } // namespace boost::units_blas
