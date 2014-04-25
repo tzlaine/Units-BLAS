@@ -7,7 +7,6 @@
 #define BOOST_UNITS_BLAS_TEST_RESULT_OF_TESTS_HPP
 
 #include <boost/units_blas/matrix.hpp>
-#include <boost/units_blas/make_matrix.hpp>
 
 #include <boost/units/quantity.hpp>
 #include <boost/units/systems/si/time.hpp>
@@ -18,38 +17,28 @@
 
 namespace bub = boost::units_blas;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<float>,
-        boost::fusion::vector<int>
-    >
->::type A_matrix_2x1_float_int_type;
+typedef bub::matrix<
+    std::tuple<float>,
+    std::tuple<int>
+> A_matrix_2x1_float_int_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<int>,
-        boost::fusion::vector<int>
-    >
->::type B_matrix_2x1_int_type;
+typedef bub::matrix<
+    std::tuple<int>,
+    std::tuple<int>
+> B_matrix_2x1_int_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<int, int>
-    >
->::type C_matrix_1x2_int_type;
+typedef bub::matrix<
+    std::tuple<int, int>
+> C_matrix_1x2_int_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<int, double>
-    >
->::type D_matrix_1x2_int_double_type;
+typedef bub::matrix<
+    std::tuple<int, double>
+> D_matrix_1x2_int_double_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<double, double>,
-        boost::fusion::vector<double, double>
-    >
->::type E_matrix_2x2_double_type;
+typedef bub::matrix<
+    std::tuple<double, double>,
+    std::tuple<double, double>
+> E_matrix_2x2_double_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
 typedef boost::units::quantity<boost::units::si::length> length;
@@ -86,37 +75,27 @@ typedef boost::units::quantity<boost::units::si::inv_length_sq> inv_length_sq;
 typedef boost::units::quantity<boost::units::si::time_per_length_sq> time_per_length_sq;
 typedef boost::units::quantity<boost::units::si::time_sq_per_length_sq> time_sq_per_length_sq;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<time_>,
-        boost::fusion::vector<length>
-    >
->::type A_matrix_2x1_time_length_type;
+typedef bub::matrix<
+    std::tuple<time_>,
+    std::tuple<length>
+> A_matrix_2x1_time_length_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length>,
-        boost::fusion::vector<length>
-    >
->::type B_matrix_2x1_length_type;
+typedef bub::matrix<
+    std::tuple<length>,
+    std::tuple<length>
+> B_matrix_2x1_length_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, length>
-    >
->::type C_matrix_1x2_length_type;
+typedef bub::matrix<
+    std::tuple<length, length>
+> C_matrix_1x2_length_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, time_>
-    >
->::type D_matrix_1x2_length_time_type;
+typedef bub::matrix<
+    std::tuple<length, time_>
+> D_matrix_1x2_length_time_type;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<time_, time_>,
-        boost::fusion::vector<time_, time_>
-    >
->::type E_matrix_2x2_time_type;
+typedef bub::matrix<
+    std::tuple<time_, time_>,
+    std::tuple<time_, time_>
+> E_matrix_2x2_time_type;
 
 #endif // BOOST_UNITS_BLAS_TEST_RESULT_OF_TESTS_HPP

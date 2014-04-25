@@ -33,8 +33,8 @@ namespace boost { namespace units_blas {
                 >::type;
                 tuple_access::get<I>(m_) =
                     row == column ?
-                    one_value<type>() :
-                    zero_value<type>();
+                    one_value<type>::value() :
+                    zero_value<type>::value();
             }
 
             Matrix & m_;
@@ -65,8 +65,8 @@ namespace boost { namespace units_blas {
     {
         using result_type = typename identity_matrix<Matrix>::type;
         result_type retval;
-        detail::iterate_simple<Matrix::num_rows>(
-            detail::identity_assign<Matrix>{retval}
+        detail::iterate_simple<result_type::num_elements>(
+            detail::identity_assign<result_type>{retval}
         );
         return retval;
     }

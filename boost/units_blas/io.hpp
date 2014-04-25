@@ -26,7 +26,7 @@ namespace boost { namespace units_blas {
             template <std::size_t I>
             void call ()
                 {
-                    if (I % Matrix::num_columns == 1)
+                    if (I && I % Matrix::num_columns == 0)
                         os_ << '\n';
                     os_ << tuple_access::get<I>(m_) << ' ';
                 }

@@ -9,30 +9,24 @@
 #include <boost/units/is_dimensionless.hpp>
 #include <boost/units_blas/identity_matrix.hpp>
 #include <boost/units_blas/operations.hpp>
-#include <boost/units_blas/traits.hpp>
-#include <boost/units_blas/result_of/at.hpp>
 
 #include <boost/test/minimal.hpp>
 
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<int, long, int>,
-        boost::fusion::vector<long, float, int>,
-        boost::fusion::vector<float, float, long>
-    >
->::type matrix_3x3_type;
+typedef bub::matrix<
+    std::tuple<int, long, int>,
+    std::tuple<long, float, int>,
+    std::tuple<float, float, long>
+> matrix_3x3_type;
 
 typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::si::velocity> velocity;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length, length>,
-        boost::fusion::vector<length, length>
-    >
->::type matrix_2x2_units_type;
+typedef bub::matrix<
+    std::tuple<length, length>,
+    std::tuple<length, length>
+> matrix_2x2_units_type;
 
 int test_main (int, char *[])
 {
@@ -48,8 +42,7 @@ int test_main (int, char *[])
         matrix.at<2, 1>() = 8.0f;
         matrix.at<2, 2>() = 9;
 
-        typedef BOOST_TYPEOF((bub::make_identity_matrix<matrix_3x3_type>())) identity_type;
-        identity_type identity_matrix = bub::make_identity_matrix<matrix_3x3_type>();
+        auto identity_matrix = bub::make_identity_matrix<matrix_3x3_type>();
 
         BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((identity_matrix.at<0, 0>())), long>));
         BOOST_MPL_ASSERT((boost::is_same<BOOST_TYPEOF((identity_matrix.at<0, 1>())), float>));
@@ -91,8 +84,9 @@ int test_main (int, char *[])
         matrix.at<1, 0>() = length::from_value(3.0);
         matrix.at<1, 1>() = length::from_value(4.0);
 
-        typedef BOOST_TYPEOF((bub::make_identity_matrix<matrix_2x2_units_type>())) identity_type;
-        identity_type identity_matrix = bub::make_identity_matrix<matrix_2x2_units_type>();
+        auto identity_matrix = bub::make_identity_matrix<matrix_2x2_units_type>();
+
+        std::cerr << "units I:\n" << identity_matrix << "\n";
 
         BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<0, 0>()))>));
         BOOST_MPL_ASSERT((boost::units::is_dimensionless<BOOST_TYPEOF((identity_matrix.at<0, 1>()))>));
