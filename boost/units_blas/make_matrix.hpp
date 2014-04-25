@@ -57,81 +57,50 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t Rows, std::size_t Columns>
     using uniform_matrix = typename uniform_matrix_type<T, Rows, Columns>::type;
 
-    namespace detail {
-
-        template <typename Tuple, std::size_t I, std::size_t N>
-        struct vector_type_impl
-        {
-            template <typename Types>
-            static constexpr auto call (Types)
-            {
-                using type = typename std::tuple_element<
-                    I,
-                    Tuple
-                >::type;
-                auto types = push_back<type>(Types{});
-                return vector_type_impl<Tuple, I + 1, N>::call(types);
-            }
-        };
-
-        template <typename Tuple, std::size_t N>
-        struct vector_type_impl<Tuple, N, N>
-        {
-            template <typename ...T>
-            struct impl
-            {
-                using type = matrix<T...>;
-            };
-
-            template <typename Seq>
-            static constexpr auto call (Seq seq)
-            { return typename impl<Seq>::type{}; }
-        };
-
-    }
-
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1.  Specifically, the resulting @c matrix<>'s dimensions
         are size(@c Tuple) x 1, and each element (i, 0) is the ith type in
         @c Tuple. */
-    template <typename Tuple>
+    template <typename ...T>
     struct vector_type
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-        using type =
-            detail::vector_type_impl<Tuple, 0, std::tuple_size<Tuple>::value>;
+        using type = matrix_t<std::tuple<T...>, sizeof...(T), 1>;
 #else
         using type = detail::unspecified;
 #endif
     };
 
-    template <typename Tuple>
-    using vector = typename vector_type<Tuple>::type;
+    template <typename ...T>
+    using vector = typename vector_type<T...>::type;
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N.  Specifically, the resulting @c
         matrix<>'s dimensions are 1 x size(@c Tuple), and each element
         (0, i) is the ith type in @c Tuple. */
-    template <typename Tuple>
+    template <typename ...T>
     struct transpose_vector_type
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-        using type =
-            matrix_t<std::tuple<Tuple>, 1, std::tuple_size<Tuple>::value>;
+        using type = matrix<std::tuple<T...>>;
 #else
         using type = detail::unspecified;
 #endif
     };
 
-    template <typename Tuple>
-    using transpose_vector = typename transpose_vector_type<Tuple>::type;
+    template <typename ...T>
+    using transpose_vector = typename transpose_vector_type<T...>::type;
 
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1, in which each element is of type @c T. */
     template <typename T, std::size_t N>
     struct uniform_vector_type
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         using type = uniform_matrix<T, N, 1>;
+#else
+        using type = detail::unspecified;
+#endif
     };
 
     template <typename T, std::size_t N>
@@ -142,7 +111,11 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t N>
     struct uniform_transpose_vector_type
     {
+#ifndef BOOST_UNITS_BLAS_DOXYGEN
         using type = uniform_matrix<T, 1, N>;
+#else
+        using type = detail::unspecified;
+#endif
     };
 
     template <typename T, std::size_t N>

@@ -1,0 +1,71 @@
+// Copyright (C) 2008 T. Zachary Laine
+//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#include <boost/units_blas/matrix.hpp>
+#include <boost/units_blas/make_matrix.hpp>
+
+#include <boost/units/quantity.hpp>
+#include <boost/units/systems/si/length.hpp>
+
+#include <boost/test/minimal.hpp>
+
+
+namespace bub = boost::units_blas;
+
+typedef bub::matrix<
+    std::tuple<float>,
+    std::tuple<float>
+> manual_matrix_2x1_type;
+
+typedef bub::matrix<
+    std::tuple<float, float>
+> manual_matrix_1x2_type;
+
+typedef bub::matrix<
+    std::tuple<float, float>,
+    std::tuple<float, float>
+> manual_matrix_2x2_type;
+
+typedef boost::units::quantity<boost::units::si::length> length;
+
+typedef bub::matrix<
+    std::tuple<length>,
+    std::tuple<length>
+> manual_matrix_2x1_units_type;
+
+typedef bub::matrix<
+    std::tuple<length, length>
+> manual_matrix_1x2_units_type;
+
+typedef bub::matrix<
+    std::tuple<length, length>,
+    std::tuple<length, length>
+> manual_matrix_2x2_units_type;
+
+int test_main (int, char *[])
+{
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<float, 1, 2>, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<float, 2, 1>, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<float, 2, 2>, manual_matrix_2x2_type>));
+
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<length, 1, 2>, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<length, 2, 1>, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_matrix<length, 2, 2>, manual_matrix_2x2_units_type>));
+
+    BOOST_MPL_ASSERT((boost::is_same<bub::vector<float, float>, manual_matrix_2x1_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_vector<float, 2>, manual_matrix_2x1_type>));
+
+    BOOST_MPL_ASSERT((boost::is_same<bub::vector<length, length>, manual_matrix_2x1_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_vector<length, 2>, manual_matrix_2x1_units_type>));
+
+    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<float, float>, manual_matrix_1x2_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_transpose_vector<float, 2>, manual_matrix_1x2_type>));
+
+    BOOST_MPL_ASSERT((boost::is_same<bub::transpose_vector<length, length>, manual_matrix_1x2_units_type>));
+    BOOST_MPL_ASSERT((boost::is_same<bub::uniform_transpose_vector<length, 2>, manual_matrix_1x2_units_type>));
+
+    return 0;
+}

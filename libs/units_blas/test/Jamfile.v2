@@ -15,6 +15,7 @@ import testing ;
    :
    [ compile test_traits.cpp ]
    [ compile test_io.cpp ]
+   [ compile test_make_matrix.cpp ]
    [ compile test_detail_has_identity.cpp ]
    [ compile test_detail_value_type.cpp ]
    [ run test_detail_zero_value_one_value.cpp ]
