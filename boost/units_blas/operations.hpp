@@ -243,90 +243,76 @@ namespace boost { namespace units_blas {
 
 
         // matrix slice
-        template <std::size_t Head, std::size_t ...Tail>
-        constexpr auto head (std::index_sequence<Head, Tail...>)
-        { return Head; }
-
-        template <std::size_t Head, std::size_t ...Tail>
-        constexpr auto tail (std::index_sequence<Head, Tail...>)
-        { return std::index_sequence<Tail...>{}; }
-
         template <typename Matrix,
                   std::size_t Row,
-                  typename ColumnIndices,
-                  std::size_t X>
+                  std::size_t ...ColumnIndices>
         struct slice_indices_and_types_row_impl
         {
-            template <typename Indices, typename Types>
-            static constexpr auto call (std::pair<Indices, Types>)
+            template <std::size_t ...I>
+            static constexpr auto indices (std::index_sequence<I...>)
             {
-                using indices = decltype(push_back<X>(Indices{}));
-                using type = tuple_element_t<
-                    Row * Matrix::num_columns + head(ColumnIndices{}),
-                    Matrix
-                >;
-                using types = decltype(push_back<type>(Types{}));
-                return slice_indices_and_types_row_impl<
-                    Matrix,
-                    Row,
-                    decltype(tail(ColumnIndices{})),
-                    X + 1
-                >::call(std::pair<indices, types>{});
+                return std::index_sequence<
+                    I...,
+                    (Row * Matrix::num_columns + ColumnIndices)...
+                >{};
+            }
+
+            template <typename ...T>
+            static constexpr auto types (type_sequence<T...>)
+            {
+                return type_sequence<
+                    T...,
+                    tuple_element_t<
+                        Row * Matrix::num_columns + ColumnIndices,
+                        Matrix
+                    >...
+                >{};
             }
         };
 
         template <typename Matrix,
                   std::size_t Row,
-                  std::size_t X>
-        struct slice_indices_and_types_row_impl<
-            Matrix,
-            Row,
-            std::index_sequence<>,
-            X
-        > {
-            template <typename Seqs>
-            static constexpr auto call (Seqs seqs)
-            { return seqs; }
-        };
-
-
-        template <typename Matrix,
-                  typename RowIndices,
-                  typename ColumnIndices,
-                  std::size_t X>
-        struct slice_indices_and_types_impl
-        {
-            template <typename Indices, typename Types>
-            static constexpr auto call (std::pair<Indices, Types> seqs)
-            {
-                auto new_seqs = slice_indices_and_types_row_impl<
-                    Matrix,
-                    head(RowIndices{}),
-                    ColumnIndices,
-                    X
-                >::call(seqs);
-                return slice_indices_and_types_impl<
-                    Matrix,
-                    decltype(tail(RowIndices{})),
-                    ColumnIndices,
-                    X + ColumnIndices::size()
-                >::call(new_seqs);
-            }
-        };
+                  typename Seqs,
+                  std::size_t ...ColumnIndices>
+        constexpr auto slice_indices_and_types_row (
+            Seqs seqs,
+            std::index_sequence<ColumnIndices...>
+        ) {
+            using impl = slice_indices_and_types_row_impl<
+                Matrix,
+                Row,
+                ColumnIndices...
+            >;
+            return std::make_pair(
+                impl::indices(seqs.first),
+                impl::types(seqs.second)
+            );
+        }
 
         template <typename Matrix,
                   typename ColumnIndices,
-                  std::size_t X>
-        struct slice_indices_and_types_impl<
-            Matrix,
-            std::index_sequence<>,
-            ColumnIndices,
-            X
-        > {
-            template <typename Seqs>
-            static constexpr auto call (Seqs seqs)
-            { return seqs; }
-        };
+                  typename Seqs,
+                  std::size_t HeadRowIndex,
+                  std::size_t ...TailRowIndices>
+        constexpr auto slice_indices_and_types (
+            Seqs seqs,
+            std::index_sequence<HeadRowIndex, TailRowIndices...>
+        ) {
+            return slice_indices_and_types<Matrix, ColumnIndices>(
+                slice_indices_and_types_row<Matrix, HeadRowIndex>(
+                    seqs,
+                    ColumnIndices{}
+                ),
+                std::index_sequence<TailRowIndices...>{}
+            );
+        }
+
+        template <typename Matrix,
+                  typename ColumnIndices,
+                  typename Seqs>
+        constexpr auto slice_indices_and_types (Seqs seqs,
+                                                std::index_sequence<>)
+        { return seqs; }
 
 
         // matrix product
@@ -669,12 +655,10 @@ namespace boost { namespace units_blas {
             "slice() requires at least one column index to compute its result"
         );
 
-        auto seqs = detail::slice_indices_and_types_impl<
-            matrix_type,
-            RowIndices,
-            ColumnIndices,
-            0
-        >::call(std::pair<std::index_sequence<>, detail::type_sequence<>>{});
+        auto seqs = detail::slice_indices_and_types<matrix_type, ColumnIndices>(
+            std::pair<std::index_sequence<>, detail::type_sequence<>>{},
+            RowIndices{}
+        );
 
         auto tuple = detail::tuple_from_types(seqs.second);
         iterate_indexed(
