@@ -398,7 +398,7 @@ namespace boost { namespace units_blas {
 
         template <typename Matrix, std::size_t ...I>
         auto neg_impl (Matrix m, std::index_sequence<I...>)
-        { return std::make_tuple(tuple_access::get<I>(m)...); }
+        { return std::make_tuple(-tuple_access::get<I>(m)...); }
 
         template <typename Tuple, bool Abs>
         struct sum_impl
