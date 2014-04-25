@@ -12,7 +12,7 @@
 #include <boost/units_blas/config.hpp>
 #include <boost/units_blas/exception.hpp>
 #include <boost/units_blas/traits.hpp>
-#include <boost/units_blas/detail/has_inverse.hpp>
+#include <boost/units_blas/detail/has_identity.hpp>
 #include <boost/units_blas/detail/inverse_type.hpp>
 #include <boost/units_blas/detail/lu.hpp>
 #include <boost/units_blas/detail/one_value.hpp>
@@ -1236,7 +1236,7 @@ namespace boost { namespace units_blas {
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
 
         static_assert(
-            detail::has_inverse<matrix_type>::value,
+            detail::has_identity<matrix_type>::value,
             "The given matrix type has no valid inverse, because it has no "
             "identity-matrix type.   A valid inverse of matrix type M must "
             "yield an identity matrix I such that M = M * I is a valid "
