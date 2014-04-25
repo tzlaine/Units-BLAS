@@ -9,6 +9,13 @@
 #ifndef BOOST_UNITS_BLAS_DETAIL_LU_HPP
 #define BOOST_UNITS_BLAS_DETAIL_LU_HPP
 
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/pair.hpp>
+#include <boost/mpl/range_c.hpp>
+#include <boost/mpl/set.hpp>
+#include <boost/units/is_dimensionless.hpp>
+
 #include <array>
 #include <cmath>
 #include <cstdlib>
@@ -16,13 +23,9 @@
 
 namespace boost { namespace units_blas { namespace detail {
 
-#if 0
     template <typename T>
     struct is_dimensionless :
-        mpl::and_<
-            is_fundamental<T>,
-            is_arithmetic<T>
-        >
+        mpl::true_
     {};
 
     template <typename Unit, typename ValueType>
@@ -47,10 +50,9 @@ namespace boost { namespace units_blas { namespace detail {
     template <typename Matrix, typename T>
     struct nth_type :
         mpl::lambda<
-            result_of::value_at<
-                Matrix,
-                mpl::divides<T, typename Matrix::num_columns_t>,
-                mpl::modulus<T, typename Matrix::num_columns_t>
+            std::tuple_element<
+                T::value,
+                typename Matrix::value_types
             >
         >::type
     {};
@@ -72,16 +74,13 @@ namespace boost { namespace units_blas { namespace detail {
     {};
 
     template <typename Matrix>
-    struct is_lu_decomposable
+    struct has_uniform_dimensional_units
     {
         typedef typename mpl::fold<
             mpl::range_c<
                 std::size_t,
                 0,
-                mpl::times<
-                    typename Matrix::num_rows_t,
-                    typename Matrix::num_columns_t
-                >::type::value
+                Matrix::num_elements
             >,
             mpl::pair<mpl::set<>, mpl::set<> >,
             mpl::eval_if<
@@ -91,12 +90,10 @@ namespace boost { namespace units_blas { namespace detail {
             >
         >::type units_and_dimensions;
 
-        typedef typename mpl::equal_to<
-            mpl::size<typename units_and_dimensions::first>,
-            mpl::size<typename units_and_dimensions::second>
-        >::type type;
+        static const bool value =
+            mpl::size<typename units_and_dimensions::first>::value ==
+            mpl::size<typename units_and_dimensions::second>::value;
     };
-#endif
 
     template <typename TempMatrix>
     auto lu_decompose (

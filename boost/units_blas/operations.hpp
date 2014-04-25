@@ -1120,14 +1120,15 @@ namespace boost { namespace units_blas {
                           Rows == Columns && 4 <= Rows
                       >::type* = 0)
     {
-#if 0 // TODO
-        // If you're seeing an error here, you're trying to perform LU
-        // decomposition on a matrix that has mixed units of the same
-        // dimension (e.g. centimeters and meters in the same matrix).
-        BOOST_MPL_ASSERT((detail::is_lu_decomposable<matrix<T> >));
-#endif
-
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
+
+        static_assert(
+            detail::has_uniform_dimensional_units<matrix_type>::value,
+            "LU decomposition requires a matrix that does not have mixed "
+            "units of the same dimension (e.g. centimeters and meters in the "
+            "same matrix)"
+        );
+
         using result_type =
             typename detail::determinant_type<matrix_type>::type;
         using raw_value_type = typename detail::value_type<result_type>::type;
