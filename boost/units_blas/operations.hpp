@@ -11,6 +11,7 @@
 
 #include <boost/units_blas/config.hpp>
 #include <boost/units_blas/exception.hpp>
+#include <boost/units_blas/traits.hpp>
 #include <boost/units_blas/detail/has_inverse.hpp>
 #include <boost/units_blas/detail/inverse_type.hpp>
 #include <boost/units_blas/detail/lu.hpp>

@@ -13,7 +13,7 @@ import testing ;
 {
   test-suite units_blas
    :
-#   [ compile test_traits.cpp ]
+    [ compile test_traits.cpp ]
     [ compile test_io.cpp ]
     [ compile test_detail_value_type.cpp ]
     [ run test_detail_zero_value_one_value.cpp ]
