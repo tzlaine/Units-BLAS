@@ -16,37 +16,25 @@
 namespace boost { namespace units_blas { namespace detail {
 
     // matrix inverse type
-    template <typename Matrix, std::size_t I, std::size_t N>
-    struct inverse_transpose_types_impl
+    template <typename Matrix, std::size_t I>
+    struct inverse_transpose_element
     {
-        template <typename Types>
-        static constexpr auto call (Types types)
-        {
-            constexpr std::size_t row = I / Matrix::num_columns;
-            constexpr std::size_t column = I % Matrix::num_columns;
-            constexpr std::size_t transpose_i =
-                column * Matrix::num_rows + row;
-            using type = typename std::tuple_element<
-                transpose_i,
-                typename Matrix::value_types
-            >::type;
-            using inverse_type = decltype(
-                std::declval<typename value_type<type>::type>() /
-                std::declval<type>()
-            );
-            return inverse_transpose_types_impl<Matrix, I + 1, N>::call(
-                push_back<inverse_type>(types)
-            );
-        }
+        using transpose_type =
+            tuple_element_t<transpose_index<Matrix>(I), Matrix>;
+        using type = decltype(
+            std::declval<value_type_t<transpose_type>>() /
+            std::declval<transpose_type>()
+        );
     };
 
-    template <typename Matrix, std::size_t N>
-    struct inverse_transpose_types_impl<Matrix, N, N>
-    {
-        template <typename Seq>
-        static constexpr auto call (Seq seq)
-        { return seq; }
-    };
+    template <typename Matrix, std::size_t I>
+    using inverse_transpose_element_t =
+        typename inverse_transpose_element<Matrix, I>::type;
+
+
+    template <typename Matrix, std::size_t ...I>
+    auto inverse_types (std::index_sequence<I...>)
+    { return type_sequence<inverse_transpose_element_t<Matrix, I>...>{}; }
 
     template <typename Matrix>
     struct inverse_type
@@ -54,11 +42,9 @@ namespace boost { namespace units_blas { namespace detail {
         using type = decltype(
             make_matrix<Matrix::num_columns, Matrix::num_rows>(
                 tuple_from_types(
-                    inverse_transpose_types_impl<
-                        Matrix,
-                        0,
-                        Matrix::num_elements
-                    >::call(type_sequence<>{})
+                    inverse_types<Matrix>(
+                        std::make_index_sequence<Matrix::num_elements>()
+                    )
                 )
             )
         );

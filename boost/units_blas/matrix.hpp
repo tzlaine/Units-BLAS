@@ -75,6 +75,25 @@ namespace boost { namespace units_blas {
         }
 
 
+        template <typename Matrix>
+        constexpr std::size_t transpose_index (std::size_t i)
+        {
+            return
+                i % Matrix::num_columns * Matrix::num_rows +
+                i / Matrix::num_columns;
+        }
+
+
+        // tuple element I of a matrix_t
+        template <std::size_t I, typename Matrix>
+        struct tuple_element :
+            std::tuple_element<I, typename Matrix::value_types>
+        {};
+
+        template <std::size_t I, typename Matrix>
+        using tuple_element_t = typename tuple_element<I, Matrix>::type;
+
+
         // iterate simple
         void iterate_landing_pad (...) {}
 

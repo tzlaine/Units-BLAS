@@ -27,16 +27,6 @@ namespace boost { namespace units_blas {
 
     namespace detail {
 
-        // tuple element I of a matrix_t
-        template <std::size_t I, typename Matrix>
-        struct tuple_element :
-            std::tuple_element<I, typename Matrix::value_types>
-        {};
-
-        template <std::size_t I, typename Matrix>
-        using tuple_element_t = typename tuple_element<I, Matrix>::type;
-
-
         // foldl
         template <std::size_t I, typename Fn, typename State>
         constexpr auto foldl_impl (Fn, State state, type_sequence<>)
@@ -65,7 +55,20 @@ namespace boost { namespace units_blas {
         { return foldl_impl<0>(f, state, seq); }
 
 
-        // column indices and types
+        // column/row indices and types
+#if 0 // Fix.
+        template <typename Matrix,
+                  std::size_t Origin,
+                  std::size_t Incr,
+                  std::size_t ...I>
+        auto indices_and_types_impl (std::index_sequence<I...>)
+        {
+            return std::pair<
+                std::index_sequence<(Origin + I * Incr)...>,
+                type_sequence<tuple_element_t<I, Matrix>...>
+            >{};
+        }
+#else
         template <typename Matrix,
                   std::size_t X,
                   std::size_t Incr,
@@ -99,30 +102,7 @@ namespace boost { namespace units_blas {
             static constexpr auto call (Seqs seqs)
             { return seqs; }
         };
-
-        template <typename Matrix, std::size_t R>
-        constexpr auto row_indices_and_types ()
-        {
-            return indices_and_types_impl<
-                Matrix,
-                R * Matrix::num_columns,
-                1,
-                0,
-                Matrix::num_columns
-            >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
-        }
-
-        template <typename Matrix, std::size_t C>
-        constexpr auto column_indices_and_types ()
-        {
-            return indices_and_types_impl<
-                Matrix,
-                C,
-                Matrix::num_columns,
-                0,
-                Matrix::num_rows
-            >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
-        }
+#endif
 
 
         // indexed iteration
@@ -175,6 +155,13 @@ namespace boost { namespace units_blas {
         template <std::size_t R, typename Matrix>
         constexpr auto row_tuple (Matrix m)
         {
+#if 0 // TODO: Fix.
+            auto seqs = indices_and_types_impl<
+                Matrix,
+                R * Matrix::num_columns,
+                1
+            >(std::make_index_sequence<Matrix::num_columns>());
+#else
             auto seqs = indices_and_types_impl<
                 Matrix,
                 R * Matrix::num_columns,
@@ -182,6 +169,7 @@ namespace boost { namespace units_blas {
                 0,
                 Matrix::num_columns
             >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
+#endif
             auto retval = tuple_from_types(seqs.second);
             iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m},
                             seqs.first);
@@ -191,6 +179,13 @@ namespace boost { namespace units_blas {
         template <std::size_t C, typename Matrix>
         constexpr auto column_tuple (Matrix m)
         {
+#if 0 // TODO: Fix.
+            auto seqs = indices_and_types_impl<
+                Matrix,
+                C,
+                Matrix::num_columns
+            >(std::make_index_sequence<Matrix::num_rows>());
+#else
             auto seqs = indices_and_types_impl<
                 Matrix,
                 C,
@@ -198,6 +193,7 @@ namespace boost { namespace units_blas {
                 0,
                 Matrix::num_rows
             >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
+#endif
             auto retval = tuple_from_types(seqs.second);
             iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m},
                             seqs.first);
@@ -206,34 +202,16 @@ namespace boost { namespace units_blas {
 
 
         // transpose indices and types
-        template <typename Matrix, std::size_t I, std::size_t N>
-        struct transpose_indices_and_types_impl
+        template <typename Matrix, std::size_t ...I>
+        auto transpose_indices_and_types (std::index_sequence<I...>)
         {
-            template <typename Indices, typename Types>
-            static constexpr auto call (std::pair<Indices, Types>)
-            {
-                constexpr std::size_t row = I / Matrix::num_columns;
-                constexpr std::size_t column = I % Matrix::num_columns;
-                constexpr std::size_t transpose_i =
-                    column * Matrix::num_rows + row;
-                using indices = decltype(push_back<transpose_i>(Indices{}));
-
-                using type = tuple_element_t<transpose_i, Matrix>;
-                using types = decltype(push_back<type>(Types{}));
-
-                return transpose_indices_and_types_impl<Matrix, I + 1, N>::call(
-                    std::pair<indices, types>{}
-                );
-            }
-        };
-
-        template <typename Matrix, std::size_t N>
-        struct transpose_indices_and_types_impl<Matrix, N, N>
-        {
-            template <typename Seqs>
-            static constexpr auto call (Seqs seqs)
-            { return seqs; }
-        };
+            return std::pair<
+                std::index_sequence<transpose_index<Matrix>(I)...>,
+                type_sequence<
+                    tuple_element_t<transpose_index<Matrix>(I), Matrix>...
+                >
+            >{};
+        }
 
 
         // tuple dot product
@@ -720,11 +698,9 @@ namespace boost { namespace units_blas {
     auto transpose (matrix_t<Tuple, Rows, Columns> m)
     {
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
-        auto seqs = detail::transpose_indices_and_types_impl<
-            matrix_type,
-            0,
-            matrix_type::num_elements
-        >::call(std::pair<std::index_sequence<>, detail::type_sequence<>>{});
+        auto seqs = detail::transpose_indices_and_types<matrix_type>(
+            std::make_index_sequence<matrix_type::num_elements>()
+        );
         auto tuple = tuple_from_types(seqs.second);
         iterate_indexed(
             detail::tuple_assign<decltype(tuple), matrix_type>{tuple, m},
