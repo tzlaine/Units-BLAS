@@ -52,7 +52,7 @@ namespace boost { namespace units_blas { namespace detail {
     struct inverse_type
     {
         using type = decltype(
-            make_matrix<Matrix::num_rows, Matrix::num_columns>(
+            make_matrix<Matrix::num_columns, Matrix::num_rows>(
                 tuple_from_types(
                     detail::inverse_transpose_types_impl<
                         Matrix,

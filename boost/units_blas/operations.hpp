@@ -1236,9 +1236,10 @@ namespace boost { namespace units_blas {
 
         static_assert(
             detail::has_inverse<matrix_type>::value,
-            "The given matrix type has no valid inverse.   A valid inverse of "
-            "matrix type M must yield an identity matrix I such that M = M * "
-            "I is a valid operation."
+            "The given matrix type has no valid inverse, because it has no "
+            "identity-matrix type.   A valid inverse of matrix type M must "
+            "yield an identity matrix I such that M = M * I is a valid "
+            "operation."
         );
 
         static_assert(

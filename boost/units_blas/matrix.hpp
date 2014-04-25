@@ -191,12 +191,8 @@ namespace boost { namespace units_blas {
         /** Copy ctor.  @c *this and @c m must have the same dimensions, and
             every @c m(i, j) must be convertible to the type of <c>(*this)(i,
             j)</c>. */
-        template <typename MatrixR>
-        matrix_t (MatrixR const & m,
-                typename std::enable_if<
-                    MatrixR::num_rows == num_rows &&
-                    MatrixR::num_columns == num_columns
-                >::type * = 0) :
+        template <typename Tuple2>
+        matrix_t (matrix_t<Tuple2, Rows, Columns> const & m) :
             data_ ()
         { assign_data(m); }
 
@@ -210,13 +206,8 @@ namespace boost { namespace units_blas {
         /** Assignment operator.  @c *this and @c m must have the same
             dimensions, and every @c m(i, j) must be convertible to the type
             of <c>(*this)(i, j)</c>. */
-        template <typename MatrixR>
-        typename std::enable_if<
-            MatrixR::num_rows == num_rows &&
-            MatrixR::num_columns == num_columns,
-            matrix_t &
-        >::type
-        operator= (MatrixR const & rhs)
+        template <typename TupleRHS>
+        matrix_t & operator= (matrix_t<TupleRHS, Rows, Columns> const & rhs)
         {
             assign_data(rhs);
             return *this;
@@ -255,16 +246,12 @@ namespace boost { namespace units_blas {
             *this and @c m must have the same dimensions, and every sum
             <c>(*this)(i, j) + rhs(i, j)</c> must be convertible to the type
             of <c>(*this)(i, j)</c>. */
-        template <typename MatrixR>
-        typename std::enable_if<
-            MatrixR::num_rows == num_rows &&
-            MatrixR::num_columns == num_columns,
-            matrix_t &
-        >::type
-        operator+= (MatrixR const & rhs)
+        template <typename TupleRHS>
+        matrix_t & operator+= (matrix_t<TupleRHS, Rows, Columns> const & rhs)
         {
+            using matrix_rhs = matrix_t<TupleRHS, Rows, Columns>;
             detail::iterate_simple<num_elements>(
-                detail::plus_assign<self_type, MatrixR>{*this, rhs}
+                detail::plus_assign<self_type, matrix_rhs>{*this, rhs}
             );
             return *this;
         }
@@ -273,16 +260,12 @@ namespace boost { namespace units_blas {
             element-by-element. @c *this and @c m must have the same
             dimensions, and every difference <c>(*this)(i, j) - rhs(i, j)</c>
             must be convertible to the type of <c>(*this)(i, j)</c>. */
-        template <typename MatrixR>
-        typename std::enable_if<
-            MatrixR::num_rows == num_rows &&
-            MatrixR::num_columns == num_columns,
-            matrix_t &
-        >::type
-        operator-= (MatrixR const & rhs)
+        template <typename TupleRHS>
+        matrix_t & operator-= (matrix_t<TupleRHS, Rows, Columns> const & rhs)
         {
+            using matrix_rhs = matrix_t<TupleRHS, Rows, Columns>;
             detail::iterate_simple<num_elements>(
-                detail::minus_assign<self_type, MatrixR>{*this, rhs}
+                detail::minus_assign<self_type, matrix_rhs>{*this, rhs}
             );
             return *this;
         }
