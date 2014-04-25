@@ -10,9 +10,30 @@
 #define BOOST_UNITS_BLAS_HAS_IDENTITY_HPP
 
 #include <boost/units_blas/traits.hpp>
+#include <boost/units_blas/detail/lu.hpp>
 
 
 namespace boost { namespace units_blas { namespace detail {
+
+#if 0
+    template <typename Matrix, std::size_t Row>
+    struct row_ddv
+    {
+        constexpr std::size_t origin = Row * Matrix::num_columns;
+
+        template <std::size_t ...I>
+        constexpr auto call (std::index_sequence<I...>)
+        {
+            using first = tuple_element_t<origin, Matrix>;
+            return type_sequence<
+                dimension_of_t<
+                    std::declval<first>() /
+                    std::declval<tuple_element_t<origin + I, Matrix>>()
+                >...
+            >{};
+        }
+    };
+#endif
 
     // TODO: Implement in terms of row-wise DDV equality.
     template <typename Matrix>
