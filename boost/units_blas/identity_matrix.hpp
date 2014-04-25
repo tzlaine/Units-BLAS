@@ -9,12 +9,38 @@
 #ifndef BOOST_UNITS_BLAS_IDENTIY_MATRIX_HPP
 #define BOOST_UNITS_BLAS_IDENTIY_MATRIX_HPP
 
-#include <boost/units_blas/iterate.hpp>
-#include <boost/units_blas/result_of/inverse.hpp>
-#include <boost/units_blas/result_of/matrix_product.hpp>
-#include <boost/units_blas/detail/simple_iteration.hpp>
+#include <boost/units_blas/matrix.hpp>
+#include <boost/units_blas/detail/inverse_type.hpp>
+#include <boost/units_blas/detail/one_value.hpp>
+#include <boost/units_blas/detail/zero_value.hpp>
+
 
 namespace boost { namespace units_blas {
+
+    namespace detail {
+
+        template <typename Matrix>
+        struct identity_assign
+        {
+            template <std::size_t I>
+            void call ()
+            {
+                constexpr std::size_t row = I / Matrix::num_columns;
+                constexpr std::size_t column = I % Matrix::num_columns;
+                using type = typename std::tuple_element<
+                    I,
+                    typename Matrix::value_types
+                >::type;
+                tuple_access::get<I>(m_) =
+                    row == column ?
+                    one_value<type>() :
+                    zero_value<type>();
+            }
+
+            Matrix & m_;
+        };
+
+    }
 
     /** Returns the type that can be used as the identity matrix for @c
         Matrix.  Note that not every matrix type has an identiy matrix
@@ -22,10 +48,10 @@ namespace boost { namespace units_blas {
     template <typename Matrix>
     struct identity_matrix
     {
-        typedef typename result_of::matrix_product<
-            Matrix,
-            typename result_of::inverse<Matrix>::type
-        >::type type;
+        using type = decltype(
+            std::declval<Matrix>() *
+            std::declval<typename detail::inverse_type<Matrix>::type>()
+        );
     };
 
     /** Returns a matrix<> I whose diagonal elements are 1, and whose
@@ -35,20 +61,12 @@ namespace boost { namespace units_blas {
         * I).at<i, j>() is within epsilon of m.at<i, j>().  Note that not
         every matrix type has an identiy matrix type. */
     template <typename Matrix>
-    typename enable_if<
-        mpl::equal_to<
-            typename Matrix::num_rows_t,
-            typename Matrix::num_columns_t
-        >,
-        typename identity_matrix<Matrix>::type
-    >::type
-    make_identity_matrix ()
+    auto make_identity_matrix ()
     {
-        typedef typename identity_matrix<Matrix>::type return_type;
-        return_type retval;
-        typedef fusion::vector<return_type &> ops;
-        iterate<typename return_type::num_rows_t>(
-            ops(retval), detail::identity_assign()
+        using result_type = typename identity_matrix<Matrix>::type;
+        result_type retval;
+        detail::iterate_simple<Matrix::num_rows>(
+            detail::identity_assign<Matrix>{retval}
         );
         return retval;
     }

@@ -12,6 +12,8 @@
 #include <boost/units_blas/config.hpp>
 #include <boost/units_blas/exception.hpp>
 #include <boost/units_blas/detail/get_value_type.hpp>
+#include <boost/units_blas/detail/has_inverse.hpp>
+#include <boost/units_blas/detail/inverse_type.hpp>
 #include <boost/units_blas/detail/lu.hpp>
 #include <boost/units_blas/detail/one_value.hpp>
 #include <boost/units_blas/detail/zero_value.hpp>
@@ -534,55 +536,6 @@ namespace boost { namespace units_blas {
             using type = double; // TODO
         };
 #endif
-
-        // matrix inverse type
-        template <typename Matrix, std::size_t I, std::size_t N>
-        struct inverse_transpose_types_impl
-        {
-            template <typename Types>
-            static constexpr auto call (Types types)
-            {
-                constexpr std::size_t row = I / Matrix::num_columns;
-                constexpr std::size_t column = I % Matrix::num_columns;
-                constexpr std::size_t transpose_i =
-                    column * Matrix::num_rows + row;
-                using type = typename std::tuple_element<
-                    transpose_i,
-                    typename Matrix::value_types
-                >::type;
-                using inverse_type = decltype(
-                    std::declval<typename value_type<type>::type>() /
-                    std::declval<type>()
-                );
-                return inverse_transpose_types_impl<Matrix, I + 1, N>::call(
-                    push_back<inverse_type>(types)
-                );
-            }
-        };
-
-        template <typename Matrix, std::size_t N>
-        struct inverse_transpose_types_impl<Matrix, N, N>
-        {
-            template <typename Seq>
-            static constexpr auto call (Seq seq)
-            { return seq; }
-        };
-
-        template <typename Matrix>
-        struct inverse_type
-        {
-            using type = decltype(
-                make_matrix<Matrix::num_rows, Matrix::num_columns>(
-                    tuple_from_types(
-                        detail::inverse_transpose_types_impl<
-                            Matrix,
-                            0,
-                            Matrix::num_elements
-                        >::call(detail::type_sequence<>{})
-                    )
-                )
-            );
-        };
 
 
         // get value
@@ -1281,13 +1234,12 @@ namespace boost { namespace units_blas {
     {
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
 
-#if 0
-        // If you're seeing an error here, it's becaue you're trying to invert
-        // a matrix for which no valid inverse type exists.  A valid inverse
-        // of matrix type M must yield an identity matrix I such that M = M *
-        // I is a valid operation.
-        BOOST_MPL_ASSERT((detail::has_inverse<matrix_type>));
-#endif
+        static_assert(
+            detail::has_inverse<matrix_type>::value,
+            "The given matrix type has no valid inverse.   A valid inverse of "
+            "matrix type M must yield an identity matrix I such that M = M * "
+            "I is a valid operation."
+        );
 
         static_assert(
             detail::has_uniform_dimensional_units<matrix_type>::value,

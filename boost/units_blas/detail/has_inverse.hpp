@@ -10,20 +10,24 @@
 #define BOOST_UNITS_BLAS_HAS_INVERSE_HPP
 
 #include <boost/units_blas/identity_matrix.hpp>
-#include <boost/units_blas/detail/is_assignable.hpp>
 
 
 namespace boost { namespace units_blas { namespace detail {
 
-    template <typename Matrix>
+    template <typename Matrix, typename Enable = void>
     struct has_inverse :
-        is_assignable<
-            typename result_of::matrix_product<
-                Matrix,
-                typename identity_matrix<Matrix>::type
-            >::type,
-            Matrix
-        >
+        std::false_type
+    {};
+
+    template <typename Matrix>
+    struct has_inverse<
+        Matrix,
+        decltype(
+            std::declval<Matrix>() *
+            std::declval<typename identity_matrix<Matrix>::type>() // TODO: Should be right identity.
+        )
+    > :
+        std::true_type
     {};
 
 } } } // namespace boost::units_blas::detail
