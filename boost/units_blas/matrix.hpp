@@ -76,28 +76,22 @@ namespace boost { namespace units_blas {
 
 
         // iterate simple
-        template <std::size_t I, std::size_t N, typename F>
-        struct iterate_simple_impl;
+        void iterate_landing_pad (...) {}
 
-        template <std::size_t I, std::size_t N, typename F>
-        struct iterate_simple_impl
+        template <std::size_t I, typename F>
+        int iterate_fn_wrapper (F f)
         {
-            static void call (F f)
-            {
-                f.template call<I>();
-                iterate_simple_impl<I + 1, N, F>::call(f);
-            }
-        };
+            f.template call<I>();
+            return 0;
+        }
 
-        template <std::size_t N, typename F>
-        struct iterate_simple_impl<N, N, F>
-        {
-            static void call (F f) {}
-        };
+        template <typename F, std::size_t ...I>
+        void iterate_simple_impl (F f, std::index_sequence<I...>)
+        { iterate_landing_pad(iterate_fn_wrapper<I>(f)...); }
 
         template <std::size_t N, typename F>
         void iterate_simple (F f)
-        { iterate_simple_impl<0, N, F>::call(f); }
+        { iterate_simple_impl(f, std::make_index_sequence<N>()); }
 
 
         // iterate_simple function objects
@@ -110,7 +104,7 @@ namespace boost { namespace units_blas {
             { tuple_access::get<I>(lhs) = tuple_access::get<I>(rhs); }
 
             MatrixL & lhs;
-            MatrixR const & rhs;
+            MatrixR rhs;
         };
 
         template <typename MatrixL, typename MatrixR>
@@ -121,7 +115,7 @@ namespace boost { namespace units_blas {
             { tuple_access::get<I>(lhs) += tuple_access::get<I>(rhs); }
 
             MatrixL & lhs;
-            MatrixR const & rhs;
+            MatrixR rhs;
         };
 
         template <typename MatrixL, typename MatrixR>
@@ -132,7 +126,7 @@ namespace boost { namespace units_blas {
             { tuple_access::get<I>(lhs) -= tuple_access::get<I>(rhs); }
 
             MatrixL & lhs;
-            MatrixR const & rhs;
+            MatrixR rhs;
         };
 
         template <typename Matrix, typename T>
@@ -176,35 +170,27 @@ namespace boost { namespace units_blas {
         static const std::size_t num_elements = num_rows * num_columns;
 
         /** Default ctor.  Each element of @c *this is default constructed. */
-        matrix_t () :
-            data_ ()
-        {}
+        matrix_t () = default;
 
         /** Copy ctor. */
-        matrix_t (matrix_t const & m) :
-            data_ (m.data_)
-        {}
+        matrix_t (matrix_t const & m) = default;
 
         /** Copy ctor.  @c *this and @c m must have the same dimensions, and
             every @c m(i, j) must be convertible to the type of <c>(*this)(i,
             j)</c>. */
         template <typename Tuple2>
-        matrix_t (matrix_t<Tuple2, Rows, Columns> const & m) :
+        matrix_t (matrix_t<Tuple2, Rows, Columns> m) :
             data_ ()
         { assign_data(m); }
 
         /** Assignment operator. */
-        matrix_t & operator= (matrix_t const & rhs)
-        {
-            data_ = rhs.data_;
-            return *this;
-        }
+        matrix_t & operator= (matrix_t const & rhs) = default;
 
         /** Assignment operator.  @c *this and @c m must have the same
             dimensions, and every @c m(i, j) must be convertible to the type
             of <c>(*this)(i, j)</c>. */
         template <typename TupleRHS>
-        matrix_t & operator= (matrix_t<TupleRHS, Rows, Columns> const & rhs)
+        matrix_t & operator= (matrix_t<TupleRHS, Rows, Columns> rhs)
         {
             assign_data(rhs);
             return *this;
@@ -244,7 +230,7 @@ namespace boost { namespace units_blas {
             <c>(*this)(i, j) + rhs(i, j)</c> must be convertible to the type
             of <c>(*this)(i, j)</c>. */
         template <typename TupleRHS>
-        matrix_t & operator+= (matrix_t<TupleRHS, Rows, Columns> const & rhs)
+        matrix_t & operator+= (matrix_t<TupleRHS, Rows, Columns> rhs)
         {
             using matrix_rhs = matrix_t<TupleRHS, Rows, Columns>;
             detail::iterate_simple<num_elements>(
@@ -258,7 +244,7 @@ namespace boost { namespace units_blas {
             dimensions, and every difference <c>(*this)(i, j) - rhs(i, j)</c>
             must be convertible to the type of <c>(*this)(i, j)</c>. */
         template <typename TupleRHS>
-        matrix_t & operator-= (matrix_t<TupleRHS, Rows, Columns> const & rhs)
+        matrix_t & operator-= (matrix_t<TupleRHS, Rows, Columns> rhs)
         {
             using matrix_rhs = matrix_t<TupleRHS, Rows, Columns>;
             detail::iterate_simple<num_elements>(
@@ -271,7 +257,7 @@ namespace boost { namespace units_blas {
             <c>(*this)(i, j) * val</c> must be convertible to the type of
             <c>(*this)(i, j)</c>. */
         template <typename T>
-        matrix_t & operator*= (T const & val)
+        matrix_t & operator*= (T val)
         {
             detail::iterate_simple<num_elements>(
                 detail::scalar_multiply_assign<self_type, T>{*this, val}
@@ -283,7 +269,7 @@ namespace boost { namespace units_blas {
             <c>(*this)(i, j) / val</c> must be convertible to the type of
             <c>(*this)(i, j)</c>. */
         template <typename T>
-        matrix_t & operator/= (T const & val)
+        matrix_t & operator/= (T val)
         {
             detail::iterate_simple<num_elements>(
                 detail::scalar_divide_assign<self_type, T>{*this, val}
@@ -315,7 +301,7 @@ namespace boost { namespace units_blas {
         );
 
         template <typename MatrixR>
-        void assign_data (MatrixR const & rhs)
+        void assign_data (MatrixR rhs)
         {
             detail::iterate_simple<num_elements>(
                 detail::assign<self_type, MatrixR>{*this, rhs}
