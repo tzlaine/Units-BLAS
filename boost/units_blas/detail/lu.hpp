@@ -9,21 +9,14 @@
 #ifndef BOOST_UNITS_BLAS_DETAIL_LU_HPP
 #define BOOST_UNITS_BLAS_DETAIL_LU_HPP
 
-#include <boost/units_blas/exception.hpp>
-#include <boost/units_blas/detail/abs.hpp>
-
-#include <boost/throw_exception.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/insert.hpp>
-#include <boost/mpl/pair.hpp>
-#include <boost/mpl/range_c.hpp>
-#include <boost/mpl/set.hpp>
-#include <boost/type_traits/is_fundamental.hpp>
-#include <boost/units/is_dimensionless.hpp>
+#include <array>
+#include <cmath>
+#include <cstdlib>
 
 
 namespace boost { namespace units_blas { namespace detail {
 
+#if 0
     template <typename T>
     struct is_dimensionless :
         mpl::and_<
@@ -103,32 +96,37 @@ namespace boost { namespace units_blas { namespace detail {
             mpl::size<typename units_and_dimensions::second>
         >::type type;
     };
+#endif
 
     template <typename TempMatrix>
-    typename TempMatrix::value_type::value_type
-    lu_decompose (TempMatrix & m,
-                  array<std::size_t, TempMatrix::static_size> & indices)
-    {
-        BOOST_STATIC_ASSERT((
-            static_cast<std::size_t>(TempMatrix::static_size) ==
-            static_cast<std::size_t>(TempMatrix::value_type::static_size)
-        ));
+    auto lu_decompose (
+        TempMatrix & m,
+        std::array<std::size_t, std::tuple_size<TempMatrix>::value> & indices
+    ) {
+        static_assert(
+            std::tuple_size<TempMatrix>::value ==
+            std::tuple_size<typename TempMatrix::value_type>::value,
+            "lu_decompse() is only defined for square matrices"
+        );
 
-        typedef typename TempMatrix::value_type::value_type value_type;
+        using value_type = typename TempMatrix::value_type::value_type;
+        using std::abs;
 
         value_type const epsilon(1.0e-20);
-        std::size_t const N = TempMatrix::static_size;
+        std::size_t const N = std::tuple_size<TempMatrix>::value;
 
-        value_type retval(1.0);
-        array<value_type, N> scale_factors;
+        std::pair<value_type, bool> retval(1.0, true);
+        std::array<value_type, N> scale_factors;
         for (std::size_t i = 0; i < N; ++i) {
             value_type max(0.0);
             for (std::size_t j = 0; j < N; ++j) {
                 value_type tmp;
-                if (max < (tmp = abs_(m[i][j])))
+                if (max < (tmp = abs(m[i][j])))
                     max = tmp;
-                if (!max)
-                    throw_exception(singular_matrix());
+                if (!max) {
+                    retval.second = false;
+                    return retval;
+                }
                 scale_factors[i] = 1.0 / max;
             }
         }
@@ -151,7 +149,7 @@ namespace boost { namespace units_blas { namespace detail {
                 }
                 m[i][j] = sum;
                 value_type tmp;
-                if (max <= (tmp = scale_factors[i] * abs_(sum))) {
+                if (max <= (tmp = scale_factors[i] * abs(sum))) {
                     max = tmp;
                     max_index = i;
                 }
@@ -164,7 +162,7 @@ namespace boost { namespace units_blas { namespace detail {
                     m[j][k] = m[max_index][k];
                     m[max_index][k] = tmp;
                 }
-                retval = -retval;
+                retval.first = -retval.first;
                 scale_factors[max_index] = scale_factors[j];
             }
 
@@ -184,20 +182,22 @@ namespace boost { namespace units_blas { namespace detail {
     }
 
     template <typename TempMatrix>
-    void lu_substitute (TempMatrix const & m,
-                        array<std::size_t, TempMatrix::static_size> const & indices,
-                        array<
-                            typename TempMatrix::value_type::value_type,
-                            TempMatrix::static_size
-                        > & columns)
-    {
-        BOOST_STATIC_ASSERT((
-            static_cast<std::size_t>(TempMatrix::static_size) ==
-            static_cast<std::size_t>(TempMatrix::value_type::static_size)
-        ));
-        typedef typename TempMatrix::value_type::value_type value_type;
+    void lu_substitute (
+        TempMatrix m,
+        std::array<std::size_t, std::tuple_size<TempMatrix>::value> indices,
+        std::array<
+            typename TempMatrix::value_type::value_type,
+            std::tuple_size<TempMatrix>::value
+        > & columns
+    ) {
+        static_assert(
+            std::tuple_size<TempMatrix>::value ==
+            std::tuple_size<typename TempMatrix::value_type>::value,
+            "lu_decompse() is only defined for square matrices"
+        );
+        using value_type = typename TempMatrix::value_type::value_type;
 
-        std::size_t const N = TempMatrix::static_size;
+        std::size_t const N = std::tuple_size<TempMatrix>::value;
         std::size_t ii = 0;
         for (std::size_t i = 0; i < N; ++i) {
             std::size_t index = indices[i];

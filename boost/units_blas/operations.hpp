@@ -11,11 +11,14 @@
 
 #include <boost/units_blas/config.hpp>
 #include <boost/units_blas/detail/get_value_type.hpp>
+#include <boost/units_blas/detail/lu.hpp>
+#include <boost/units_blas/detail/one_value.hpp>
+#include <boost/units_blas/detail/zero_value.hpp>
 
-#include <boost/array.hpp>
 #include <boost/units/cmath.hpp>
 
-#include <cmath>
+
+#include <boost/mpl/print.hpp> // TODO TODO TODO
 
 
 namespace boost { namespace units_blas {
@@ -154,10 +157,10 @@ namespace boost { namespace units_blas {
         {
             template <std::size_t I, std::size_t J>
             void call ()
-            { std::get<I>(lhs) = tuple_access::get<J>(rhs); }
+            { std::get<I>(lhs_) = tuple_access::get<J>(rhs_); }
 
-            Tuple & lhs;
-            Matrix const & rhs;
+            Tuple & lhs_;
+            Matrix const & rhs_;
         };
 
         template <std::size_t R, typename Matrix>
@@ -371,11 +374,11 @@ namespace boost { namespace units_blas {
             void call ()
             {
                 using std::swap;
-                swap(tuple_access::get<I>(lhs), tuple_access::get<I>(rhs));
+                swap(tuple_access::get<I>(lhs_), tuple_access::get<I>(rhs_));
             }
 
-            Matrix & lhs;
-            Matrix & rhs;
+            Matrix & lhs_;
+            Matrix & rhs_;
         };
 
         template <typename Matrix>
@@ -383,9 +386,9 @@ namespace boost { namespace units_blas {
         {
             template <std::size_t I>
             void call ()
-            { tuple_access::get<I>(m) = -tuple_access::get<I>(m); }
+            { tuple_access::get<I>(m_) = -tuple_access::get<I>(m_); }
 
-            Matrix & m;
+            Matrix & m_;
         };
 
         template <typename ResultMatrix, typename MatrixLHS, typename MatrixRHS>
@@ -396,13 +399,13 @@ namespace boost { namespace units_blas {
             {
                 constexpr std::size_t row = I / ResultMatrix::num_columns;
                 constexpr std::size_t column = I % ResultMatrix::num_columns;
-                tuple_access::get<I>(m) = tuple_dot(row_tuple<row>(lhs),
-                                                    column_tuple<column>(rhs));
+                tuple_access::get<I>(m_) = tuple_dot(row_tuple<row>(lhs_),
+                                                     column_tuple<column>(rhs_));
             }
 
-            ResultMatrix & m;
-            MatrixLHS lhs;
-            MatrixRHS rhs;
+            ResultMatrix & m_;
+            MatrixLHS lhs_;
+            MatrixRHS rhs_;
         };
 
         template <typename ResultMatrix, typename MatrixLHS, typename MatrixRHS>
@@ -411,13 +414,13 @@ namespace boost { namespace units_blas {
             template <std::size_t I>
             void call ()
             {
-                tuple_access::get<I>(m) =
-                    tuple_access::get<I>(lhs) * tuple_access::get<I>(rhs);
+                tuple_access::get<I>(m_) =
+                    tuple_access::get<I>(lhs_) * tuple_access::get<I>(rhs_);
             }
 
-            ResultMatrix & m;
-            MatrixLHS lhs;
-            MatrixRHS rhs;
+            ResultMatrix & m_;
+            MatrixLHS lhs_;
+            MatrixRHS rhs_;
         };
 
         template <typename ResultMatrix, typename MatrixLHS, typename MatrixRHS>
@@ -426,13 +429,13 @@ namespace boost { namespace units_blas {
             template <std::size_t I>
             void call ()
             {
-                tuple_access::get<I>(m) =
-                    tuple_access::get<I>(lhs) / tuple_access::get<I>(rhs);
+                tuple_access::get<I>(m_) =
+                    tuple_access::get<I>(lhs_) / tuple_access::get<I>(rhs_);
             }
 
-            ResultMatrix & m;
-            MatrixLHS lhs;
-            MatrixRHS rhs;
+            ResultMatrix & m_;
+            MatrixLHS lhs_;
+            MatrixRHS rhs_;
         };
 
         template <typename Tuple, bool Abs>
@@ -483,11 +486,53 @@ namespace boost { namespace units_blas {
             Tuple t_;
         };
 
+#if 1 // TODO BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE
+        template <typename Matrix, std::size_t I, std::size_t N>
+        struct simplified_determinant_type_impl
+        {
+            template <typename Prev>
+            static constexpr auto call (Prev prev)
+            {
+                using type = typename std::tuple_element<
+                    I * Matrix::num_columns + I,
+                    typename Matrix::value_types
+                >::type;
+                return simplified_determinant_type_impl<Matrix, I + 1, N>::call(
+                    prev * type{}
+                );
+            }
+        };
+
+        template <typename Matrix, std::size_t N>
+        struct simplified_determinant_type_impl<Matrix, N, N>
+        {
+            template <typename Result>
+            static constexpr auto call (Result result)
+            { return result; }
+        };
+
+        template <typename Matrix>
+        struct determinant_type
+        {
+            using first = typename std::tuple_element<
+                0,
+                typename Matrix::value_types
+            >::type;
+            using type = decltype(
+                simplified_determinant_type_impl<
+                    Matrix,
+                    1,
+                    Matrix::num_columns
+                >::call(first{})
+            );
+        };
+#else
         template <typename Matrix>
         struct determinant_type
         {
             using type = double; // TODO
         };
+#endif
 
         template <typename T, typename ValueType>
         struct get_value
@@ -511,17 +556,17 @@ namespace boost { namespace units_blas {
             {
                 constexpr std::size_t row = I / Matrix::num_columns;
                 constexpr std::size_t column = I % Matrix::num_columns;
-                a[row][column] = get_value<
+                a_[row][column] = get_value<
                     typename std::tuple_element<
                         I,
                         typename Matrix::value_types
                     >::type,
                     typename Array::value_type::value_type
-                >::call(tuple_access::get<I>(m));
+                >::call(tuple_access::get<I>(m_));
             }
 
-            Array & a;
-            Matrix m;
+            Array & a_;
+            Matrix m_;
         };
 
     }
@@ -1097,20 +1142,17 @@ namespace boost { namespace units_blas {
             >{temp_matrix, m}
         );
 
-        result_type retval; // TODO: = detail::zero<result_type>{};
+        result_type retval = detail::zero_value<result_type>::value();
 
         std::array<std::size_t, Rows> indices;
-#if 0
-        auto result = detail::lu_decompose(temp_matrix, indices);
-        if (result.second) {
-            detail::iterate_simple<Rows>(
-                detail::accumulate_determinant<
-                    decltype(result.first),
-                    temp_matrix_type
-                >{retval, temp_matrix}
-            );
+        auto lu_result = detail::lu_decompose(temp_matrix, indices);
+        if (lu_result.second) {
+            raw_value_type tmp = lu_result.first;
+            for (std::size_t i = 0; i < Columns; ++i) {
+                tmp *= temp_matrix[i][i];
+            }
+            retval = detail::one_value<result_type>::value() * tmp;
         }
-#endif
 
         return retval;
     }

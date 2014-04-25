@@ -18,18 +18,18 @@ namespace boost { namespace units_blas { namespace detail {
     struct one_value
     {
         static T value ()
-            { return T(1); }
+        { return T{1}; }
     };
 
     template <typename Unit, typename ValueType>
-    struct one_value<units::quantity<Unit, ValueType> >
+    struct one_value<units::quantity<Unit, ValueType>>
     {
         static units::quantity<Unit, ValueType> value ()
-            {
-                return units::quantity<Unit, ValueType>::from_value(
-                    static_cast<ValueType>(1)
-                );
-            }
+        {
+            return units::quantity<Unit, ValueType>::from_value(
+                static_cast<ValueType>(1)
+            );
+        }
     };
 
 } } }
