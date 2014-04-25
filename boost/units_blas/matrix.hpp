@@ -59,8 +59,11 @@ namespace boost { namespace units_blas {
 
 
         // tuple <--> typelist
+
+        // This is not declared as return-auto as a workaround for a bug in
+        // Clang 3.4.
         template <typename ...T>
-        constexpr auto tuple_from_types (type_sequence<T...>)
+        std::tuple<T...> tuple_from_types (type_sequence<T...>)
         { return std::tuple<T...>{}; }
 
         template <typename ...T>

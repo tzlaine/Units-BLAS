@@ -54,11 +54,11 @@ namespace boost { namespace units_blas { namespace detail {
         using type = decltype(
             make_matrix<Matrix::num_columns, Matrix::num_rows>(
                 tuple_from_types(
-                    detail::inverse_transpose_types_impl<
+                    inverse_transpose_types_impl<
                         Matrix,
                         0,
                         Matrix::num_elements
-                    >::call(detail::type_sequence<>{})
+                    >::call(type_sequence<>{})
                 )
             )
         );
