@@ -10,15 +10,14 @@
 #define BOOST_UNITS_BLAS_OPERATIONS_HPP
 
 #include <boost/units_blas/config.hpp>
+#include <boost/units_blas/exception.hpp>
 #include <boost/units_blas/detail/get_value_type.hpp>
 #include <boost/units_blas/detail/lu.hpp>
 #include <boost/units_blas/detail/one_value.hpp>
 #include <boost/units_blas/detail/zero_value.hpp>
 
+#include <boost/throw_exception.hpp>
 #include <boost/units/cmath.hpp>
-
-
-#include <boost/mpl/print.hpp> // TODO TODO TODO
 
 
 namespace boost { namespace units_blas {
@@ -164,7 +163,7 @@ namespace boost { namespace units_blas {
         };
 
         template <std::size_t R, typename Matrix>
-        constexpr auto row_tuple (const Matrix & m)
+        constexpr auto row_tuple (Matrix m)
         {
             auto seqs = indices_and_types_impl<
                 Matrix,
@@ -181,7 +180,7 @@ namespace boost { namespace units_blas {
         }
 
         template <std::size_t C, typename Matrix>
-        constexpr auto column_tuple (const Matrix & m)
+        constexpr auto column_tuple (Matrix m)
         {
             auto seqs = indices_and_types_impl<
                 Matrix,
@@ -486,6 +485,8 @@ namespace boost { namespace units_blas {
             Tuple t_;
         };
 
+
+        // matrix determinant type
 #if 1 // TODO BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE
         template <typename Matrix, std::size_t I, std::size_t N>
         struct simplified_determinant_type_impl
@@ -534,6 +535,57 @@ namespace boost { namespace units_blas {
         };
 #endif
 
+        // matrix inverse type
+        template <typename Matrix, std::size_t I, std::size_t N>
+        struct inverse_transpose_types_impl
+        {
+            template <typename Types>
+            static constexpr auto call (Types types)
+            {
+                constexpr std::size_t row = I / Matrix::num_columns;
+                constexpr std::size_t column = I % Matrix::num_columns;
+                constexpr std::size_t transpose_i =
+                    column * Matrix::num_rows + row;
+                using type = typename std::tuple_element<
+                    transpose_i,
+                    typename Matrix::value_types
+                >::type;
+                using inverse_type = decltype(
+                    std::declval<typename value_type<type>::type>() /
+                    std::declval<type>()
+                );
+                return inverse_transpose_types_impl<Matrix, I + 1, N>::call(
+                    push_back<inverse_type>(types)
+                );
+            }
+        };
+
+        template <typename Matrix, std::size_t N>
+        struct inverse_transpose_types_impl<Matrix, N, N>
+        {
+            template <typename Seq>
+            static constexpr auto call (Seq seq)
+            { return seq; }
+        };
+
+        template <typename Matrix>
+        struct inverse_type
+        {
+            using type = decltype(
+                make_matrix<Matrix::num_rows, Matrix::num_columns>(
+                    tuple_from_types(
+                        detail::inverse_transpose_types_impl<
+                            Matrix,
+                            0,
+                            Matrix::num_elements
+                        >::call(detail::type_sequence<>{})
+                    )
+                )
+            );
+        };
+
+
+        // get value
         template <typename T, typename ValueType>
         struct get_value
         {
@@ -548,25 +600,87 @@ namespace boost { namespace units_blas {
             { return static_cast<ValueType>(u.value()); }
         };
 
-        template <typename Array, typename Matrix>
-        struct assign_to_temp_array
+
+        // matrix_t <--> temp matrix
+        template <typename TempMatrix, typename Matrix>
+        struct assign_to_temp_matrix
         {
             template <std::size_t I>
             void call ()
             {
                 constexpr std::size_t row = I / Matrix::num_columns;
                 constexpr std::size_t column = I % Matrix::num_columns;
-                a_[row][column] = get_value<
+                tmp_[row][column] = get_value<
                     typename std::tuple_element<
                         I,
                         typename Matrix::value_types
                     >::type,
-                    typename Array::value_type::value_type
+                    typename TempMatrix::value_type::value_type
                 >::call(tuple_access::get<I>(m_));
             }
 
-            Array & a_;
+            TempMatrix & tmp_;
             Matrix m_;
+        };
+
+        template <typename T, typename ValueType>
+        struct make_value
+        {
+            static auto call (ValueType value)
+            { return static_cast<T>(value); }
+        };
+
+        template <typename Unit, typename T, typename ValueType>
+        struct make_value<units::quantity<Unit, T>, ValueType>
+        {
+            static auto call (ValueType value)
+            {
+                return units::quantity<Unit, T>::from_value(
+                    static_cast<T>(value)
+                );
+            }
+        };
+
+        template <typename TempMatrix, typename Matrix>
+        struct assign_from_temp_matrix
+        {
+            template <std::size_t I>
+            void call ()
+            {
+                constexpr std::size_t row = I / Matrix::num_columns;
+                constexpr std::size_t column = I % Matrix::num_columns;
+                tuple_access::get<I>(m_) = make_value<
+                    typename std::tuple_element<
+                        I,
+                        typename Matrix::value_types
+                    >::type,
+                    typename TempMatrix::value_type::value_type
+                >::call(tmp_[row][column]);
+            }
+
+            TempMatrix tmp_;
+            Matrix & m_;
+        };
+
+        // inverse() support
+        template <typename TempMatrix, typename Indices, std::size_t Columns>
+        struct assign_inverted_column
+        {
+            template <std::size_t C>
+            void call ()
+            {
+                using value_type = typename TempMatrix::value_type::value_type;
+                std::array<value_type, Columns> columns = {};
+                columns[C] = value_type{1.0};
+                detail::lu_substitute(from_, indices_, columns);
+                for (std::size_t i = 0; i < Columns; ++i) {
+                    to_[i][C] = columns[i];
+                }
+            }
+
+            TempMatrix & to_;
+            TempMatrix from_;
+            Indices indices_;
         };
 
     }
@@ -1126,7 +1240,7 @@ namespace boost { namespace units_blas {
             detail::has_uniform_dimensional_units<matrix_type>::value,
             "LU decomposition requires a matrix that does not have mixed "
             "units of the same dimension (e.g. centimeters and meters in the "
-            "same matrix)"
+            "same matrix won't work)."
         );
 
         using result_type =
@@ -1137,7 +1251,7 @@ namespace boost { namespace units_blas {
 
         temp_matrix_type temp_matrix;
         detail::iterate_simple<Rows * Columns>(
-            detail::assign_to_temp_array<
+            detail::assign_to_temp_matrix<
                 temp_matrix_type,
                 matrix_type
             >{temp_matrix, m}
@@ -1158,56 +1272,72 @@ namespace boost { namespace units_blas {
         return retval;
     }
 
-#if 0
     /** Returns the inverse of @c m.  Throws @c singular_matrix if @c m is
         found to be singular.  @c m must be a @c matrix<>, and must be
         square. */
-    template <typename T>
-    typename lazy_enable_if<
-        is_square_matrix<matrix<T> >,
-        result_of::inverse<matrix<T> >
-    >::type
-    inverse (matrix<T> const & m)
+    template <typename Tuple, std::size_t Rows, std::size_t Columns>
+    auto inverse (matrix_t<Tuple, Rows, Columns> m,
+                  typename std::enable_if<Rows == Columns>::type* = 0)
     {
+        using matrix_type = matrix_t<Tuple, Rows, Columns>;
+
+#if 0
         // If you're seeing an error here, it's becaue you're trying to invert
         // a matrix for which no valid inverse type exists.  A valid inverse
         // of matrix type M must yield an identity matrix I such that M = M *
         // I is a valid operation.
-        BOOST_MPL_ASSERT((detail::has_inverse<matrix<T> >));
+        BOOST_MPL_ASSERT((detail::has_inverse<matrix_type>));
+#endif
 
-        // If you're seeing an error here, you're trying to perform LU
-        // decomposition on a matrix that has mixed units of the same
-        // dimension (e.g. centimeters and meters in the same matrix).
-        BOOST_MPL_ASSERT((detail::is_lu_decomposable<matrix<T> >));
+        static_assert(
+            detail::has_uniform_dimensional_units<matrix_type>::value,
+            "LU decomposition requires a matrix that does not have mixed "
+            "units of the same dimension (e.g. centimeters and meters in the "
+            "same matrix won't work)."
+        );
 
-        typedef typename result_of::inverse<matrix<T> >::type result_type;
-        result_type retval;
-        typedef typename result_of::determinant<matrix<T> >::type temp_value_type;
-        typedef typename detail::get_value_type<temp_value_type>::type raw_value_type;
-        typedef array<
-            array<raw_value_type, matrix<T>::num_columns_t::value>,
-            matrix<T>::num_rows_t::value
-        > temp_matrix_type;
+        using result_type = typename detail::inverse_type<matrix_type>::type;
+        using temp_value_type =
+            typename detail::determinant_type<matrix_type>::type;
+        using raw_value_type =
+            typename detail::value_type<temp_value_type>::type;
+        using temp_matrix_type =
+            std::array<std::array<raw_value_type, Columns>, Rows>;
+
         temp_matrix_type temp_matrix;
-        typedef fusion::vector<temp_matrix_type &, matrix<T> const &> ops1;
-        iterate<size<matrix<T> > >(
-            ops1(temp_matrix, m), detail::matrix_to_temp_assign<temp_value_type>()
+        detail::iterate_simple<Rows * Columns>(
+            detail::assign_to_temp_matrix<
+                temp_matrix_type,
+                matrix_type
+            >{temp_matrix, m}
         );
-        typedef array<std::size_t, matrix<T>::num_rows_t::value> indices_type;
-        indices_type indices;
-        detail::lu_decompose(temp_matrix, indices);
+
+        result_type retval;
+
+        std::array<std::size_t, Columns> indices;
+        bool nonsingular = detail::lu_decompose(temp_matrix, indices).second;
+        if (!nonsingular)
+            throw_exception(singular_matrix{});
+
         temp_matrix_type temp_result_matrix;
-        typedef fusion::vector<temp_matrix_type &, temp_matrix_type const &, indices_type const &> ops2;
-        iterate<typename matrix<T>::num_rows_t>(
-            ops2(temp_result_matrix, temp_matrix, indices), detail::assign_inverted_column()
+        detail::iterate_simple<Rows>(
+            detail::assign_inverted_column<
+                temp_matrix_type,
+                std::array<std::size_t, Rows>,
+                Columns
+            >{temp_result_matrix, temp_matrix, indices}
         );
-        typedef fusion::vector<result_type &, temp_matrix_type const &> ops3;
-        iterate<size<matrix<T> > >(
-            ops3(retval, temp_result_matrix), detail::temp_to_matrix_assign()
+        detail::iterate_simple<Rows * Columns>(
+            detail::assign_from_temp_matrix<
+                temp_matrix_type,
+                result_type
+            >{temp_result_matrix, retval}
         );
+
         return retval;
     }
 
+#if 0
     /** Returns the solution to the equation Ax = b in @c x.  Throws @c
         singular_matrix if @c A is found to be singular.  @c A must be a @c
         matrix<>, and must be square.  @c x and @c b must be "vector"

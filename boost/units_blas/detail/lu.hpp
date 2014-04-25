@@ -90,7 +90,7 @@ namespace boost { namespace units_blas { namespace detail {
             >
         >::type units_and_dimensions;
 
-        static const bool value =
+        static bool const value =
             mpl::size<typename units_and_dimensions::first>::value ==
             mpl::size<typename units_and_dimensions::second>::value;
     };

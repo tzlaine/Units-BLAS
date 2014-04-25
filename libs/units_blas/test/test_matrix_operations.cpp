@@ -92,10 +92,9 @@ int test_main (int, char *[])
 
     BOOST_CHECK_CLOSE(determinant(m_D_d), -32.0, epsilon);
 
-#if 0
-    typedef bub::result_of::inverse<
-        D_matrix_4x4_fundamentals_type
-    >::type D_matrix_4x4_fundamentals_type_inverse;
+    using D_matrix_4x4_fundamentals_type_inverse = decltype(
+        bub::inverse(std::declval<D_matrix_4x4_fundamentals_type>())
+    );
     D_matrix_4x4_fundamentals_type_inverse m_D_inv;
     m_D_inv = inverse(m_D);
     BOOST_CHECK_CLOSE((m_D_inv.at<0, 0>()), -0.5, epsilon);
@@ -133,6 +132,7 @@ int test_main (int, char *[])
     BOOST_CHECK_CLOSE((m_D_inv.at<3, 2>()), 0.5, epsilon);
     BOOST_CHECK_CLOSE((m_D_inv.at<3, 3>()), -0.75, epsilon);
 
+#if 0
     b_fundamentals_vector_type m_b;
     m_b.at<0, 0>() = 1.0;
     m_b.at<1, 0>() = 1.0;
@@ -246,10 +246,9 @@ int test_main (int, char *[])
 
     BOOST_CHECK_CLOSE(determinant(m_D_u_d).value(), -32.0, epsilon);
 
-#if 0
-    typedef bub::result_of::inverse<
-        D_matrix_4x4_units_type
-    >::type D_matrix_4x4_units_type_inverse;
+    using D_matrix_4x4_units_type_inverse = decltype(
+        bub::inverse(std::declval<D_matrix_4x4_units_type>())
+    );
     D_matrix_4x4_units_type_inverse m_D_u_inv;
     m_D_u_inv = inverse(m_D_u);
     BOOST_CHECK_CLOSE((m_D_u_inv.at<0, 0>()).value(), -0.5, epsilon);
@@ -287,6 +286,7 @@ int test_main (int, char *[])
     BOOST_CHECK_CLOSE((m_D_u_inv.at<3, 2>()).value(), 0.5, epsilon);
     BOOST_CHECK_CLOSE((m_D_u_inv.at<3, 3>()).value(), -0.75, epsilon);
 
+#if 0
     b_units_vector_type m_b_u;
     m_b_u.at<0, 0>() = length::from_value(1.0);
     m_b_u.at<1, 0>() = length::from_value(1.0);
