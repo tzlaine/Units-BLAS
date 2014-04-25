@@ -83,19 +83,6 @@ namespace boost { namespace units_blas {
 
 
         // column/row indices and types
-#if 0 // Fix.
-        template <typename Matrix,
-                  std::size_t Origin,
-                  std::size_t Incr,
-                  std::size_t ...I>
-        auto indices_and_types_impl (std::index_sequence<I...>)
-        {
-            return std::pair<
-                std::index_sequence<(Origin + I * Incr)...>,
-                type_sequence<tuple_element_t<I, Matrix>...>
-            >{};
-        }
-#else
         template <typename Matrix,
                   std::size_t X,
                   std::size_t Incr,
@@ -129,7 +116,6 @@ namespace boost { namespace units_blas {
             static constexpr auto call (Seqs seqs)
             { return seqs; }
         };
-#endif
 
 
         // indexed iteration
@@ -182,13 +168,6 @@ namespace boost { namespace units_blas {
         template <std::size_t R, typename Matrix>
         constexpr auto row_tuple (Matrix m)
         {
-#if 0 // TODO: Fix.
-            auto seqs = indices_and_types_impl<
-                Matrix,
-                R * Matrix::num_columns,
-                1
-            >(std::make_index_sequence<Matrix::num_columns>());
-#else
             auto seqs = indices_and_types_impl<
                 Matrix,
                 R * Matrix::num_columns,
@@ -196,7 +175,6 @@ namespace boost { namespace units_blas {
                 0,
                 Matrix::num_columns
             >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
-#endif
             auto retval = tuple_from_types(seqs.second);
             iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m},
                             seqs.first);
@@ -206,13 +184,6 @@ namespace boost { namespace units_blas {
         template <std::size_t C, typename Matrix>
         constexpr auto column_tuple (Matrix m)
         {
-#if 0 // TODO: Fix.
-            auto seqs = indices_and_types_impl<
-                Matrix,
-                C,
-                Matrix::num_columns
-            >(std::make_index_sequence<Matrix::num_rows>());
-#else
             auto seqs = indices_and_types_impl<
                 Matrix,
                 C,
@@ -220,7 +191,6 @@ namespace boost { namespace units_blas {
                 0,
                 Matrix::num_rows
             >::call(std::pair<std::index_sequence<>, type_sequence<>>{});
-#endif
             auto retval = tuple_from_types(seqs.second);
             iterate_indexed(tuple_assign<decltype(retval), Matrix>{retval, m},
                             seqs.first);
