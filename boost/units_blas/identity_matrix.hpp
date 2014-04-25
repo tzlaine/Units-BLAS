@@ -46,13 +46,18 @@ namespace boost { namespace units_blas {
         Matrix.  Note that not every matrix type has an identiy matrix
         type. */
     template <typename Matrix>
-    struct identity_matrix
+    struct identity_matrix_type
     {
         using type = decltype(
-            std::declval<Matrix>() *
-            std::declval<typename detail::inverse_type<Matrix>::type>()
+            prod(
+                std::declval<Matrix>(),
+                std::declval<detail::inverse_type_t<Matrix>>()
+            )
         );
     };
+
+    template <typename Matrix>
+    using identity_matrix = typename identity_matrix_type<Matrix>::type;
 
     /** Returns a matrix<> I whose diagonal elements are 1, and whose
         nondiagonal elements are 0, and whose element types are such that for
@@ -63,7 +68,7 @@ namespace boost { namespace units_blas {
     template <typename Matrix>
     auto make_identity_matrix ()
     {
-        using result_type = typename identity_matrix<Matrix>::type;
+        using result_type = identity_matrix<Matrix>;
         result_type retval;
         detail::iterate_simple<result_type::num_elements>(
             detail::identity_assign<result_type>{retval}

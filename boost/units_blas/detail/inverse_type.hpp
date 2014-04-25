@@ -64,6 +64,9 @@ namespace boost { namespace units_blas { namespace detail {
         );
     };
 
+    template <typename Matrix>
+    using inverse_type_t = typename inverse_type<Matrix>::type;
+
 } } } // namespace boost::units_blas::detail
 
 #endif // BOOST_UNITS_BLAS_INVERSE_TYPE_HPP

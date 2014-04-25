@@ -42,6 +42,9 @@ namespace boost { namespace units_blas { namespace detail {
         using type = typename selector::value_type;
     };
 
+    template <typename T>
+    using value_type_t = typename value_type<T>::type;
+
 } } } // namespace boost::units_blas::detail
 
 #endif // BOOST_UNITS_BLAS_DETAIL_VALUE_TYPE_HPP

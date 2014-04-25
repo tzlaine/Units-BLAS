@@ -27,6 +27,16 @@ namespace boost { namespace units_blas {
 
     namespace detail {
 
+        // tuple element I of a matrix_t
+        template <std::size_t I, typename Matrix>
+        struct tuple_element :
+            std::tuple_element<I, typename Matrix::value_types>
+        {};
+
+        template <std::size_t I, typename Matrix>
+        using tuple_element_t = typename tuple_element<I, Matrix>::type;
+
+
         // foldl
         template <std::size_t I, typename Fn, typename State>
         constexpr auto foldl_impl (Fn, State state, type_sequence<>)
@@ -67,10 +77,7 @@ namespace boost { namespace units_blas {
             static constexpr auto call (std::pair<Indices, Types>)
             {
                 using indices = decltype(push_back<X>(Indices{}));
-                using type = typename std::tuple_element<
-                    X,
-                    typename Matrix::value_types
-                >::type;
+                using type = tuple_element_t<X, Matrix>;
                 using types = decltype(push_back<type>(Types{}));
                 return indices_and_types_impl<
                     Matrix,
@@ -211,10 +218,7 @@ namespace boost { namespace units_blas {
                     column * Matrix::num_rows + row;
                 using indices = decltype(push_back<transpose_i>(Indices{}));
 
-                using type = typename std::tuple_element<
-                    transpose_i,
-                    typename Matrix::value_types
-                >::type;
+                using type = tuple_element_t<transpose_i, Matrix>;
                 using types = decltype(push_back<type>(Types{}));
 
                 return transpose_indices_and_types_impl<Matrix, I + 1, N>::call(
@@ -279,10 +283,10 @@ namespace boost { namespace units_blas {
             static constexpr auto call (std::pair<Indices, Types>)
             {
                 using indices = decltype(push_back<X>(Indices{}));
-                using type = typename std::tuple_element<
+                using type = tuple_element_t<
                     Row * Matrix::num_columns + head(ColumnIndices{}),
-                    typename Matrix::value_types
-                >::type;
+                    Matrix
+                >;
                 using types = decltype(push_back<type>(Types{}));
                 return slice_indices_and_types_row_impl<
                     Matrix,
@@ -582,10 +586,10 @@ namespace boost { namespace units_blas {
             template <typename Prev>
             static constexpr auto call (Prev prev)
             {
-                using type = typename std::tuple_element<
+                using type = tuple_element_t<
                     I * Matrix::num_columns + I,
-                    typename Matrix::value_types
-                >::type;
+                    Matrix
+                >;
                 return simplified_determinant_type_impl<Matrix, I + 1, N>::call(
                     prev * type{}
                 );
@@ -603,10 +607,7 @@ namespace boost { namespace units_blas {
         template <typename Matrix>
         struct determinant_type
         {
-            using first = typename std::tuple_element<
-                0,
-                typename Matrix::value_types
-            >::type;
+            using first = tuple_element_t<0, Matrix>;
             using type = decltype(
                 simplified_determinant_type_impl<
                     Matrix,
@@ -622,6 +623,9 @@ namespace boost { namespace units_blas {
             using type = double; // TODO
         };
 #endif
+
+        template <typename Matrix>
+        using determinant_type_t = typename determinant_type<Matrix>::type;
 
 
         // get value
@@ -650,10 +654,7 @@ namespace boost { namespace units_blas {
                 constexpr std::size_t row = I / Matrix::num_columns;
                 constexpr std::size_t column = I % Matrix::num_columns;
                 tmp_[row][column] = get_value<
-                    typename std::tuple_element<
-                        I,
-                        typename Matrix::value_types
-                    >::type,
+                    tuple_element_t<I, Matrix>,
                     typename TempMatrix::value_type::value_type
                 >::call(tuple_access::get<I>(m_));
             }
@@ -689,10 +690,7 @@ namespace boost { namespace units_blas {
                 constexpr std::size_t row = I / Matrix::num_columns;
                 constexpr std::size_t column = I % Matrix::num_columns;
                 tuple_access::get<I>(m_) = make_value<
-                    typename std::tuple_element<
-                        I,
-                        typename Matrix::value_types
-                    >::type,
+                    tuple_element_t<I, Matrix>,
                     typename TempMatrix::value_type::value_type
                 >::call(tmp_[row][column]);
             }
@@ -709,10 +707,7 @@ namespace boost { namespace units_blas {
             void call ()
             {
                 tmp_[I] = get_value<
-                    typename std::tuple_element<
-                        I,
-                        typename Matrix::value_types
-                    >::type,
+                    tuple_element_t<I, Matrix>,
                     typename TempArray::value_type
                 >::call(tuple_access::get<I>(m_));
             }
@@ -728,10 +723,7 @@ namespace boost { namespace units_blas {
             void call ()
             {
                 tuple_access::get<I>(m_) = make_value<
-                    typename std::tuple_element<
-                        I,
-                        typename Matrix::value_types
-                    >::type,
+                    tuple_element_t<I, Matrix>,
                     typename TempArray::value_type
                 >::call(tmp_[I]);
             }
@@ -1332,9 +1324,8 @@ namespace boost { namespace units_blas {
             "same matrix won't work)."
         );
 
-        using result_type =
-            typename detail::determinant_type<matrix_type>::type;
-        using raw_value_type = typename detail::value_type<result_type>::type;
+        using result_type = detail::determinant_type_t<matrix_type>;
+        using raw_value_type = detail::value_type_t<result_type>;
         using temp_matrix_type =
             std::array<std::array<raw_value_type, Rows>, Rows>;
 
@@ -1384,11 +1375,9 @@ namespace boost { namespace units_blas {
             "same matrix won't work)."
         );
 
-        using result_type = typename detail::inverse_type<matrix_type>::type;
-        using temp_value_type =
-            typename detail::determinant_type<matrix_type>::type;
-        using raw_value_type =
-            typename detail::value_type<temp_value_type>::type;
+        using result_type = detail::inverse_type_t<matrix_type>;
+        using temp_value_type = detail::determinant_type_t<matrix_type>;
+        using raw_value_type = detail::value_type_t<temp_value_type>;
         using temp_matrix_type =
             std::array<std::array<raw_value_type, Rows>, Rows>;
 
@@ -1449,8 +1438,8 @@ namespace boost { namespace units_blas {
             "same matrix won't work)."
         );
 
-        using temp_value_type = typename detail::determinant_type<a_type>::type;
-        using raw_value_type = typename detail::value_type<temp_value_type>::type;
+        using temp_value_type = detail::determinant_type_t<a_type>;
+        using raw_value_type = detail::value_type_t<temp_value_type>;
 
         using temp_matrix_type =
             std::array<std::array<raw_value_type, Rows>, Rows>;

@@ -57,6 +57,10 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t Rows, std::size_t Columns>
     using uniform_matrix = typename uniform_matrix_type<T, Rows, Columns>::type;
 
+    template <typename T, std::size_t Rows, std::size_t Columns>
+    auto make_uniform_matrix ()
+    { return uniform_matrix<T, Rows, Columns>{}; }
+
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1.  Specifically, the resulting @c matrix<>'s dimensions
         are size(@c Tuple) x 1, and each element (i, 0) is the ith type in
@@ -73,6 +77,10 @@ namespace boost { namespace units_blas {
 
     template <typename ...T>
     using vector = typename vector_type<T...>::type;
+
+    template <typename ...T>
+    auto make_vector ()
+    { return vector<T...>{}; }
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N.  Specifically, the resulting @c
@@ -91,6 +99,10 @@ namespace boost { namespace units_blas {
     template <typename ...T>
     using transpose_vector = typename transpose_vector_type<T...>::type;
 
+    template <typename ...T>
+    auto make_transpose_vector ()
+    { return transpose_vector<T...>{}; }
+
     /** Convenience metafunction that returns a "vector" -- a @c matrix<> of
         dimension N x 1, in which each element is of type @c T. */
     template <typename T, std::size_t N>
@@ -105,6 +117,10 @@ namespace boost { namespace units_blas {
 
     template <typename T, std::size_t N>
     using uniform_vector = typename uniform_vector_type<T, N>::type;
+
+    template <typename T, std::size_t N>
+    auto make_uniform_vector ()
+    { return uniform_vector<T, N>{}; }
 
     /** Convenience metafunction that returns a "transpose vector" -- a @c
         matrix<> of dimension 1 x N, in which each element is of type @c T. */
@@ -121,6 +137,10 @@ namespace boost { namespace units_blas {
     template <typename T, std::size_t N>
     using uniform_transpose_vector =
         typename uniform_transpose_vector_type<T, N>::type;
+
+    template <typename T, std::size_t N>
+    auto make_uniform_transpose_vector ()
+    { return uniform_transpose_vector<T, N>{}; }
 
 } } // namespace boost::units_blas
 

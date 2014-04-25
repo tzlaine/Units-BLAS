@@ -50,6 +50,14 @@ namespace boost { namespace units_blas {
     }
 #endif
 
+    template <typename T>
+    using is_matrix_t = typename is_matrix<T>::type;
+
+#if 0 // TODO: Enable when Clang fixes the variable template internal linkage bug.
+    template <typename T>
+    const bool is_matrix_v = is_matrix<T>::value;
+#endif
+
     /** Returns true iff cv-unqualified @c T is, or is derived from, a @c
         matrix<>. */
     template <typename T>
@@ -58,6 +66,14 @@ namespace boost { namespace units_blas {
             std::declval<typename std::remove_cv<T>::type>()
         ))
     {};
+
+    template <typename T>
+    using is_matrix_or_derived_t = typename is_matrix_or_derived<T>::type;
+
+#if 0 // TODO: Enable when Clang fixes the variable template internal linkage bug.
+    template <typename T>
+    const bool is_matrix_or_derived_v = is_matrix_or_derived<T>::value;
+#endif
 
 } } // namespace boost::units_blas
 

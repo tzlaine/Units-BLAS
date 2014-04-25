@@ -310,6 +310,7 @@ namespace boost { namespace units_blas {
             "matrix_t<> must be specified with a positive Rows "
             "template parameter"
         );
+
         static_assert(
             0 < num_columns,
             "matrix_t<> must be specified with a positive Columns "
@@ -330,9 +331,33 @@ namespace boost { namespace units_blas {
     namespace detail {
 
         template <typename HeadRow, typename ...TailRows>
+        constexpr auto tuples_same_size (bool same,
+                                         std::size_t prev,
+                                         type_sequence<HeadRow, TailRows...>)
+        {
+            constexpr std::size_t size = std::tuple_size<HeadRow>::value;
+            return tuples_same_size(
+                same && prev == size,
+                size,
+                type_sequence<TailRows...>{}
+            );
+        }
+
+        constexpr auto tuples_same_size (bool s, std::size_t, type_sequence<>)
+        { return s; }
+
+        template <typename HeadRow, typename ...TailRows>
         struct matrix_type
         {
-// TODO: Check that all rows have equal length.
+            static_assert(
+                tuples_same_size(
+                    true,
+                    std::tuple_size<HeadRow>::value,
+                    type_sequence<HeadRow, TailRows...>{}
+                ),
+                "matrix_type<> requires tuples of uniform length"
+            );
+
             using tuple = decltype(std::tuple_cat(
                 std::declval<HeadRow>(),
                 std::declval<TailRows>()...
