@@ -19,6 +19,12 @@
 
 namespace boost { namespace units_blas {
 
+    template <std::size_t ...I>
+    struct index_sequence
+    {
+        static const std::size_t size = sizeof...(I);
+    };
+
     namespace detail {
 
         // tuple access
@@ -35,12 +41,6 @@ namespace boost { namespace units_blas {
 
 
         // sequences
-        template <std::size_t ...I>
-        struct index_sequence
-        {
-            static const std::size_t size = sizeof...(I);
-        };
-
         template <typename ...T>
         struct type_sequence
         {
