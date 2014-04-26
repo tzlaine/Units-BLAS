@@ -47,6 +47,9 @@ namespace boost { namespace units_blas { namespace detail {
     struct dimension_of<units::quantity<Unit, ValueType> >
     { typedef typename Unit::dimension_type type; };
 
+    template <typename T>
+    using dimension_of_t = typename dimension_of<T>::type;
+
     template <typename Matrix, typename T>
     struct nth_type :
         mpl::lambda<
