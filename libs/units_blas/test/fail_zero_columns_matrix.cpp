@@ -11,13 +11,11 @@
 
 int test_main (int, char *[])
 {
-    typedef bub::make_matrix<
-        boost::fusion::vector<
-            boost::fusion::vector<>
-        >
-    >::type failure_type;
+    using failure_type = bub::matrix<
+        std::tuple<>
+    >;
 
-    failure_type ft;
+    failure_type f;
 
     return 0;
 }

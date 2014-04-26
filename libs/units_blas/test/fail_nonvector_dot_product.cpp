@@ -13,7 +13,7 @@
 
 int test_main (int, char *[])
 {
-    dot(matrix_2x2(), matrix_2x2());
+    dot(matrix_2x2{}, matrix_2x2{});
 
     return 0;
 }

@@ -307,6 +307,7 @@ namespace boost { namespace units_blas {
             "matrix_t<> must be specified with a Tuple template parameter "
             "consisting of Rows * Columns types"
         );
+
         static_assert(
             0 < num_rows,
             "matrix_t<> must be specified with a positive Rows "
