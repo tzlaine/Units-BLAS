@@ -9,17 +9,15 @@
 #include <boost/units_blas/operations.hpp>
 
 
-typedef bub::make_matrix<
-    boost::fusion::vector<
-        boost::fusion::vector<length_sq,          length_sq,          length_sq_per_time>,
-        boost::fusion::vector<length_sq,          length_sq,          length_sq_per_time>,
-        boost::fusion::vector<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
-    >
->::type matrix_3x3_units_type;
+using uninvertible_matrix_3x3 = bub::matrix<
+    std::tuple<length_sq,          length_sq,          length_sq_per_time>,
+    std::tuple<length_sq,          length,             length_sq_per_time>,
+    std::tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
+>;
 
 int test_main (int, char *[])
 {
-    inverse(matrix_3x3_units_type());
+    inverse(uninvertible_matrix_3x3{});
 
     return 0;
 }

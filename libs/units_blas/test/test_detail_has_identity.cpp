@@ -20,10 +20,16 @@ struct derived_from_E_matrix_2x2_time_type :
     E_matrix_2x2_time_type
 {};
 
-typedef bub::matrix<
+using uninvertible_matrix_2x2 = bub::matrix<
     std::tuple<time_, time_>,
     std::tuple<time_, double>
-> uninvertible_matrix_2x2;
+>;
+
+using uninvertible_matrix_3x3 = bub::matrix<
+    std::tuple<length_sq,          length_sq,          length_sq_per_time>,
+    std::tuple<length_sq,          length,             length_sq_per_time>,
+    std::tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
+>;
 
 int test_main (int, char *[])
 {
@@ -34,6 +40,7 @@ int test_main (int, char *[])
 
     static_assert(!bub::detail::has_identity<int>::value, "");
     static_assert(!bub::detail::has_identity<uninvertible_matrix_2x2>::value, "");
+    static_assert(!bub::detail::has_identity<uninvertible_matrix_3x3>::value, "");
 
     return 0;
 }
