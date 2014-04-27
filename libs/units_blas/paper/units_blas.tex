@@ -21,6 +21,10 @@
 \begin{document}
 Need proof/discussion of
 
+***TODO*** Show that $\hat M * inverse(\hat M) = \hat I_L$
+
+***TODO*** Show that $inverse(\hat M) * \hat M = \hat R_L$
+
 ***TODO*** Show that dimensional antisymmetry <-> $\hat I_R = \hat I_L$ (conjecture).
 
 ***TODO*** Show that dimensional symmetry <-> $\hat I_R = \hat I_L^{TV}$ (conjecture).
@@ -99,7 +103,7 @@ results, are inherent to matrices containing physical quantities.
 
 \begin{defn} A value associated with one or more physical dimensions
   is a \textbf{dimensional value}. \end{defn}
-
+ 
 Dimensional values are written as $x \cdot T$, where $x$ is the
 numeric value, and $T$ is the dimension of the value.  For instance,
 $1 \cdot m$, $2 \cdot m/s^2$, and $3 \cdot s$ are all dimensional
@@ -778,6 +782,57 @@ this, the final units for $| \hat M |$ are
 
 \[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk}
 \rangle . \] \end{proof}
+
+\begin{defn} \label{inverse_type_definition} Given an $n \times n$
+dimensional value matrix $\hat M$, the \textbf{inverse type} of
+$\hat M$ is $\langle \hat M^{TV} \rangle$. \end{defn}
+
+\begin{thm} For an $n \times n$ dimensional value matrix $\hat M$, the
+$\hat M * inverse(\hat M) = \hat I_L$. \end{thm}
+
+\begin{proof} Let $\hat M$ be an $n \times n$ dimensional value
+matrix, and let $DM$ be the matrix that contains the DCVs of all
+of the values in $\hat M$:
+
+\[ DM = \left[ \begin{matrix} 
+  v_{11} & v_{12} & \cdots & v_{1n} \\
+  v_{21} & v_{22} & \cdots & v_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  v_{n1} & v_{n2} & \cdots & v_{nn}
+\end{matrix} \right] \] in which each $v$ is a DCV.
+
+Applying Definition \ref{inverse_type_definition}, the matrix that contains
+the DCVs of all of the values in $inverse(\hat M)$ is $DM_{Inv}$:
+
+\[ DM_{Inv} = \left[ \begin{matrix} 
+  -v_{11} & -v_{21} & \cdots & -v_{n1} \\
+  -v_{12} & -v_{22} & \cdots & -v_{n2} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  -v_{1n} & -v_{2n} & \cdots & -v_{nn}
+ \end{matrix} \right]. \]
+
+The matrix that contains the DCVs of all of the values in $\hat M * inverse(\hat M)$
+$DM_{IL}$ is thus:
+
+\[ DM_{IL} = \left[ \begin{matrix} 
+  \vec{\emptyset} & v_{11} - v_{21} & \cdots & v_{11} - v_{n1} \\
+  v_{21} - v_{11} & \vec{\emptyset} & \cdots & v_{21} - v_{n1} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  v_{n1} - v{11} & v_{n1} - v_{21} & \cdots & \vec{\emptyset}
+ \end{matrix} \right]. \]
+
+Finally, the matrix that contains the DCVs of all of the values in
+$(\hat M * inverse(\hat M)) * \hat M$ is:
+
+\[ DM^{\prime} = \left[ \begin{matrix} 
+  v_{11} & v_{12} & \cdots & v_{1n} \\
+  v_{21} & v_{22} & \cdots & v_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  v_{n1} & v_{n2} & \cdots & v_{nn}
+\end{matrix} \right]. \]
+
+Since this result has the same dimensions as $DM$, the expression $\hat M *
+inverse(\hat M)$ is a left-identity for $\hat M$. \end{proof}
 
 \begin{thm} \end{thm}
 
