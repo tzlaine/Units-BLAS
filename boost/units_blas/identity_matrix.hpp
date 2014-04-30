@@ -39,11 +39,11 @@ namespace boost { namespace units_blas {
 
     }
 
-    /** Returns the type that can be used as the identity matrix for @c
+    /** Returns the type that can be used as the left-identity matrix for @c
         Matrix.  Note that not every matrix type has an identiy matrix
         type. */
     template <typename Matrix>
-    struct identity_matrix_type
+    struct left_identity_matrix_type
     {
         using type = decltype(
             prod(
@@ -53,19 +53,55 @@ namespace boost { namespace units_blas {
         );
     };
 
+    /** Returns the type that can be used as the right-identity matrix for @c
+        Matrix.  Note that not every matrix type has an identiy matrix
+        type. */
     template <typename Matrix>
-    using identity_matrix = typename identity_matrix_type<Matrix>::type;
+    struct right_identity_matrix_type
+    {
+        using type = decltype(
+            prod(
+                std::declval<detail::inverse_type_t<Matrix>>(),
+                std::declval<Matrix>()
+            )
+        );
+    };
+
+    template <typename Matrix>
+    using left_identity_matrix =
+        typename left_identity_matrix_type<Matrix>::type;
+
+    template <typename Matrix>
+    using right_identity_matrix =
+        typename right_identity_matrix_type<Matrix>::type;
 
     /** Returns a matrix<> I whose diagonal elements are 1, and whose
         nondiagonal elements are 0, and whose element types are such that for
         any @c Matrix m, type of the expression m * I is assignable to a @c
         Matrix.  Further, for all i,j in [0, @c Matrix::num_rows_t::value), (m
         * I).at<i, j>() is within epsilon of m.at<i, j>().  Note that not
-        every matrix type has an identiy matrix type. */
+        every matrix type has an left-identity matrix type. */
     template <typename Matrix>
-    auto make_identity_matrix ()
+    auto make_left_identity_matrix ()
     {
-        using result_type = identity_matrix<Matrix>;
+        using result_type = left_identity_matrix<Matrix>;
+        result_type retval;
+        detail::iterate_simple<result_type::num_elements>(
+            detail::identity_assign<result_type>{retval}
+        );
+        return retval;
+    }
+
+    /** Returns a matrix<> I whose diagonal elements are 1, and whose
+        nondiagonal elements are 0, and whose element types are such that for
+        any @c Matrix m, type of the expression m * I is assignable to a @c
+        Matrix.  Further, for all i,j in [0, @c Matrix::num_rows_t::value), (m
+        * I).at<i, j>() is within epsilon of m.at<i, j>().  Note that not
+        every matrix type has an right-identity matrix type. */
+    template <typename Matrix>
+    auto make_right_identity_matrix ()
+    {
+        using result_type = right_identity_matrix<Matrix>;
         result_type retval;
         detail::iterate_simple<result_type::num_elements>(
             detail::identity_assign<result_type>{retval}
