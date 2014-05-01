@@ -25,9 +25,6 @@ Need proof/discussion of
 
 ***TODO*** Show that dimensional symmetry <-> $\hat I_R = \hat I_L^{TV}$ (conjecture).
 
-***TODO*** Show that $\hat I_R = \hat I_L^{TV}$ (conjecture; subsumes the
-conjectures above if true).
-
 
 \section{Introduction}
 
@@ -786,7 +783,7 @@ $\langle \hat I_L \rangle = \langle \hat M \hat M^{-1} \rangle$. \end{thm}
 
 \begin{proof}Let $\hat M$ be an $n \times n$ dimensional value
 matrix, and let $DM$ be the matrix that contains the DCVs of all
-of the units in $\langle \hat M \rangle$ (each $v_{ij}$ is a DCV):
+of the units in $\hat M$ (each $v_{ij}$ is a DCV):
 
 \[ DM = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
@@ -796,7 +793,7 @@ of the units in $\langle \hat M \rangle$ (each $v_{ij}$ is a DCV):
 \end{matrix} \right] \]
 
 Applying Definition \ref{inverse_type_definition}, the matrix $DM_{Inv}$ that
-contains the DCVs of all of the units in $\langle \hat M^{-1} \rangle$ is:
+contains the DCVs of all of the units in $\hat M^{-1}$ is:
 
 \[ DM_{Inv} = \left[ \begin{matrix} 
   -v_{11} & -v_{21} & \cdots & -v_{n1} \\
@@ -811,13 +808,13 @@ all equal.  Further, since $DM_{Inv}$ was constructed using Definition
 each of its columns.  Also by due to the use of Definition
 \ref{inverse_type_definition}, $\langle (\hat M \hat M^{-1})_{11}
 \rangle = \emptyset$.  By the logic used to prove Theorem
-\ref{if_IL_then_same_col_ddvs}, each term of the summation that
+ \ref{if_IL_then_same_col_ddvs}, each term of the summation that
 computes the $(i, j)$ element of $\hat M \hat M^{-1}$ will have the
 same units, as required by Lemma
 \ref{terms_of_a_summation_have_equal_units}.
 
 The matrix $DM_{IL}$ that contains the DCVs of all of the values in
-$\langle \hat M \hat M^{-1} \rangle$ is thus:
+$\hat M \hat M^{-1}$ is thus:
 
 \[ DM_{IL} = \left[ \begin{matrix} 
   \vec{\emptyset} & v_{11} - v_{21} & \cdots & v_{11} - v_{n1} \\
@@ -830,8 +827,7 @@ Lemma \ref{terms_of_a_summation_have_equal_units} allows one to choose
 any term in the summation that computes the $(i, j)$ element of $(\hat
 M \hat M^{-1}) \hat M$.  By choosing the appropriate term in each
 summation, the matrix $DM^{\prime}$ that contains the DCVs of all of
-the values in $\langle (\hat M \hat M^{-1}) \hat M \rangle$ can be
-written as:
+the values in $(\hat M \hat M^{-1}) \hat M$ can be written as:
 
 \[ DM^{\prime} = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
@@ -840,7 +836,7 @@ written as:
   v_{n1} & v_{n2} & \cdots & v_{nn}
 \end{matrix} \right]. \]
 
-Since $DM^{\prime} = DM$, the product $\langle \hat M \hat M^{-1} \rangle$
+Since $DM^{\prime} = DM$, the product $\hat M \hat M^{-1}$
 has units usable as a left-identity for $\hat M$. \end{proof}
 
 \begin{thm} \label{IR_is_constructible_from_inverse} If an $n \times n$
@@ -854,5 +850,42 @@ by symmetry with Theorem \ref{IL_is_constructible_from_inverse}. \end{proof}
 \begin{cor}By Theorems \ref{IL_is_constructible_from_inverse} and
 \ref{IR_is_constructible_from_inverse}, $\langle \hat M^{TV}
 \rangle = \langle \hat M^{-1} \rangle$ \end{cor}
+
+\begin{thm}If an $n \times n$ dimensional value matrix $\hat M$ has
+left- and right-identities $\hat I_L$ and $\hat I_R$, then
+$\langle \hat I_R \rangle = \langle \hat I_L^{TV} \rangle$ \end{thm}
+
+\begin{proof}Recall $DM_{IL}$ from Theorem \ref{IL_is_constructible_from_inverse}:
+
+\[ DM_{IL} = \left[ \begin{matrix} 
+  \vec{\emptyset} & v_{11} - v_{21} & \cdots & v_{11} - v_{n1} \\
+  v_{21} - v_{11} & \vec{\emptyset} & \cdots & v_{21} - v_{n1} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  v_{n1} - v{11} & v_{n1} - v_{21} & \cdots & \vec{\emptyset}
+ \end{matrix} \right]. \]
+
+Using $DM$ and $DM_{Inv}$, also from Theorem
+\ref{IL_is_constructible_from_inverse}, the matrix $DM_{IR}$ that
+contains the DCVs of all of the values in $\hat M^{-1} \hat M$ is:
+
+\[ DM_{IR} = \left[ \begin{matrix} 
+  \vec{\emptyset} & -v_{11} + v_{12} & \cdots & -v_{11} + v_{1n} \\
+  -v_{12} + v_{11} & \vec{\emptyset} & \cdots & -v_{12} + v_{1n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  -v_{1n} + v_{11} & -v_{1n} + v_{12} & \cdots & \vec{\emptyset}
+ \end{matrix} \right]. \]
+
+This can be rewritten as:
+
+\[ DM_{IR} = \left[ \begin{matrix} 
+  \vec{\emptyset} & -(v_{11} - v_{12}) & \cdots & -(v_{11} - v_{1n}) \\
+  -(v_{12} - v_{11}) & \vec{\emptyset} & \cdots & -(v_{12} - v_{1n}) \\
+  \vdots & \vdots & \ddots & \vdots \\
+  -(v_{1n} - v_{11}) & -(v_{1n} - v_{12}) & \cdots & \vec{\emptyset}
+ \end{matrix} \right]. \]
+
+From this it is clear that
+
+\[ \forall i,j \in [1, n] : (DM_{IL})_{ij} = -(DM_{IR})_{ji}. \] \end{proof}
 
 \end{document}
