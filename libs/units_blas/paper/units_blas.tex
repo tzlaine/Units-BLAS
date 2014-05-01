@@ -22,17 +22,23 @@
 
 \section{Introduction}
 
-***TODO***
+Dimensional analysis is ubiquitous in the sciences.  However, in
+scientific computing, attempts are seldom made to bring dimensional
+analysis into code that uses or produces values with physical
+dimensions.  The Boost.Units library was created to address this
+frequent shortcoming.  However, the Boost.Units library is not
+interoperable with linear algrbra libraries like Eigen and
+Boost.uBlas, even though linear algebra is common in the scientific
+computing domain.
 
-\section{Conventions}
+Moreover, scientists often dismiss the importance of dimensional
+analysis in linear algebra, but this paper shows that the rules that
+apply to purely numeric matrices differ nontrivially from those that
+apply to matrices containing values with physical dimensions.
 
-***TODO*** Basic definitions
+Consider an example.  Here is the matrix whose confusing properties
+motivated this paper, the x-y-doppler correlation matrix:
 
-***TODO*** Discuss the addition and multiplication of units.
-
-***TODO*** Some of this should be moved up to Introduction.
-
-Consider the x-y-doppler correlation matrix
 \[XYD = \left[ \begin{matrix}
 xx & xy & xd \\ yx & yy & yd \\ dx & dy & dd
 \end{matrix} \right]. \]
@@ -46,7 +52,8 @@ having been removed) elides the dimensional analysis that is otherwise
 applied to physical quantities.
 
 Consider now the same x-y-doppler correlation matrix, this time with
-its physical dimensions preserved
+its physical dimensions preserved (the ``hat'' here indicates that
+the behatted matrix contains values with physical dimensions)
 
 \[ \widehat{XYD}= \left[ \begin{matrix}
   xx \cdot m^2 & xy \cdot m^2 & xd \cdot m^2/s \\
@@ -60,28 +67,32 @@ leads to nontrivial questions.  For instance, what is the identity matrix that
 one can use with $\widehat{XYD}$?  Note that
 
 \[ \hat I = \left[ \begin{matrix} 
-  \hat 1 & \hat 0 & \hat 0 \\
-  \hat 0 & \hat 1 & \hat 0 \\
-  \hat 0 & \hat 0 & \hat 1
- \end{matrix} \right] \] does not work.  Try to compute any element of
-the result of either $\hat I \cdot \widehat{XYD}$ or $\widehat{XYD}
-\cdot \hat I$ to see why.  As it turns out, there are two identities
-for $\widehat{XYD}$.  One can only be used on the left:
+  1 & 0 & 0 \\
+  0 & 1 & 0 \\
+  0 & 0 & 1
+ \end{matrix} \right] \]
+
+does not work. Try to compute any element of the result of either
+$\hat I \cdot \widehat{XYD}$ or $\widehat{XYD} \cdot \hat I$ to see
+why.  As it turns out, there are two identities for $\widehat{XYD}$.
+One can only be used on the left:
  
  \[ \left[ \begin{matrix} 
-  \hat 1 & \hat 0 & 0 \cdot s \\
-  \hat 0 & \hat 1 & 0 \cdot s \\
-  0 \cdot s^{-1} & 0 \cdot s^{-1} & \hat 1
+  1 & 0 & 0 \cdot s \\
+  0 & 1 & 0 \cdot s \\
+  0 \cdot s^{-1} & 0 \cdot s^{-1} & 1
  \end{matrix} \right] \] and one can only be used on the right:
 
 \[ \left[ \begin{matrix} 
-  \hat 1 & \hat 0 & 0 \cdot s^{-1} \\
-  \hat 0 & \hat 1 & 0 \cdot s^{-1} \\
-  0 \cdot s & 0 \cdot s & \hat 1
+  1 & 0 & 0 \cdot s^{-1} \\
+  0 & 1 & 0 \cdot s^{-1} \\
+  0 \cdot s & 0 \cdot s & 1
  \end{matrix} \right] \]
  
-This paper attempts to answer why this result, and other nontrivial
+This paper attempts to answer why this result, and other unexpected
 results, are inherent to matrices containing physical quantities.
+
+\section{Conventions}
 
 \begin{defn} A value associated with one or more physical dimensions
   is a \textbf{dimensional value}. \end{defn}
