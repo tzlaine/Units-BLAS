@@ -785,22 +785,22 @@ this, the final units for $| \hat M |$ are
 dimensional value matrix $\hat M$, the \textbf{inverse type} of
 $\hat M$ is $\langle \hat M^{TV} \rangle$. \end{defn}
 
-\begin{thm} For an $n \times n$ dimensional value matrix $\hat M$, the
-$\hat M * inverse(\hat M) = \hat I_L$. \end{thm}
+\begin{thm} If an $n \times n$ dimensional value matrix $\hat M$
+has a left-identity $\hat I_L$, then $\langle \hat I_L \rangle = \langle \hat M * \hat M^{-1} \rangle$. \end{thm}
 
 \begin{proof} Let $\hat M$ be an $n \times n$ dimensional value
 matrix, and let $DM$ be the matrix that contains the DCVs of all
-of the values in $\hat M$:
+of the units in $\langle \hat M \rangle$ (each $v_{ij}$ is a DCV):
 
 \[ DM = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
   v_{21} & v_{22} & \cdots & v_{2n} \\
   \vdots & \vdots & \ddots & \vdots \\
   v_{n1} & v_{n2} & \cdots & v_{nn}
-\end{matrix} \right] \] in which each $v$ is a DCV.
+\end{matrix} \right] \]
 
-Applying Definition \ref{inverse_type_definition}, the matrix that contains
-the DCVs of all of the values in $inverse(\hat M)$ is $DM_{Inv}$:
+Applying Definition \ref{inverse_type_definition}, the matrix $DM_{Inv}$ that
+contains the DCVs of all of the units in $\langle \hat M^{-1} \rangle$ is:
 
 \[ DM_{Inv} = \left[ \begin{matrix} 
   -v_{11} & -v_{21} & \cdots & -v_{n1} \\
@@ -809,8 +809,19 @@ the DCVs of all of the values in $inverse(\hat M)$ is $DM_{Inv}$:
   -v_{1n} & -v_{2n} & \cdots & -v_{nn}
  \end{matrix} \right]. \]
 
-The matrix that contains the DCVs of all of the values in $\hat M * inverse(\hat M)$
-$DM_{IL}$ is thus:
+Since $\hat M$ has a left-identity, the DDVs for the rows of $DM$ are
+all equal.  Further, since $DM_{Inv}$ was constructed using Definition
+\ref{inverse_type_definition}, $DM_{Inv}$ then has the same DDV for
+each of its columns.  Also by due to the use of Definition
+\ref{inverse_type_definition}, $\langle (\hat M * \hat M^{-1})_{11}
+\rangle = \emptyset$.  By the logic used to prove Theorem
+\ref{if_IL_then_same_col_ddvs}, each term of the summation that
+computes the $(i, j)$ element of $\hat M * \hat M^{-1}$ will have the
+same units, as required by Lemma
+\ref{terms_of_a_summation_have_equal_units}.
+
+The matrix $DM_{IL}$ that contains the DCVs of all of the values in
+$\langle \hat M * \hat M^{-1} \rangle$ is thus:
 
 \[ DM_{IL} = \left[ \begin{matrix} 
   \vec{\emptyset} & v_{11} - v_{21} & \cdots & v_{11} - v_{n1} \\
@@ -819,8 +830,12 @@ $DM_{IL}$ is thus:
   v_{n1} - v{11} & v_{n1} - v_{21} & \cdots & \vec{\emptyset}
  \end{matrix} \right]. \]
 
-Finally, the matrix that contains the DCVs of all of the values in
-$(\hat M * inverse(\hat M)) * \hat M$ is:
+Lemma \ref{terms_of_a_summation_have_equal_units} allows one to choose
+any term in the summation that computes the $(i, j)$ element of $(\hat
+M * \hat M^{-1}) * \hat M$.  By choosing the appropriate term in each
+summation, the matrix $DM^{\prime}$ that contains the DCVs of all of
+the values in $\langle (\hat M * \hat M^{-1}) * \hat M \rangle$ can be
+written as:
 
 \[ DM^{\prime} = \left[ \begin{matrix} 
   v_{11} & v_{12} & \cdots & v_{1n} \\
@@ -829,32 +844,7 @@ $(\hat M * inverse(\hat M)) * \hat M$ is:
   v_{n1} & v_{n2} & \cdots & v_{nn}
 \end{matrix} \right]. \]
 
-Since this result has the same dimensions as $DM$, the expression $\hat M *
-inverse(\hat M)$ is a left-identity for $\hat M$. \end{proof}
-
-\begin{thm} \end{thm}
-
-\begin{proof}
-
-\[ \hat M_1 = \left[ \begin{matrix} x_{11} \cdot u_{11} \end{matrix} \right] \]
-\[ \hat I_{L1} = \hat I_{R1} = \left[ \begin{matrix}
- \hat 1
-\end{matrix} \right], so \]
-\[ \hat I_{L1} = \hat I_{R1}^{TV} \]
-
-\[ DM_n = \left[ \begin{matrix} 
-  v_{11} & v_{12} & \cdots & v_{1n} \\
-  v_{21} & v_{22} & \cdots & v_{2n} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  v_{n1} & v_{n2} & \cdots & v_{nn}
-\end{matrix} \right] \]
-
-\[ DM_{n+1} = \left[ \begin{matrix} 
-  v_{11} & v_{12} & \cdots & v_{1n} & v_{1(n+1)} \\
-  v_{21} & v_{22} & \cdots & v_{2n} & v_{2(n+1)} \\
-  \vdots & \vdots & \ddots & \vdots & \vdots \\
-  v_{n1} & v_{n2} & \cdots & v_{nn} & v_{n(n+1)} \\
-  v_{(n+1)1} & v_{(n+1)2} & \cdots & v_{(n+1)n} & v_{(n+1)(n+1)}
-\end{matrix} \right] \]  \end{proof}
+Since $DM^{\prime} = DM$, the $\langle \hat M * \hat M^{-1} \rangle$
+has units usable as a left-identity for $\hat M$. \end{proof}
 
 \end{document}
