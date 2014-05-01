@@ -21,12 +21,6 @@
 \begin{document}
 Need proof/discussion of
 
-***TODO*** Show that $\hat M * inverse(\hat M) = \hat I_L$
-
-***TODO*** Show that $inverse(\hat M) * \hat M = \hat R_L$
-
-***TODO*** Add corollary that an inverse can be used on either side.
-
 ***TODO*** Show that dimensional antisymmetry <-> $\hat I_R = \hat I_L$ (conjecture).
 
 ***TODO*** Show that dimensional symmetry <-> $\hat I_R = \hat I_L^{TV}$ (conjecture).
@@ -287,8 +281,9 @@ and $\hat I_{A_n} \cdot \hat B_n$ for $n > 1$.  This is shown later.
 
 The above must be true by the nature of addition of dimensional values.
 
-\begin{cor}Every term in the summation computing a dot product must
-  have the same units as the first term in the summation.\end{cor}
+\begin{cor}By Lemma \label{terms_of_a_summation_have_equal_units},
+every term in the summation computing a dot product must have the same
+units as the first term in the summation.\end{cor}
 
 \begin{defn}The vector of coefficients of the dimensions of the units
   of a dimensional value vector is the \textbf{Dimensional
@@ -710,10 +705,11 @@ A^T$.  For example, if
 Recall that for a purely numerical $n \times n$ matrix $M$, a
 determinant always exists, and $|M| \not= 0$ implies that $M$ is
 nonsingular.  However, even if $| \| \hat M \| | \not= 0$, $| \hat M
-|$ may not even exist.
+|$ may not exist.
 
-\begin{thm}For $n > 1$, a determinant does not exist for every $n
-  \times n$ dimensional value matrix $\hat M$. \end{thm}
+\begin{thm} \label{nonexistence_of_some_determinants} For $n > 1$,
+a determinant does not exist for every $n \times n$ dimensional value
+matrix $\hat M$. \end{thm}
 
 \begin{proof}Let $\hat A$ be the matrix
 
@@ -733,8 +729,9 @@ dimensional value matrix $\hat M$ that has no determinant by placing
 the elements of $\hat A$ in the upper-left $2 \times 2$ elements of
 $\hat M$. \end{proof}
 
-\begin{cor}Some numerically nonsingular dimensional value matrices
-  have no inverse, due to their units.\end{cor}
+\begin{cor}Due to \label{nonexistence_of_some_determinants}, some numerically
+nonsingular dimensional value matrices have no inverse, due to their
+units.\end{cor}
 
 \begin{thm}For an $n \times n$ dimensional value matrix $\hat M$, if
   $\hat M$ has a determinant, then
@@ -781,14 +778,15 @@ this, the final units for $| \hat M |$ are
 \[ \langle | \hat M | \rangle = \langle \prod_{k=1}^n \hat M_{kk}
 \rangle . \] \end{proof}
 
-\begin{defn} \label{inverse_type_definition} Given an $n \times n$
+\begin{defn}\label{inverse_type_definition} Given an $n \times n$
 dimensional value matrix $\hat M$, the \textbf{inverse type} of
 $\hat M$ is $\langle \hat M^{TV} \rangle$. \end{defn}
 
-\begin{thm} If an $n \times n$ dimensional value matrix $\hat M$
-has a left-identity $\hat I_L$, then $\langle \hat I_L \rangle = \langle \hat M * \hat M^{-1} \rangle$. \end{thm}
+\begin{thm}\label{IL_is_constructible_from_inverse} If an $n \times n$
+dimensional value matrix $\hat M$ has a left-identity $\hat I_L$, then
+$\langle \hat I_L \rangle = \langle \hat M \hat M^{-1} \rangle$. \end{thm}
 
-\begin{proof} Let $\hat M$ be an $n \times n$ dimensional value
+\begin{proof}Let $\hat M$ be an $n \times n$ dimensional value
 matrix, and let $DM$ be the matrix that contains the DCVs of all
 of the units in $\langle \hat M \rangle$ (each $v_{ij}$ is a DCV):
 
@@ -813,15 +811,15 @@ Since $\hat M$ has a left-identity, the DDVs for the rows of $DM$ are
 all equal.  Further, since $DM_{Inv}$ was constructed using Definition
 \ref{inverse_type_definition}, $DM_{Inv}$ then has the same DDV for
 each of its columns.  Also by due to the use of Definition
-\ref{inverse_type_definition}, $\langle (\hat M * \hat M^{-1})_{11}
+\ref{inverse_type_definition}, $\langle (\hat M \hat M^{-1})_{11}
 \rangle = \emptyset$.  By the logic used to prove Theorem
 \ref{if_IL_then_same_col_ddvs}, each term of the summation that
-computes the $(i, j)$ element of $\hat M * \hat M^{-1}$ will have the
+computes the $(i, j)$ element of $\hat M \hat M^{-1}$ will have the
 same units, as required by Lemma
 \ref{terms_of_a_summation_have_equal_units}.
 
 The matrix $DM_{IL}$ that contains the DCVs of all of the values in
-$\langle \hat M * \hat M^{-1} \rangle$ is thus:
+$\langle \hat M \hat M^{-1} \rangle$ is thus:
 
 \[ DM_{IL} = \left[ \begin{matrix} 
   \vec{\emptyset} & v_{11} - v_{21} & \cdots & v_{11} - v_{n1} \\
@@ -832,9 +830,9 @@ $\langle \hat M * \hat M^{-1} \rangle$ is thus:
 
 Lemma \ref{terms_of_a_summation_have_equal_units} allows one to choose
 any term in the summation that computes the $(i, j)$ element of $(\hat
-M * \hat M^{-1}) * \hat M$.  By choosing the appropriate term in each
+M \hat M^{-1}) \hat M$.  By choosing the appropriate term in each
 summation, the matrix $DM^{\prime}$ that contains the DCVs of all of
-the values in $\langle (\hat M * \hat M^{-1}) * \hat M \rangle$ can be
+the values in $\langle (\hat M \hat M^{-1}) \hat M \rangle$ can be
 written as:
 
 \[ DM^{\prime} = \left[ \begin{matrix} 
@@ -844,7 +842,19 @@ written as:
   v_{n1} & v_{n2} & \cdots & v_{nn}
 \end{matrix} \right]. \]
 
-Since $DM^{\prime} = DM$, the $\langle \hat M * \hat M^{-1} \rangle$
+Since $DM^{\prime} = DM$, the product $\langle \hat M \hat M^{-1} \rangle$
 has units usable as a left-identity for $\hat M$. \end{proof}
+
+\begin{thm} \label{IR_is_constructible_from_inverse} If an $n \times n$
+dimensional value matrix $\hat M$ has a right-identity $\hat I_R$,
+then $\langle \hat I_R \rangle = \langle \hat M^{-1} \hat M
+\rangle$. \end{thm}
+
+\begin{proof}Theorem \ref{IR_is_constructible_from_inverse} is proved
+by symmetry with Theorem \ref{IL_is_constructible_from_inverse}. \end{proof}
+
+\begin{cor}By Theorems \ref{IL_is_constructible_from_inverse} and
+\ref{IR_is_constructible_from_inverse}, $\langle \hat M^{TV}
+\rangle = \langle \hat M^{-1} \rangle$ \end{cor}
 
 \end{document}
