@@ -79,8 +79,8 @@ namespace boost { namespace units_blas {
         constexpr std::size_t transpose_index (std::size_t i)
         {
             return
-                i % Matrix::num_columns * Matrix::num_rows +
-                i / Matrix::num_columns;
+                i % Matrix::num_rows * Matrix::num_columns +
+                i / Matrix::num_rows;
         }
 
 
