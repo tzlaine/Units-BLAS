@@ -14,48 +14,33 @@
 Matrices are declared in the form:
 
     units_blas::matrix<
-        fusion::vectorN<
-            fusion::vectorN< ... >,
-            fusion::vectorN< ... >,
-            ...
-        >
-    > MyMatrix;
+        std::tuple< ... >,
+        std::tuple< ... >,
+        ...
+    > my_matrix;
 
-For example, assuming there exist three quantity types `Length`, `Time`, and
-`Frequency`, these are all valid matrices:
+For example, assuming there exist three quantity types `length`, `time_`, and
+`frequency`, these are all valid matrices:
 
 [/ this does not seems to want to work, so I'm cut-and-pasting instead: quick_start_example_types]
 
     // a 1x3 matrix
     typedef units_blas::matrix<
-        fusion::vector1<
-            fusion::vector3<Length, Time, Frequency>
-        >
-    > MatrixType1;
+        std::tuple<length, time_, frequency>
+    > matrix_type_1;
     
     // a 3x1 matrix
     typedef units_blas::matrix<
-        fusion::vector3<
-            fusion::vector1<Length>,
-            fusion::vector1<Time>,
-            fusion::vector1<Frequency>
-        >
-    > MatrixType2;
+        std::tuple<length>,
+        std::tuple<time_>,
+        std::tuple<frequency>
+    > matrix_type_2;
     
     // a 2x2 matrix
     typedef units_blas::matrix<
-        fusion::vector2<
-            fusion::vector2<Length, Time>,
-            fusion::vector2<Frequency, Time>
-        >
-    > MatrixType3;
-
-Note that the size of a _matrix_ is limited by the maximum number of elements
-allowed in an _fus_vec_ object.  By default, the max for each is 10.  To
-increase it, you must define `FUSION_MAX_VECTOR_SIZE` before including any
-UnitsBlas or Fusion header.  For example:
-
-    #define FUSION_MAX_VECTOR_SIZE 20
+        std::tuple<length, time_>,
+        std::tuple<frequency, time_>
+    > matrix_type_3;
 
 [heading Operations On Matrices]
 
@@ -73,16 +58,15 @@ or:
     s * m
 
 Here is a summary of the operations on matrices.  In the table below, `M1` and
-`M2` are _matrix_ objects, `s` is a scalar, `Rows` and `Columns` are _mpl_ type
-sequences containing integral constants, and `e1` is an element of _matrix_
-`M1`.
+`M2` are _matrix_ objects, `s` is a scalar, `Rows` and `Columns` are
+`std::index_sequence`s, and `e1` is an element of _matrix_ `M1`.
 
 [table Matrix Operations
     [[Operation Syntax] [Description] [Notes]]
     [[`M1 += M2`]                      [ Elementwise addition. ]                          []]
     [[`M1 -= M2`]                      [ Elementwise subtraction. ]                       []]
-    [[`M1 *= s`]                       [ Matrix-scalar product. ]                         [ Won't compile if `e1 = typeof(e1 * s)` doesn't compile. ]]
-    [[`M1 /= s`]                       [ Matrix-scalar division. ]                        [ Won't compile if `e1 = typeof(e1 / s)` doesn't compile. ]]
+    [[`M1 *= s`]                       [ Matrix-scalar product. ]                         [ Won't compile if `e1 = decltype(e1 * s)` doesn't compile. ]]
+    [[`M1 /= s`]                       [ Matrix-scalar division. ]                        [ Won't compile if `e1 = decltype(e1 / s)` doesn't compile. ]]
     [[`-M1`
 
       _neg__`(M)`]              [ Elementwise negation. ]                          []]
@@ -103,7 +87,7 @@ sequences containing integral constants, and `e1` is an element of _matrix_
       _diff__`(M1, M2)`]    [ Elementwise subtraction. ]                       []]
     [[_element_prod__`(M1, M2)`]       [ Elementwise product. ]                           []]
     [[_element_div__`(M1, M2)`]        [ Elementwise division. ]                          []]
-    [[_slice__`<Rows, Columns>(M1)`]   [ Subset of rows and columns of original matrix. ] []]
+    [[_slice__`<Rows, Columns>(M1)`]   [ Construct new matrix from some set of rows and columns of original matrix. ] []]
     [[_transpose__`(M1)`]              [ Matrix transpose. ]                              []]
     [[_determinant__`(M1)`]            [ Matrix determinant. ]                            [ `M1` must be square. ]]
     [[_inverse__`(M1)`]                [ Matrix inverse. ]                                [ `M1` must be square.  Throws if `M1` is singular. ]]
@@ -114,15 +98,11 @@ sequences containing integral constants, and `e1` is an element of _matrix_
 There are no vector types in UnitsBlas.  Vectors are merely degenerate matrices.
 All the UnitsBlas vector operations accept _matrix_ parameters of the
 appropriate dimensions (either 1 x N or N x 1).  Overloads are provided for both
-orientations where approprate.  Two vector predicate metafunctions are provided,
-_is_vector_ and _is_transpose_vector_.  Common convention dictates that vectors
-are written vertically, so _is_vector_ evaluates to true iff its given argument
-is a _matrix_ and has one column.  _is_transpose_vector_ evaluates to true iff
-its given argument is a _matrix_ and has one row.
+orientations where approprate.
 
 Here is a summary of the operations specific to "vectors".  Since "vectors"
 are just matrices, all matrix operations also apply to "vectors".  In the
-table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true.
+table below, `V1` and `V2` are Nx1 or 1xN _matrix_ objects.
 
 [table Vector Operations
     [[Operation Syntax] [Description] [Notes]]
@@ -139,9 +119,5 @@ table below, `V1` and `V2` are _matrix_ objects for which _is_vector_ is true.
     [[_norm_inf_index__`(V1)`]         [ Index of first element equal to `norm_inf(V1)`. ]    [ Elements must be pairwise less-than comparable. ]]
     [[_solve__`(M1, V2, V1)`]          [ Solution to `M1 * V1 = V2` placed in `V1`. ]         [ `M1` must be square.  Throws if `M1` is singular. ]]
 ]
-
-[note All the above operations also apply to _matrix_ objects for which
-_is_transpose_vector_ is true.  Canonical and transpose vectors cannot be mixed
-in the vector-specific operations.]
 
 [endsect]

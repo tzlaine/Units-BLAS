@@ -25,36 +25,27 @@ is (compile-time) O(n!) in the number of rows.  For even moderately-sized
 matrices, this may impose an unrealistic compile-time burden for some users.
 Since for matrices that have a determinant type T, T must be convertible to
 the type of the products of the diagonals, UnitsBlas provides a simpler
-`result_of::determinant` metafunction that uses only the diagonal elements.
+determinant-type metafunction that uses only the diagonal elements.
 Note that this *does not* produce the same results as the default
-`result_of::determinant` in the general case!  For instance, consider this
+determinant-type in the general case!  For instance, consider this
 matrix:
 
 __bad_determinant__
 
 It has no determinant that makes sense given its elements' types.  Yet, using
-only its diagonals, the alternative `result_of::determinant` implementation
-will ignorantly report a determinant type of ['m^2/s].  Other more subtle
-problems crop up when different units are mixed in the same matrix, or when
-units using different underlying `value_type`s are mixed in the same matrix.
+only its diagonals, the alternative implementation will ignorantly report a
+determinant type of ['m^2/s].  Other more subtle problems crop up when
+different units are mixed in the same matrix, or when units using different
+underlying `value_type`s are mixed in the same matrix.
 
-To enable the simplified implementation of `result_of::determinant`, define
+To enable the simplified implementation of determinant-type, define
 `BOOST_UNITS_BLAS_USE_INEXACT_DETERMINANT_TYPE` to be nonzero before including
 any library header.
 
 [tip If prohibitively long compile times are a problem, try using the default
-`result_of::determinant` at first to check the validity of the determinant
-type, then temporarily switch to the simpler alternative.  Don't forget to
-switch back to the default implementation when you're finished with frequent
-recompilation.]
-
-[heading `FUSION_MAX_VECTOR_SIZE`]
-
-UnitsBlas relies heavily on Boost.Fusion.  The internal storage of _matrix_ is
-just a `fusion::vector` of `fusion::vector`s.  As such, you may need to be
-aware of the `FUSION_MAX_VECTOR_SIZE`, which controls the maximum arity of the
-`fusion::vector` template.  See the Boost.Fusion documentation for more
-details.
+method at first to check the validity of the determinant type, then
+temporarily switch to the simpler alternative.  Don't forget to switch back to
+the default implementation when you're finished with frequent recompilation.]
 
 [heading `BOOST_NO_EXCEPTIONS`]
 

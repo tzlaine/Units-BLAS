@@ -5,25 +5,35 @@
 # http://www.boost.org/LICENSE_1_0.txt
 
 import path ;
-import doxygen ;
 import quickbook ;
+using boostbook ;
+using doxygen ;
 
-rule run_doxygen ( target : files * : name : expand ? )
+rule run_doxygen ( target : files * : name )
 {
-
-    expand ?= <doxygen:param>EXPAND_ONLY_PREDEF=YES ;
-
-doxygen $(target)
-  :
-    $(files)
-  :
+    doxygen $(target)
+      :
+        $(files)
+      :
         <doxygen:param>EXTRACT_ALL=YES
-        # note that there is no detail::unspecified -- this is a hack to get all
-        # the SFINAE code out of the API docs.
-        <doxygen:param>"PREDEFINED=\"BOOST_UNITS_BLAS_DOXYGEN=1\" \\
-                                   \"BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS=1\" \\
-                                   \"lazy_enable_if=detail::unspecified\" \\
-                                   \"enable_if=detail::unspecified\""
+        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+
+        # Horribly ugly, but then macros usually are :(
+        <doxygen:param>"PREDEFINED= \\
+            \"BOOST_MPL_ASSERT(expr)=\" \\
+            \"BOOST_UNITS_STATIC_CONSTANT(a,b)=static const b a\" \\
+            \"BOOST_UNITS_AUTO_STATIC_CONSTANT(a,b)=static const auto a = b\" \\
+            \"BOOST_UNITS_TYPEOF(a)=typeof(a)\" \\
+            \"BOOST_PREVENT_MACRO_SUBSTITUTION=\" \\
+            \"BOOST_UNITS_HAS_TYPEOF=1\" \\
+            \"BOOST_UNITS_DEFINE_BASE_UNIT_WITH_CONVERSIONS(namespace_, name_, name_string, symbol_, factor, other_unit, id)= \\
+                namespace boost { namespace units { namespace namespace_ { \\
+                    struct name_ ## _base_unit : boost::units::base_unit<name_ ## _base_unit, other_unit::dimension_type, id> { \\
+                        static const char* name(); \\
+                        static const char* symbol(); \\
+                    }; \\
+                } } }\" \\
+            \"BOOST_UNITS_DOXYGEN=1\""
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES
@@ -31,7 +41,7 @@ doxygen $(target)
         $(expand)
         <doxygen:param>SEARCH_INCLUDES=NO
         <reftitle>$(name)
-  ;
+    ;
 
 }
 

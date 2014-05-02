@@ -34,9 +34,9 @@ compile, since the subtraction operation above makes no sense.  If not caught by
 inspection, such calculations can fall into the typesafety hole, appearing to be
 correct.
 
-Thanks to the efforts of the authors of Boost.Units and Boost.Fusion, it is a
-relatively simple matter to create matrices whose elements have heterogenous
-types.  This library does exactly that.
+Thanks to the efforts of the authors of Boost.Units, it is a relatively simple
+matter to create matrices whose elements have heterogenous types.  This
+library does exactly that.
 
 [heading Description]
 
@@ -47,9 +47,8 @@ operations.  Specifically, its goals are to:
 * eliminate the need to remove and then re-stuff raw values from/into Boost.Units quantities via _value_ and _from_value_; and
 * provide linear algebra operations as efficient as hand-written code.
 
-A secondary goal is for UnitsBlas to work equally well with any units library
-(i.e. not just Boost.Units), or none at all (i.e. using only fundamental types,
-std::complex, etc.).
+A secondary goal is for UnitsBlas to work equally well using only fundamental
+types, std::complex, etc.
 
 [heading What This Library Does Not Do]
 

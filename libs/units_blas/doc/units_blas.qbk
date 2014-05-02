@@ -56,16 +56,15 @@
 
 [def _matrix_                       [classref boost::units_blas::matrix `matrix<>`]]
 [def _matrices_                     [classref boost::units_blas::matrix `matrix<>`s]]
-[def _identity_matrix__             [funcref boost::units_blas:: `identity_matrix`]]
-[def _identity_matrix_              [funcref boost::units_blas:: `identity_matrix<>`]]
-[def _make_matrix_                  [classref boost::units_blas::make_matrix `make_matrix<>`]]
+[def _left_identity_matrix__        [funcref boost::units_blas:: `make_left_identity_matrix`]]
+[def _left_identity_matrix_         [funcref boost::units_blas:: `make_left_identity_matrix<>`]]
+[def _right_identity_matrix__       [funcref boost::units_blas:: `make_right_identity_matrix`]]
+[def _right_identity_matrix_        [funcref boost::units_blas:: `make_right_identity_matrix<>`]]
 [def _uniform_matrix_               [classref boost::units_blas::uniform_matrix `uniform_matrix<>`]]
 [def _vector_                       [classref boost::units_blas::vector `vector<>`]]
 [def _transpose_vector_             [classref boost::units_blas::transpose_vector `transpose_vector<>`]]
 [def _uniform_vector_               [classref boost::units_blas::uniform_vector `uniform_vector<>`]]
 [def _uniform_transpose_vector_     [classref boost::units_blas::uniform_transpose_vector `uniform_transpose_vector<>`]]
-[def _is_vector_                    [classref boost::units_blas::is_vector `is_vector<>`]]
-[def _is_transpose_vector_          [classref boost::units_blas::is_transpose_vector `is_transpose_vector<>`]]
 [def _slice__                       [funcref boost::units_blas::slice `slice`]]
 [def _slice_                        [funcref boost::units_blas::slice `slice<>`]]
 [def _transpose__                   [funcref boost::units_blas::transpose `transpose`]]
@@ -107,12 +106,10 @@
 [def _tutorial_                     [link units_blas.manual.tutorial Tutorial]]
 [def _value_                        `units::quantity<>::value()`]
 [def _from_value_                   `units::quantity<>::from_value()`]
-[def _fus_vec_                      `fusion::vector<>`]
 
 [/ External Links ]
 
 [def _mpl_                          [@http://boost.org/libs/mpl/doc/index.html MPL]]
-[def _fusion_                       [@http://boost.org/libs/fusion/doc/index.html Fusion]]
 
 [include intro.qbk]
 
@@ -144,9 +141,7 @@ the Quick Start section, so material covered there is not repeated here.
 
 The headers in UnitsBlas are fairly fine-grained.  See the Reference section
 for the specific contents of the UnitsBlas headers.  Additionally, one can
-`#include <boost/units_blas.hpp>` to get all the library's headers, or one can
-`#include <boost/units_blas/result_of.hpp>` to get all the headers in the
-`boost/units_blas/result_of` directory.
+`#include <boost/units_blas.hpp>` to get all the library's headers.
 
 [heading Creating _matrices_]
 
@@ -154,14 +149,6 @@ Typically, you will make a _matrix_ by declaring it as indicated previously.
 For example:
 
 [default_matrix_decl]
-
-However, in a generic programming context this may be inconvenient.  _matrix_
-will accept any type sequence of same-sized type sequences.  The type sequences
-can be any of those in the _mpl_ or _fusion_ libraries, or in fact any other
-compatible sequence (including views on sequences).  To use
-non-`fusion::vector<>`s, use the metafunction _make_matrix_:
-
-[make_matrix_decl]
 
 As a convenience, a few other metafunctions are also supplied.  To create a N
 x M _matrix_ in which every element has the same type, use _uniform_matrix_:
@@ -246,22 +233,13 @@ Indexing is done with compile-time constants.  There is no interface for using
 variables as indices into _matrices_.  This necessitates the need to use
 _iterate_ to loop over elements of a _matrix_.
 
-[note Indices into _matrices_ are usually only checked when they reach the
-static assertions in _value_at_.]
-
-_iterate_ is a generic facility for unrolling loops.  See [headerref
-boost/units_blas/operations.hpp] and [headerref
-boost/units_blas/detail/iteration.hpp] for examples.
-
-[note Each iteration of an _iterate_ loop will be forced inline, to the extent
-this is possible with the platform and compiler, when `NDEBUG` is defined.]
-
 [heading I/O]
 
 There is support for very simple output of _matrices_.  There is no support
-for input of them.  _matrix_ has an unimplemented member function _print_;
-include [headerref boost/units_blas/io.hpp] for the implementation and an
-overload of `operator<<` for `std::ostream &` and _matrix_.
+for input.  _matrix_ as it appears in [headerref boost/units_blas/matrix.hpp]
+has an unimplemented member function _print_; include [headerref
+boost/units_blas/io.hpp] for the implementation and an overload of
+`operator<<` for `std::ostream &` and _matrix_.
 
 [heading Cross Products]
 
@@ -287,10 +265,6 @@ of the _matrix_ being sliced.  Here is an example of reordering using slice:
 
 [heading Identity Matrices]
 
-Identity matrices of a certain type can be created by calling
-`units_blas::identity_matrix<MatrixType>()`, where `MatrixType` is a square
-_matrix_.
-
 This is simple enough, but there is something else to note about identity
 _matrices_.  The _matrix_ `I` that preserves the values and types of another
 _matrix_ `M` in the operation `M * I` is not always obvious.  For uniform
@@ -307,6 +281,17 @@ its element types.  Consider the following _matrix_:
 Clearly, there is no column 0 that can be created that will produce a `Length`
 type when multiplied by both the first and second rows of `who_am_i`, so there
 is no `I` that will preserve `who_am_i`.
+
+Further, for a given _matrix_ `M`, there may be a _matrix_ `I` that works in
+the expression `M * I`, but that *does not* work in the expression `I * M`.
+You will note that this is weird.
+
+Identity _matrices_ of a certain type can be created by calling
+`units_blas::make_left_identity_matrix<MatrixType>()` or
+`units_blas::make_right_identity_matrix<MatrixType>()`, where `MatrixType` is
+a square _matrix_.  For a given `MatrixType` these may be the same or
+different, depending on the value types in `MatrixType`.  The left-and
+right-identity _matrices_ will only be the same for uniform _matrices_.
 
 [heading Swap]
 
@@ -355,9 +340,9 @@ UnitsBlas.
 
 [heading Common Error 1: Static Assertion Failure]
 
-`BOOST_STATIC_ASSERT()` and `BOOST_MPL_ASSERT()` are used liberally throughout
-UnitsBlas.  All nonobvious static assertions should have a comment indicating
-the most probable reason for the error.
+`static_assert()` is used liberally throughout UnitsBlas (along with a few
+instances of `BOOST_MPL_ASSERT()`).  All nonobvious static assertions should
+have a comment indicating the most probable reason for the error.
 
 [heading Common Error 2: Overload Failure]
 
@@ -378,7 +363,7 @@ Errors that are not in either of the previous two categories usually fall into
 this one.  Such errors are most commonly due to inappropriate quantity types
 being used in the _matrix_ parameters.  For instance, a _matrix_ with no
 determinant may produce a large number of hard-to-read errors that boil down
-to the inability to add intermediate types used to calculate the determinant.
+to the inability to add intermediate values used to calculate the determinant.
 
 [endsect]
 
@@ -388,25 +373,13 @@ to the inability to add intermediate types used to calculate the determinant.
 
 [endsect]
 
-[include adapting.qbk]
-
 [section:rationale Rationale]
-
-This is an overridable configuration macro controlling whether compile-time
-assertions should be used to enforce that the boost::units_blas::matrix template
-parameter \a Rows is a boost::fusion::vector of boost::fusion::vector's.  It is
-turned off by default.  If this is not set, consider a matrix<A>, where A is
-fusion vectors as stated before, and matrix<B>, where B is a boost::mpl::vector
-of boost::mpl::vector's.  Both matrices will function exactly the same, and in
-fact have the same \a value_types type, but are different types.  To prevent
-accidental code bloat due to this effect, define this macro to a nonzero value
-before including any library header.
 
 uniform_matrix name selection (vs. homogeneous_matrix)
 
 use of SFINAE in non-operator versions of operations, e.g. prod vs. operator* for consistency
 
-rules for handling degenerate 1x1 amtrices (vector vs. transpose vector cases, and vector vs. matrix operator*)
+rules for handling degenerate 1x1 matrices (vector vs. transpose vector cases, and vector vs. matrix operator*)
 
 use of operators, including the slightly wierd operator^ (note that cross products and bitwise xor have quite a bit in common)
 

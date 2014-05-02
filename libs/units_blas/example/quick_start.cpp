@@ -8,7 +8,7 @@ struct frequency {};
 
 int main()
 {
-// [quick_start_example_types
+//[quick_start_example_types
     // a 1x3 matrix
     using matrix_type_1 = units_blas::matrix<
         std::tuple<length, time_, frequency>
