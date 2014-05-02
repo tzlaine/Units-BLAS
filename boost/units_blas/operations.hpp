@@ -579,6 +579,18 @@ namespace boost { namespace units_blas {
         };
 
         template <typename Tuple>
+        struct determinant_type<matrix_t<Tuple, 1, 1>>
+        {
+            using type = decltype(determinant(matrix_t<Tuple, 1, 1>{}));
+        };
+
+        template <typename Tuple>
+        struct determinant_type<matrix_t<Tuple, 2, 2>>
+        {
+            using type = decltype(determinant(matrix_t<Tuple, 2, 2>{}));
+        };
+
+        template <typename Tuple>
         struct determinant_type<matrix_t<Tuple, 3, 3>>
         {
             using type = decltype(determinant(matrix_t<Tuple, 3, 3>{}));
