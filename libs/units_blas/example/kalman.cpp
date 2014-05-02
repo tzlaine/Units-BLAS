@@ -1,6 +1,9 @@
 //[units_blas_boilerplate
 #include <boost/units_blas.hpp>
 
+#include <iostream>
+#include <boost/units/io.hpp>
+
 using namespace boost;
 //]
 
@@ -12,103 +15,98 @@ using namespace boost;
 #include <boost/units/systems/si/frequency.hpp>
 #include <boost/units/systems/si/dimensionless.hpp>
 
-typedef units::quantity<units::si::time> s;
-typedef units::quantity<units::si::length> m;
-typedef units::quantity<units::si::velocity> m_per_s;
-typedef units::quantity<units::si::dimensionless> none_;
-typedef units::quantity<units::si::frequency> hz;
+using s = units::quantity<units::si::time>;
+using m = units::quantity<units::si::length>;
+using m_per_s = units::quantity<units::si::velocity>;
+using none_ = units::quantity<units::si::dimensionless>;
+using hz = units::quantity<units::si::frequency>;
 
 namespace boost { namespace units { namespace si {
-    typedef derived_dimension<length_base_dimension, 2>::type length_squared_dimension;
-    typedef derived_dimension<length_base_dimension, 2, time_base_dimension, -1>::type length_squared_per_time_dimension;
-    typedef derived_dimension<length_base_dimension, 2, time_base_dimension, -2>::type length_squared_per_time_squared_dimension;
-    typedef unit<length_squared_dimension, system> length_squared;
-    typedef unit<length_squared_per_time_dimension, system> length_squared_per_time;
-    typedef unit<length_squared_per_time_squared_dimension, system> length_squared_per_time_squared;
+
+    using length_squared_dimension =
+        derived_dimension<length_base_dimension, 2>::type;
+    using length_squared_per_time_dimension =
+        derived_dimension<length_base_dimension, 2, time_base_dimension, -1>::type;
+    using length_squared_per_time_squared_dimension =
+        derived_dimension<length_base_dimension, 2, time_base_dimension, -2>::type;
+
+    using length_squared =
+        unit<length_squared_dimension, system>;
+    using length_squared_per_time =
+        unit<length_squared_per_time_dimension, system>;
+    using length_squared_per_time_squared =
+        unit<length_squared_per_time_squared_dimension, system>;
+
 } } }
 
-typedef units::quantity<units::si::length_squared> m2;
-typedef units::quantity<units::si::length_squared_per_time> m2_per_s;
-typedef units::quantity<units::si::length_squared_per_time_squared> m2_per_s2;
+using m2 = units::quantity<units::si::length_squared>;
+using m2_per_s = units::quantity<units::si::length_squared_per_time>;
+using m2_per_s2 = units::quantity<units::si::length_squared_per_time_squared>;
 //]
 
 //[meas_type
-typedef units_blas::matrix<
-    fusion::vector2<
-        fusion::vector1<m>,
-        fusion::vector1<m>
-    >
-> meas_type;
+using meas_type = units_blas::matrix<
+    std::tuple<m>,
+    std::tuple<m>
+>;
 //]
 
 //[state_type
-typedef units_blas::matrix<
-    fusion::vector4<
-        fusion::vector1<m>,
-        fusion::vector1<m_per_s>,
-        fusion::vector1<m>,
-        fusion::vector1<m_per_s>
-    >
-> state_type;
+using state_type = units_blas::matrix<
+    std::tuple<m>,
+    std::tuple<m_per_s>,
+    std::tuple<m>,
+    std::tuple<m_per_s>
+>;
 //]
 
 //[P_type
-typedef units_blas::matrix<
-    fusion::vector4<
-        fusion::vector4<m2,       m2_per_s,  m2,       m2_per_s>,
-        fusion::vector4<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>,
-        fusion::vector4<m2,       m2_per_s,  m2,       m2_per_s>,
-        fusion::vector4<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>
-    >
-> P_type;
+using P_type = units_blas::matrix<
+    std::tuple<m2,       m2_per_s,  m2,       m2_per_s>,
+    std::tuple<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>,
+    std::tuple<m2,       m2_per_s,  m2,       m2_per_s>,
+    std::tuple<m2_per_s, m2_per_s2, m2_per_s, m2_per_s2>
+>;
 //]
 
 //[Q_type
-typedef P_type Q_type;
+using Q_type = P_type;
 //]
 
 //[F_type
-typedef units_blas::matrix<
-    fusion::vector4<
-        fusion::vector4<none_, s,     none_, s>,
-        fusion::vector4<hz,    none_, hz,    none_>,
-        fusion::vector4<none_, s,     none_, s>,
-        fusion::vector4<hz,    none_, hz,    none_>
-    >
-> F_type;
+using F_type = units_blas::matrix<
+    std::tuple<none_, s,     none_, s>,
+    std::tuple<hz,    none_, hz,    none_>,
+    std::tuple<none_, s,     none_, s>,
+    std::tuple<hz,    none_, hz,    none_>
+>;
 //]
 
 //[R_type
-typedef units_blas::matrix<
-    fusion::vector2<
-        fusion::vector2<m2, m2>,
-        fusion::vector2<m2, m2>
-    >
-> R_type;
+using R_type = units_blas::matrix<
+    std::tuple<m2, m2>,
+    std::tuple<m2, m2>
+>;
 //]
 
 //[H_type
-typedef units_blas::matrix<
-    fusion::vector2<
-        fusion::vector4<none_, s, none_, s>,
-        fusion::vector4<none_, s, none_, s>
-    >
-> H_type;
+using H_type = units_blas::matrix<
+    std::tuple<none_, s, none_, s>,
+    std::tuple<none_, s, none_, s>
+>;
 //]
 
 //[S_type
-typedef R_type S_type;
+using S_type = R_type;
 //]
 
 //[K_type
-typedef units_blas::matrix<
-    fusion::vector4<
-        fusion::vector2<none_, none_>,
-        fusion::vector2<hz,    hz>,
-        fusion::vector2<none_, none_>,
-        fusion::vector2<hz,    hz>
-    >
-> K_type;
+using K_type = units_blas::matrix<
+    std::tuple<none_, none_>,
+    std::tuple<hz,    hz>,
+    std::tuple<none_, none_>,
+    std::tuple<hz,    hz>
+>;
 //]
 
 int main()

@@ -1,148 +1,125 @@
 #include <libs/units_blas/test/operations_tests.hpp>
 
 #include <boost/units_blas.hpp>
-#include <boost/fusion/include/set.hpp>
-#include <boost/fusion/include/list.hpp>
-#include <boost/mpl/vector_c.hpp>
 
 using namespace boost;
 
-typedef length Length;
-typedef time_ Time;
-typedef velocity Velocity;
-typedef length_sq LengthSquared;
+using length_squared = length_sq;
 
 int main()
 {
     {
 //[default_matrix_decl
     units_blas::matrix<
-        fusion::vector4<
-            fusion::vector1<Length>,
-            fusion::vector1<Velocity>,
-            fusion::vector1<Length>,
-            fusion::vector1<Velocity>
-        >
+        std::tuple<length>,
+        std::tuple<velocity>,
+        std::tuple<length>,
+        std::tuple<velocity>
     > my_matrix;
 //]
     }
 
     {
 //[make_matrix_decl
-    units_blas::make_matrix<
-        mpl::set<
-            mpl::vector<Length, Length>,
-            fusion::list<Length, Length>
-        >
-    >::type my_matrix;
+    units_blas::matrix<
+        std::tuple<length, length>,
+        std::tuple<length, length>
+    > my_matrix;
 //]
     }
 
     {
 //[uniform_matrix_decl
-    units_blas::make_uniform_matrix<Time, 2, 3>::type my_matrix;
+    units_blas::uniform_matrix<time_, 2, 3> my_matrix;
 //]
     }
 
     {
 //[equiv_uniform_matrix_decl
     units_blas::matrix<
-        fusion::vector2<
-            fusion::vector3<Time, Time, Time>,
-            fusion::vector3<Time, Time, Time>
-        >
+        std::tuple<time_, time_, time_>,
+        std::tuple<time_, time_, time_>
     > my_matrix;
 //]
     }
 
     {
 //[vector_decl
-    units_blas::make_vector<fusion::vector<Length, Time> >::type my_vector;
+    units_blas::vector<length, time_> my_vector;
 //]
     }
 
     {
 //[equiv_vector_decl
     units_blas::matrix<
-        fusion::vector2<
-            fusion::vector1<Length>,
-            fusion::vector1<Time>
-        >
+        std::tuple<length>,
+        std::tuple<time_>
     > my_vector;
 //]
     }
 
     {
 //[transpose_vector_decl
-    units_blas::make_transpose_vector<fusion::vector<Length, Time> >::type my_transpose_vector;
+    units_blas::transpose_vector<length, time_> my_transpose_vector;
 //]
     }
 
     {
 //[equiv_transpose_vector_decl
     units_blas::matrix<
-        fusion::vector1<
-            fusion::vector2<Length, Time>
-        >
+        std::tuple<length, time_>
     > my_transpose_vector;
 //]
     }
 
     {
 //[uniform_vector_decls
-    units_blas::make_uniform_vector<Length, 2>::type my_vector;
-    units_blas::make_uniform_transpose_vector<Time, 2>::type my_transpose_vector;
+    units_blas::uniform_vector<length, 2> my_vector;
+    units_blas::uniform_transpose_vector<time_, 2> my_transpose_vector;
 //]
     }
 
     {
 //[equiv_uniform_vector_decls
     units_blas::matrix<
-        fusion::vector2<
-            fusion::vector1<Length>,
-            fusion::vector1<Length>
-        >
+        std::tuple<length>,
+        std::tuple<length>
     > my_vector;
     
     units_blas::matrix<
-        fusion::vector1<
-            fusion::vector2<Time, Time>
-        >
+        std::tuple<time_, time_>
     > my_transpose_vector;
 //]
     }
 
     {
 //[cross_product_space_example
-    units_blas::make_uniform_vector<Length, 3>::type vec;
-    units_blas::make_uniform_vector<LengthSquared, 3>::type cross_product_result = vec ^ vec;
+    units_blas::uniform_vector<length, 3> vec;
+    units_blas::uniform_vector<length_squared, 3> cross_product_result = vec ^ vec;
 //]
     }
 
     {
 //[slicing_example
-    typedef units_blas::matrix<
-        fusion::vector2<
-            fusion::vector2<double, double>,
-            fusion::vector2<double, double>
-        >
-    > Matrix;
+    using matrix = units_blas::matrix<
+        std::tuple<double, double>,
+        std::tuple<double, double>
+    >;
 
-    Matrix matrix;
-    matrix.at<0, 0>() = 1.0;
-    matrix.at<0, 1>() = 2.0;
-    matrix.at<1, 0>() = 3.0;
-    matrix.at<1, 1>() = 4.0;
+    matrix m;
+    m.at<0, 0>() = 1.0;
+    m.at<0, 1>() = 2.0;
+    m.at<1, 0>() = 3.0;
+    m.at<1, 1>() = 4.0;
 
     // Note that Rows reorders rows 0 and 1.
-    typedef mpl::vector_c<std::size_t, 1, 0> Rows;
-    typedef mpl::vector_c<std::size_t, 1> Columns;
+    using rows = std::index_sequence<1, 0>;
+    using columns = std::index_sequence<1>;
 
-    typedef units_blas::result_of::slice<Matrix, Rows, Columns>::type SlicedMatrix;
-    SlicedMatrix sliced_matrix =
-        units_blas::slice<Rows, Columns>(matrix);
-    assert((sliced_matrix.at<0, 0>() == 4.0));
-    assert((sliced_matrix.at<1, 0>() == 2.0));
+    auto sliced_m =
+        units_blas::slice<rows, columns>(m);
+    assert((sliced_m.at<0, 0>() == 4.0));
+    assert((sliced_m.at<1, 0>() == 2.0));
 //]
     }
 
@@ -150,10 +127,8 @@ int main()
 //[impossible_to_generate_identity_matrix_example
     // No identity matrix exists which will preserve these types.
     units_blas::matrix<
-        fusion::vector2<
-            fusion::vector2<Length, Length>,
-            fusion::vector2<Length, Time>
-        >
+        std::tuple<length, length>,
+        std::tuple<length, time_>
     > who_am_i;
 //]
     }

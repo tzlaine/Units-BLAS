@@ -2,36 +2,30 @@
 
 using namespace boost;
 
-struct Length {};
-struct Time {};
-struct Frequency {};
+struct length {};
+struct time_ {};
+struct frequency {};
 
 int main()
 {
 // [quick_start_example_types
     // a 1x3 matrix
-    typedef units_blas::matrix<
-        fusion::vector1<
-            fusion::vector3<Length, Time, Frequency>
-        >
-    > MatrixType1;
+    using matrix_type_1 = units_blas::matrix<
+        std::tuple<length, time_, frequency>
+    >;
     
     // a 3x1 matrix
-    typedef units_blas::matrix<
-        fusion::vector3<
-            fusion::vector1<Length>,
-            fusion::vector1<Time>,
-            fusion::vector1<Frequency>
-        >
-    > MatrixType2;
+    using matrix_type_2 = units_blas::matrix<
+        std::tuple<length>,
+        std::tuple<time_>,
+        std::tuple<frequency>
+    >;
     
     // a 2x2 matrix
-    typedef units_blas::matrix<
-        fusion::vector2<
-            fusion::vector2<Length, Time>,
-            fusion::vector2<Frequency, Time>
-        >
-    > MatrixType3;
+    using matrix_type_3 = units_blas::matrix<
+        std::tuple<length, time_>,
+        std::tuple<frequency, time_>
+    >;
 //]
 
     return 0;
