@@ -16,28 +16,29 @@
 #include <boost/units/systems/si/dimensionless.hpp>
 
 namespace bub = boost::units_blas;
+namespace bh = boost::hana;
 
 typedef bub::matrix<
-    std::tuple<float>,
-    std::tuple<int>
+    bh::_tuple<float>,
+    bh::_tuple<int>
 > A_matrix_2x1_float_int_type;
 
 typedef bub::matrix<
-    std::tuple<int>,
-    std::tuple<int>
+    bh::_tuple<int>,
+    bh::_tuple<int>
 > B_matrix_2x1_int_type;
 
 typedef bub::matrix<
-    std::tuple<int, int>
+    bh::_tuple<int, int>
 > C_matrix_1x2_int_type;
 
 typedef bub::matrix<
-    std::tuple<int, double>
+    bh::_tuple<int, double>
 > D_matrix_1x2_int_double_type;
 
 typedef bub::matrix<
-    std::tuple<double, double>,
-    std::tuple<double, double>
+    bh::_tuple<double, double>,
+    bh::_tuple<double, double>
 > E_matrix_2x2_double_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
@@ -76,26 +77,26 @@ typedef boost::units::quantity<boost::units::si::time_per_length_sq> time_per_le
 typedef boost::units::quantity<boost::units::si::time_sq_per_length_sq> time_sq_per_length_sq;
 
 typedef bub::matrix<
-    std::tuple<time_>,
-    std::tuple<length>
+    bh::_tuple<time_>,
+    bh::_tuple<length>
 > A_matrix_2x1_time_length_type;
 
 typedef bub::matrix<
-    std::tuple<length>,
-    std::tuple<length>
+    bh::_tuple<length>,
+    bh::_tuple<length>
 > B_matrix_2x1_length_type;
 
 typedef bub::matrix<
-    std::tuple<length, length>
+    bh::_tuple<length, length>
 > C_matrix_1x2_length_type;
 
 typedef bub::matrix<
-    std::tuple<length, time_>
+    bh::_tuple<length, time_>
 > D_matrix_1x2_length_time_type;
 
 typedef bub::matrix<
-    std::tuple<time_, time_>,
-    std::tuple<time_, time_>
+    bh::_tuple<time_, time_>,
+    bh::_tuple<time_, time_>
 > E_matrix_2x2_time_type;
 
 #endif // BOOST_UNITS_BLAS_TEST_RESULT_OF_TESTS_HPP

@@ -20,27 +20,28 @@
 
 
 namespace bub = boost::units_blas;
+namespace bh = boost::hana;
 
 typedef bub::matrix<
-    std::tuple<double>,
-    std::tuple<double>,
-    std::tuple<double>
+    bh::_tuple<double>,
+    bh::_tuple<double>,
+    bh::_tuple<double>
 > A_matrix_3x1_fundamentals_type;
 
 typedef bub::matrix<
-    std::tuple<double, double, double>
+    bh::_tuple<double, double, double>
 > B_matrix_1x3_fundamentals_type;
 
 #if 0 // TODO: This works around a bug in clang-3.4.
 typedef bub::matrix<
-    std::tuple<double, double, double, double>,
-    std::tuple<double, double, double, double>,
-    std::tuple<double, double, double, double>,
-    std::tuple<double, double, double, double>
+    bh::_tuple<double, double, double, double>,
+    bh::_tuple<double, double, double, double>,
+    bh::_tuple<double, double, double, double>,
+    bh::_tuple<double, double, double, double>
 > D_matrix_4x4_fundamentals_type;
 #else
 typedef bub::matrix_t<
-    std::tuple<double, double, double, double,
+    bh::_tuple<double, double, double, double,
                double, double, double, double,
                double, double, double, double,
                double, double, double, double>,
@@ -50,7 +51,7 @@ typedef bub::matrix_t<
 #endif
 
 typedef bub::matrix<
-    std::tuple<double>
+    bh::_tuple<double>
 > E_matrix_1x1_fundamentals_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
@@ -73,36 +74,36 @@ typedef boost::units::quantity<boost::units::si::time_sq> time_sq;
 typedef boost::units::quantity<boost::units::si::length_sq> length_sq;
 
 typedef bub::matrix<
-    std::tuple<time_>,
-    std::tuple<length>,
-    std::tuple<dimensionless>
+    bh::_tuple<time_>,
+    bh::_tuple<length>,
+    bh::_tuple<dimensionless>
 > A_matrix_3x1_units_type;
 
 typedef bub::matrix<
-    std::tuple<length>,
-    std::tuple<time_>,
-    std::tuple<time_length>
+    bh::_tuple<length>,
+    bh::_tuple<time_>,
+    bh::_tuple<time_length>
 > A_matrix_3x1_units_type_2;
 
 typedef bub::matrix<
-    std::tuple<time_, time_, time_>
+    bh::_tuple<time_, time_, time_>
 > B_matrix_1x3_units_type;
 
 typedef bub::matrix<
-    std::tuple<dimensionless>,
-    std::tuple<dimensionless>,
-    std::tuple<dimensionless>
+    bh::_tuple<dimensionless>,
+    bh::_tuple<dimensionless>,
+    bh::_tuple<dimensionless>
 > C_matrix_3x1_units_type;
 
 typedef bub::matrix<
-    std::tuple<length, length, length, length>,
-    std::tuple<length, length, length, length>,
-    std::tuple<length, length, length, length>,
-    std::tuple<length, length, length, length>
+    bh::_tuple<length, length, length, length>,
+    bh::_tuple<length, length, length, length>,
+    bh::_tuple<length, length, length, length>,
+    bh::_tuple<length, length, length, length>
 > D_matrix_4x4_units_type;
 
 typedef bub::matrix<
-    std::tuple<length>
+    bh::_tuple<length>
 > E_matrix_1x1_units_type;
 
 #endif // BOOST_UNITS_BLAS_TEST_OPERATIONS_TESTS_HPP

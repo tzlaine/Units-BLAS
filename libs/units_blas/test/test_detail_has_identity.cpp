@@ -12,6 +12,8 @@
 #include <boost/test/minimal.hpp>
 
 
+namespace bh = boost::hana;
+
 struct derived_from_E_matrix_2x2_double_type :
     E_matrix_2x2_double_type
 {};
@@ -21,14 +23,14 @@ struct derived_from_E_matrix_2x2_time_type :
 {};
 
 using uninvertible_matrix_2x2 = bub::matrix<
-    std::tuple<time_, time_>,
-    std::tuple<time_, double>
+    bh::_tuple<time_, time_>,
+    bh::_tuple<time_, double>
 >;
 
 using uninvertible_matrix_3x3 = bub::matrix<
-    std::tuple<length_sq,          length_sq,          length_sq_per_time>,
-    std::tuple<length_sq,          length,             length_sq_per_time>,
-    std::tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
+    bh::_tuple<length_sq,          length_sq,          length_sq_per_time>,
+    bh::_tuple<length_sq,          length,             length_sq_per_time>,
+    bh::_tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
 >;
 
 int test_main (int, char *[])

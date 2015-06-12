@@ -14,35 +14,36 @@
 
 
 namespace bub = boost::units_blas;
+namespace bh = boost::hana;
 
 typedef bub::matrix<
-    std::tuple<float>,
-    std::tuple<float>
+    bh::_tuple<float>,
+    bh::_tuple<float>
 > manual_matrix_2x1_type;
 
 typedef bub::matrix<
-    std::tuple<float, float>
+    bh::_tuple<float, float>
 > manual_matrix_1x2_type;
 
 typedef bub::matrix<
-    std::tuple<float, float>,
-    std::tuple<float, float>
+    bh::_tuple<float, float>,
+    bh::_tuple<float, float>
 > manual_matrix_2x2_type;
 
 typedef boost::units::quantity<boost::units::si::length> length;
 
 typedef bub::matrix<
-    std::tuple<length>,
-    std::tuple<length>
+    bh::_tuple<length>,
+    bh::_tuple<length>
 > manual_matrix_2x1_units_type;
 
 typedef bub::matrix<
-    std::tuple<length, length>
+    bh::_tuple<length, length>
 > manual_matrix_1x2_units_type;
 
 typedef bub::matrix<
-    std::tuple<length, length>,
-    std::tuple<length, length>
+    bh::_tuple<length, length>,
+    bh::_tuple<length, length>
 > manual_matrix_2x2_units_type;
 
 int test_main (int, char *[])

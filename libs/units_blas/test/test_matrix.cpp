@@ -15,19 +15,20 @@
 
 
 namespace bub = boost::units_blas;
+namespace bh = boost::hana;
 
 typedef bub::matrix<
-    std::tuple<float>,
-    std::tuple<int>
+    bh::_tuple<float>,
+    bh::_tuple<int>
 > A_matrix_2x1_float_int_type;
 
 typedef bub::matrix<
-    std::tuple<int>,
-    std::tuple<int>
+    bh::_tuple<int>,
+    bh::_tuple<int>
 > B_matrix_2x1_int_type;
 
 typedef bub::matrix<
-    std::tuple<double, double>
+    bh::_tuple<double, double>
 > C_matrix_1x2_double_type;
 
 typedef boost::units::quantity<boost::units::si::time> time_;
@@ -35,12 +36,12 @@ typedef boost::units::quantity<boost::units::si::length> length;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
 typedef bub::matrix<
-    std::tuple<time_>,
-    std::tuple<length>
+    bh::_tuple<time_>,
+    bh::_tuple<length>
 > A_matrix_2x1_time_length_type;
 
 typedef bub::matrix<
-    std::tuple<dimensionless, dimensionless>
+    bh::_tuple<dimensionless, dimensionless>
 > B_matrix_2x1_length_type;
 
 int test_main (int, char *[])

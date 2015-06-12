@@ -159,7 +159,7 @@ namespace boost { namespace units_blas {
         {
             template <std::size_t I, std::size_t J>
             void call ()
-            { std::get<I>(lhs_) = tuple_access::get<J>(rhs_); }
+            { hana::at_c<I>(lhs_) = tuple_access::get<J>(rhs_); }
 
             Tuple & lhs_;
             Matrix const & rhs_;
@@ -217,23 +217,23 @@ namespace boost { namespace units_blas {
         {
             template <std::size_t I, typename T, typename State>
             auto call (State prev)
-            { return prev + std::get<I>(t1_) * std::get<I>(t2_); }
+            { return prev + hana::at_c<I>(t1_) * hana::at_c<I>(t2_); }
 
             Tuple1 t1_;
             Tuple2 t2_;
         };
 
         template <typename Tuple1, typename Head, typename ...Tail>
-        auto tuple_dot (Tuple1 t1, std::tuple<Head, Tail...> t2)
+        auto tuple_dot (Tuple1 t1, hana::_tuple<Head, Tail...> t2)
         {
             static_assert(
-                std::tuple_size<Tuple1>::value ==
-                std::tuple_size<std::tuple<Head, Tail...>>::value,
+                Tuple1::size ==
+                hana::_tuple<Head, Tail...>::size,
                 "tuple_dot() must be given tuples of the same length"
             );
-            auto state = std::get<0>(t1) * std::get<0>(t2);
+            auto state = hana::at_c<0>(t1) * hana::at_c<0>(t2);
             using function_object =
-                tuple_dot_impl<Tuple1, std::tuple<Head, Tail...>>;
+                tuple_dot_impl<Tuple1, hana::_tuple<Head, Tail...>>;
             function_object f{t1, t2};
             return foldl_impl<1>(f, state, type_sequence<Tail...>{});
         }
@@ -318,7 +318,7 @@ namespace boost { namespace units_blas {
                                MatrixRHS rhs,
                                std::index_sequence<I...>)
         {
-            return std::make_tuple(
+            return hana::make<hana::Tuple>(
                 tuple_dot(
                     row_tuple<I / MatrixRHS::num_columns>(lhs),
                     column_tuple<I % MatrixRHS::num_columns>(rhs)
@@ -330,11 +330,11 @@ namespace boost { namespace units_blas {
         // scalar operations
         template <typename Matrix, typename T, std::size_t ...I>
         auto scalar_prod_impl (Matrix m, T t, std::index_sequence<I...>)
-        { return std::make_tuple((tuple_access::get<I>(m) * t)...); }
+        { return hana::make<hana::Tuple>((tuple_access::get<I>(m) * t)...); }
 
         template <typename Matrix, typename T, std::size_t ...I>
         auto scalar_div_impl (Matrix m, T t, std::index_sequence<I...>)
-        { return std::make_tuple((tuple_access::get<I>(m) / t)...); }
+        { return hana::make<hana::Tuple>((tuple_access::get<I>(m) / t)...); }
 
 
         // elementwise operations
@@ -343,7 +343,7 @@ namespace boost { namespace units_blas {
                                MatrixRHS rhs,
                                std::index_sequence<I...>)
         {
-            return std::make_tuple(
+            return hana::make<hana::Tuple>(
                 (tuple_access::get<I>(lhs) + tuple_access::get<I>(rhs))...
             );
         }
@@ -353,7 +353,7 @@ namespace boost { namespace units_blas {
                                 MatrixRHS rhs,
                                 std::index_sequence<I...>)
         {
-            return std::make_tuple(
+            return hana::make<hana::Tuple>(
                 (tuple_access::get<I>(lhs) - tuple_access::get<I>(rhs))...
             );
         }
@@ -363,7 +363,7 @@ namespace boost { namespace units_blas {
                                 MatrixRHS rhs,
                                 std::index_sequence<I...>)
         {
-            return std::make_tuple(
+            return hana::make<hana::Tuple>(
                 (tuple_access::get<I>(lhs) * tuple_access::get<I>(rhs))...
             );
         }
@@ -373,12 +373,13 @@ namespace boost { namespace units_blas {
                                MatrixRHS rhs,
                                std::index_sequence<I...>)
         {
-            return std::make_tuple(
+            return hana::make<hana::Tuple>(
                 (tuple_access::get<I>(lhs) / tuple_access::get<I>(rhs))...
             );
         }
 
 
+#if 0
         template <typename Matrix>
         struct swap
         {
@@ -392,10 +393,11 @@ namespace boost { namespace units_blas {
             Matrix & lhs_;
             Matrix & rhs_;
         };
+#endif
 
         template <typename Matrix, std::size_t ...I>
         auto neg_impl (Matrix m, std::index_sequence<I...>)
-        { return std::make_tuple(-tuple_access::get<I>(m)...); }
+        { return hana::make<hana::Tuple>(-tuple_access::get<I>(m)...); }
 
         template <typename Tuple, bool Abs>
         struct sum_impl
@@ -403,7 +405,7 @@ namespace boost { namespace units_blas {
             template <std::size_t I, typename T, typename State>
             auto call (State prev)
             {
-                auto value = std::get<I>(t_);
+                auto value = hana::at_c<I>(t_);
                 using std::abs;
                 if (Abs)
                     value = abs(value);
@@ -419,7 +421,7 @@ namespace boost { namespace units_blas {
             template <std::size_t I, typename T, typename State>
             auto call (State prev)
             {
-                auto value = std::get<I>(t_);
+                auto value = hana::at_c<I>(t_);
                 return prev + value * value;
             }
 
@@ -432,10 +434,10 @@ namespace boost { namespace units_blas {
             template <std::size_t I, typename T, typename State>
             auto call (State prev)
             {
-                using common_type = decltype(prev.second + std::get<I>(t_));
+                using common_type = decltype(prev.second + hana::at_c<I>(t_));
                 using retval_type = std::pair<std::size_t, common_type>;
                 using std::abs;
-                auto value = abs(std::get<I>(t_));
+                auto value = abs(hana::at_c<I>(t_));
                 return
                     prev.second < value ?
                     retval_type{I, value} :
@@ -551,7 +553,7 @@ namespace boost { namespace units_blas {
         determinant_type_impl (Matrix m, std::index_sequence<Head, Tail...>)
         {
             using rows = std::index_sequence<Tail...>;
-            using tuple = std::tuple<
+            using tuple = hana::_tuple<
                 decltype(tuple_access::get<Head>(m) *
                          subdeterminant<rows, Head>(m)),
                 decltype(tuple_access::get<Tail>(m) *
@@ -794,7 +796,7 @@ namespace boost { namespace units_blas {
 
     /** Returns the negation of @c m.  @c m must be a @c matrix<>. */
     template <std::size_t Rows, std::size_t Columns, typename ...T>
-    auto neg (matrix_t<std::tuple<T...>, Rows, Columns> m)
+    auto neg (matrix_t<hana::_tuple<T...>, Rows, Columns> m)
     {
         return detail::make_matrix<Rows, Columns>(
             detail::neg_impl(
@@ -1029,10 +1031,21 @@ namespace boost { namespace units_blas {
     void swap (matrix_t<Tuple, Rows, Columns> & lhs,
                matrix_t<Tuple, Rows, Columns> & rhs)
     {
+        using std::swap;
+        hana::fold.left(
+            detail::tuple_access::all(lhs),
+            hana::size_t<0>,
+            [&](auto i, auto & x) {
+                swap(hana::at(detail::tuple_access::get<i.value>(rhs), i), x);
+                return hana::succ(i);
+            }
+        );
+#if 0
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
         detail::iterate_simple<matrix_type::num_elements>(
             detail::swap<matrix_type>{lhs, rhs}
         );
+#endif
     }
 
     /** Returns the dot product of @c lhs and @c rhs.  @c VectorL and @c VectorR
@@ -1091,15 +1104,15 @@ namespace boost { namespace units_blas {
         auto l = detail::tuple_access::all(lhs);
         auto r = detail::tuple_access::all(rhs);
         auto _0 =
-            std::get<1>(l) * std::get<2>(r) -
-            std::get<2>(l) * std::get<1>(r);
+            hana::at_c<1>(l) * hana::at_c<2>(r) -
+            hana::at_c<2>(l) * hana::at_c<1>(r);
         auto _1 =
-            std::get<2>(l) * std::get<0>(r) -
-            std::get<0>(l) * std::get<2>(r);
+            hana::at_c<2>(l) * hana::at_c<0>(r) -
+            hana::at_c<0>(l) * hana::at_c<2>(r);
         auto _2 =
-            std::get<0>(l) * std::get<1>(r) -
-            std::get<1>(l) * std::get<0>(r);
-        return detail::make_matrix<Rows, Columns>(std::make_tuple(_0, _1, _2));
+            hana::at_c<0>(l) * hana::at_c<1>(r) -
+            hana::at_c<1>(l) * hana::at_c<0>(r);
+        return detail::make_matrix<Rows, Columns>(hana::make<hana::Tuple>(_0, _1, _2));
     }
 
 #if BOOST_UNITS_BLAS_USE_OPERATORS_FOR_MATRIX_OPERATIONS
@@ -1131,12 +1144,12 @@ namespace boost { namespace units_blas {
               std::size_t Columns,
               typename Head,
               typename ...Tail>
-    auto sum (matrix_t<std::tuple<Head, Tail...>, Rows, Columns> v,
+    auto sum (matrix_t<hana::_tuple<Head, Tail...>, Rows, Columns> v,
               typename std::enable_if<
                   Rows == 1 || Columns == 1
               >::type* = 0)
     {
-        auto f = detail::sum_impl<std::tuple<Head, Tail...>, false>{
+        auto f = detail::sum_impl<hana::_tuple<Head, Tail...>, false>{
             detail::tuple_access::all(v)
         };
         auto state = detail::tuple_access::get<0>(v);
@@ -1155,12 +1168,12 @@ namespace boost { namespace units_blas {
               std::size_t Columns,
               typename Head,
               typename ...Tail>
-    auto norm_1 (matrix_t<std::tuple<Head, Tail...>, Rows, Columns> v,
+    auto norm_1 (matrix_t<hana::_tuple<Head, Tail...>, Rows, Columns> v,
                  typename std::enable_if<
                      Rows == 1 || Columns == 1
                  >::type* = 0)
     {
-        auto f = detail::sum_impl<std::tuple<Head, Tail...>, true>{
+        auto f = detail::sum_impl<hana::_tuple<Head, Tail...>, true>{
             detail::tuple_access::all(v)
         };
         using std::abs;
@@ -1181,12 +1194,12 @@ namespace boost { namespace units_blas {
               std::size_t Columns,
               typename Head,
               typename ...Tail>
-    auto norm_2 (matrix_t<std::tuple<Head, Tail...>, Rows, Columns> v,
+    auto norm_2 (matrix_t<hana::_tuple<Head, Tail...>, Rows, Columns> v,
                  typename std::enable_if<
                      Rows == 1 || Columns == 1
                  >::type* = 0)
     {
-        auto f = detail::norm_2_impl<std::tuple<Head, Tail...>>{
+        auto f = detail::norm_2_impl<hana::_tuple<Head, Tail...>>{
             detail::tuple_access::all(v)
         };
         auto first = detail::tuple_access::get<0>(v);
@@ -1204,12 +1217,12 @@ namespace boost { namespace units_blas {
         Vector must be a "vector" @c matrix<>.  Also, @c operator+ and @c
         operator< must be defined for all pairs of elements in @c Vector. */
     template <std::size_t Rows, std::size_t Columns, typename ...T>
-    auto norm_inf (matrix_t<std::tuple<T...>, Rows, Columns> v,
+    auto norm_inf (matrix_t<hana::_tuple<T...>, Rows, Columns> v,
                    typename std::enable_if<
                        Rows == 1 || Columns == 1
                    >::type* = 0)
     {
-        auto f = detail::norm_inf_index_impl<std::tuple<T...>>{
+        auto f = detail::norm_inf_index_impl<hana::_tuple<T...>>{
             detail::tuple_access::all(v)
         };
         using std::abs;
@@ -1225,12 +1238,12 @@ namespace boost { namespace units_blas {
         operator+ and @c operator< must be defined for all pairs of elements
         in @c Vector. */
     template <std::size_t Rows, std::size_t Columns, typename ...T>
-    auto norm_inf_index (matrix_t<std::tuple<T...>, Rows, Columns> v,
+    auto norm_inf_index (matrix_t<hana::_tuple<T...>, Rows, Columns> v,
                          typename std::enable_if<
                              Rows == 1 || Columns == 1
                          >::type* = 0)
     {
-        auto f = detail::norm_inf_index_impl<std::tuple<T...>>{
+        auto f = detail::norm_inf_index_impl<hana::_tuple<T...>>{
             detail::tuple_access::all(v)
         };
         using std::abs;

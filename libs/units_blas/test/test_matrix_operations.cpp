@@ -12,10 +12,10 @@
 
 
 typedef bub::matrix<
-    std::tuple<double>,
-    std::tuple<double>,
-    std::tuple<double>,
-    std::tuple<double>
+    bh::_tuple<double>,
+    bh::_tuple<double>,
+    bh::_tuple<double>,
+    bh::_tuple<double>
 > x_vector_type;
 
 struct derived_from_x_vector_type :

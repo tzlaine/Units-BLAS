@@ -14,26 +14,6 @@
 
 namespace boost { namespace units_blas {
 
-    namespace detail {
-
-        template <typename T, std::size_t N>
-        struct repeat_type
-        {
-            template <typename Seq>
-            static auto call (Seq seq)
-            { return repeat_type<T, N - 1>::call(push_back<T>(seq)); }
-        };
-
-        template <typename T>
-        struct repeat_type<T, 0>
-        {
-            template <typename Seq>
-            static auto call (Seq seq)
-            { return seq; }
-        };
-
-    }
-
     /** Convenience metafunction that returns a @c matrix<> of dimension @c
         Rows x @c Columns, in which each element is of type @c T. */
     template <typename T, std::size_t Rows, std::size_t Columns>
@@ -42,11 +22,7 @@ namespace boost { namespace units_blas {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
         using type = decltype(
             detail::make_matrix<Rows, Columns>(
-                detail::tuple_from_types(
-                    detail::repeat_type<T, Rows * Columns>::call(
-                        detail::type_sequence<>{}
-                    )
-                )
+                hana::repeat<hana::Tuple>(std::declval<T>(), hana::size_t<Rows * Columns>)
             )
         );
 #else
@@ -69,7 +45,7 @@ namespace boost { namespace units_blas {
     struct vector_type
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-        using type = matrix_t<std::tuple<T...>, sizeof...(T), 1>;
+        using type = matrix_t<hana::_tuple<T...>, sizeof...(T), 1>;
 #else
         using type = detail::unspecified;
 #endif
@@ -90,7 +66,7 @@ namespace boost { namespace units_blas {
     struct transpose_vector_type
     {
 #ifndef BOOST_UNITS_BLAS_DOXYGEN
-        using type = matrix<std::tuple<T...>>;
+        using type = matrix<hana::_tuple<T...>>;
 #else
         using type = detail::unspecified;
 #endif

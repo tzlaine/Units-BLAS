@@ -9,11 +9,13 @@
 #include <boost/test/minimal.hpp>
 
 
+namespace bh = boost::hana;
+
 int test_main (int, char *[])
 {
     using failure_type = bub::matrix<
-        std::tuple<double>,
-        std::tuple<double, double>
+        bh::_tuple<double>,
+        bh::_tuple<double, double>
     >;
 
     failure_type f;

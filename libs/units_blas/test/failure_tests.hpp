@@ -8,27 +8,28 @@
 
 
 namespace bub = boost::units_blas;
+namespace bh = boost::hana;
 
 using matrix_3x1 = bub::matrix<
-    std::tuple<double>,
-    std::tuple<double>,
-    std::tuple<double>
+    bh::_tuple<double>,
+    bh::_tuple<double>,
+    bh::_tuple<double>
 >;
 
 using matrix_1x3 = bub::matrix<
-    std::tuple<double, double, double>
+    bh::_tuple<double, double, double>
 >;
 
 using matrix_2x2 = bub::matrix<
-    std::tuple<double, double>,
-    std::tuple<double, double>
+    bh::_tuple<double, double>,
+    bh::_tuple<double, double>
 >;
 
 using matrix_1x2 = bub::matrix<
-    std::tuple<double, double>
+    bh::_tuple<double, double>
 >;
 
 using matrix_2x1 = bub::matrix<
-    std::tuple<double>,
-    std::tuple<double>
+    bh::_tuple<double>,
+    bh::_tuple<double>
 >;

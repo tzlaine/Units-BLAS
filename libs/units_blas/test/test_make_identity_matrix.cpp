@@ -14,20 +14,20 @@
 
 
 using matrix_3x3_type = bub::matrix<
-    std::tuple<int, long, int>,
-    std::tuple<long, float, int>,
-    std::tuple<float, float, long>
+    bh::_tuple<int, long, int>,
+    bh::_tuple<long, float, int>,
+    bh::_tuple<float, float, long>
 >;
 
 using matrix_2x2_units_type = bub::matrix<
-    std::tuple<length, length>,
-    std::tuple<length, length>
+    bh::_tuple<length, length>,
+    bh::_tuple<length, length>
 >;
 
 using xyd_matrix_3x3_units_type = bub::matrix<
-    std::tuple<length_sq,          length_sq,          length_sq_per_time>,
-    std::tuple<length_sq,          length_sq,          length_sq_per_time>,
-    std::tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
+    bh::_tuple<length_sq,          length_sq,          length_sq_per_time>,
+    bh::_tuple<length_sq,          length_sq,          length_sq_per_time>,
+    bh::_tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
 >;
 
 #define CHECK_TYPE(i, j, T)                                             \

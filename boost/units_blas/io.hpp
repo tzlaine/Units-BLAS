@@ -41,9 +41,21 @@ namespace boost { namespace units_blas {
     std::ostream &
     matrix_t<Tuple, Rows, Columns>::print (std::ostream & os) const
     {
+        hana::fold.left(
+            data_,
+            hana::size_t<0>,
+            [&](auto i, auto x) {
+                if (i && i % num_columns == 0)
+                    os << '\n';
+                os << hana::at(data_, i);
+                return hana::succ(i);
+            }
+        );
+#if 0
         detail::iterate_simple<num_elements>(
             detail::print<self_type>{*this, os}
         );
+#endif
         return os;
     }
 

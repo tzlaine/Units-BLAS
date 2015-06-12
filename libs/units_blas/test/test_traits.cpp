@@ -17,28 +17,29 @@
 
 
 namespace bub = boost::units_blas;
+namespace bh = boost::hana;
 
 typedef bub::matrix<
-    std::tuple<int>,
-    std::tuple<long>,
-    std::tuple<float>,
-    std::tuple<double>
+    bh::_tuple<int>,
+    bh::_tuple<long>,
+    bh::_tuple<float>,
+    bh::_tuple<double>
 > matrix_4x1_type;
 
 typedef bub::matrix<
-    std::tuple<int, long, float, double>
+    bh::_tuple<int, long, float, double>
 > matrix_1x4_type;
 
 #if 0 // TODO: This works around a bug in clang-3.4.
 typedef bub::matrix<
-    std::tuple<int, long, float, double>,
-    std::tuple<long, int, float, double>,
-    std::tuple<int, float, long, double>,
-    std::tuple<int, long, double, float>
+    bh::_tuple<int, long, float, double>,
+    bh::_tuple<long, int, float, double>,
+    bh::_tuple<int, float, long, double>,
+    bh::_tuple<int, long, double, float>
 > matrix_4x4_type;
 #else
 typedef bub::matrix_t<
-    std::tuple<int, long, float, double,
+    bh::_tuple<int, long, float, double,
                long, int, float, double,
                int, float, long, double,
                int, long, double, float>,
@@ -53,21 +54,21 @@ typedef boost::units::quantity<boost::units::si::velocity> velocity;
 typedef boost::units::quantity<boost::units::si::dimensionless> dimensionless;
 
 typedef bub::matrix<
-    std::tuple<time_>,
-    std::tuple<length>,
-    std::tuple<velocity>,
-    std::tuple<dimensionless>
+    bh::_tuple<time_>,
+    bh::_tuple<length>,
+    bh::_tuple<velocity>,
+    bh::_tuple<dimensionless>
 > matrix_4x1_units_type;
 
 typedef bub::matrix<
-    std::tuple<time_, length, velocity, dimensionless>
+    bh::_tuple<time_, length, velocity, dimensionless>
 > matrix_1x4_units_type;
 
 typedef bub::matrix<
-    std::tuple<time_, length, velocity, dimensionless>,
-    std::tuple<length, time_, velocity, dimensionless>,
-    std::tuple<time_, velocity, length, dimensionless>,
-    std::tuple<time_, length, dimensionless, velocity>
+    bh::_tuple<time_, length, velocity, dimensionless>,
+    bh::_tuple<length, time_, velocity, dimensionless>,
+    bh::_tuple<time_, velocity, length, dimensionless>,
+    bh::_tuple<time_, length, dimensionless, velocity>
 > matrix_4x4_units_type;
 
 struct derived_from_matrix_4x1_type :

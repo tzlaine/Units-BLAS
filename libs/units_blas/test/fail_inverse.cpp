@@ -10,9 +10,9 @@
 
 
 using uninvertible_matrix_3x3 = bub::matrix<
-    std::tuple<length_sq,          length_sq,          length_sq_per_time>,
-    std::tuple<length_sq,          length,             length_sq_per_time>,
-    std::tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
+    bh::_tuple<length_sq,          length_sq,          length_sq_per_time>,
+    bh::_tuple<length_sq,          length,             length_sq_per_time>,
+    bh::_tuple<length_sq_per_time, length_sq_per_time, length_sq_per_time_sq>
 >;
 
 int test_main (int, char *[])
