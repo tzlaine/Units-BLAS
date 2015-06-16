@@ -23,6 +23,16 @@ namespace boost { namespace units_blas {
 
     namespace detail {
 
+        // We should be able to write `xs = ys`, but Hana's Tuple does not
+        // support assignment right now, which is arguably a bug. This will
+        // be fixed.
+        template <typename Xs, typename Ys>
+        void assign_hana_tuple(Xs& xs, Ys& ys) {
+            hana::size(xs).times.with_index([&](auto i) {
+                xs[i] = ys[i];
+            });
+        }
+
         // tuple access
         struct tuple_access
         {
@@ -72,7 +82,7 @@ namespace boost { namespace units_blas {
         auto make_matrix (Tuple t)
         {
             matrix_t<Tuple, Rows, Columns> retval;
-            tuple_access::all(retval) = t;
+            assign_hana_tuple(tuple_access::all(retval), t);
             return retval;
         }
 
@@ -153,7 +163,7 @@ namespace boost { namespace units_blas {
         /** Assignment operator. */
         matrix_t & operator= (matrix_t const & rhs)
         {
-            data_ = rhs.data_;
+            detail::assign_hana_tuple(data_, rhs.data_);
             return *this;
         }
 
@@ -203,14 +213,9 @@ namespace boost { namespace units_blas {
         template <typename TupleRHS>
         matrix_t & operator+= (matrix_t<TupleRHS, Rows, Columns> rhs)
         {
-            hana::fold.left(
-                rhs.data_,
-                hana::size_t<0>,
-                [&](auto i, auto x) {
-                    hana::at(data_, i) += x;
-                    return hana::succ(i);
-                }
-            );
+            hana::size(data_).times.with_index([&](auto i) {
+                data_[i] += rhs.data_[i];
+            });
             return *this;
         }
 
@@ -221,14 +226,9 @@ namespace boost { namespace units_blas {
         template <typename TupleRHS>
         matrix_t & operator-= (matrix_t<TupleRHS, Rows, Columns> rhs)
         {
-            hana::fold.left(
-                rhs.data_,
-                hana::size_t<0>,
-                [&](auto i, auto x) {
-                    hana::at(data_, i) -= x;
-                    return hana::succ(i);
-                }
-            );
+            hana::size(data_).times.with_index([&](auto i) {
+                data_[i] -= rhs.data_[i];
+            });
             return *this;
         }
 
@@ -238,14 +238,9 @@ namespace boost { namespace units_blas {
         template <typename T>
         matrix_t & operator*= (T val)
         {
-            hana::fold.left(
-                data_,
-                hana::size_t<0>,
-                [&](auto i, auto) {
-                    hana::at(data_, i) *= val;
-                    return hana::succ(i);
-                }
-            );
+            hana::size(data_).times.with_index([&](auto i) {
+                data_[i] *= val;
+            });
             return *this;
         }
 
@@ -255,14 +250,9 @@ namespace boost { namespace units_blas {
         template <typename T>
         matrix_t & operator/= (T val)
         {
-            hana::fold.left(
-                data_,
-                hana::size_t<0>,
-                [&](auto i, auto) {
-                    hana::at(data_, i) /= val;
-                    return hana::succ(i);
-                }
-            );
+            hana::size(data_).times.with_index([&](auto i) {
+                data_[i] /= val;
+            });
             return *this;
         }
 
@@ -293,90 +283,38 @@ namespace boost { namespace units_blas {
         template <typename MatrixR>
         void assign_data (MatrixR rhs)
         {
-#if 0
-
-            // Could not get this to work due to 'static_assert failed
-            // "hana::zip.shortest.with(f, xs, ys...) requires ys to be a
-            // Sequence'
-
-            // Awkward (and maybe inefficient?) to use zip.with for this;
-            // would prefer to use some kind of mutating copy.
-            data_ = hana::zip.with(rhs.data_, data_, [](auto x, auto y) {
-                return static_cast<decltype(y)>(x);
+            hana::size_t<Rows * Columns>.times.with_index([&](auto i) {
+                using T = std::remove_reference_t<decltype(data_[i])>;
+                data_[i] = static_cast<T>(rhs.data_[i]);
             });
-#elif 0
-            // Close, but also does not work, as the sequence is not Foldable.
-            hana::for_each(
-                hana::detail::generate_index_sequence<Rows * Columns>{},
-                [&](auto i) {
-                    hana::at(data_, i) =
-                        static_cast<std::remove_reference_t<decltype(hana::at(data_, i))>>(
-                            hana::at(rhs.data_, i)
-                        );
-                }
-            );
-#elif 1
-            // Feels dirty, but works
-            hana::fold.left(
-                rhs.data_,
-                hana::size_t<0>,
-                [&](auto i, auto x) {
-                    hana::at(data_, i) =
-                        static_cast<std::remove_reference_t<decltype(hana::at(data_, i))>>(x);
-                    return hana::succ(i);
-                }
-            );
-#endif
         }
 
         value_types data_;
     };
 
     namespace detail {
+        auto make_matrix_type = [](auto rows) {
+            auto nrows = hana::size(rows);
+            static_assert(nrows >= 1u,
+            "matrix_t<> requires at least one row");
 
-        template <typename HeadRow, typename ...TailRows>
-        struct matrix_type
-        {
-            static const std::size_t rows = sizeof...(TailRows) + 1;
-#if 0 // attempt 1
-            static const std::size_t columns = hana::size(HeadRow{});
-#elif 0 // attempt 2
-            static const std::size_t columns = hana::size(std::declval<HeadRow>());
-#elif 0 // attempt 3
-            static const std::size_t columns = hana::size(hana::type<HeadRow>);
-#else // This compiles.  Sigh.
-            static const std::size_t columns = HeadRow::size;
-#endif
+            auto ncolumns = hana::size(rows[hana::size_t<0>]);
+            auto uniform = hana::all_of(rows, [=](auto row) {
+                return hana::size(row) == ncolumns;
+            });
+            static_assert(uniform,
+            "matrix_t<> requires tuples of uniform length");
 
-            struct same_size_as_head
-            {
-                template <typename T>
-                constexpr bool operator() (hana::_type<T> x)
-                { return hana::_type<T>::_::type::size == columns;}
-            };
+            using tuple_type = decltype(hana::flatten(rows));
 
-            static_assert(
-                hana::all_of(
-                    hana::make<hana::Tuple>(hana::_type<TailRows>{}...),
-                    same_size_as_head{}
-                ),
-                "matrix_type<> requires tuples of uniform length"
-            );
-
-            using tuple = decltype(hana::flatten(
-                hana::make<hana::Tuple>(
-                    HeadRow{},
-                    TailRows{}...
-                )
-            ));
-
-            using type = matrix_t<tuple, rows, columns>;
+            return hana::type<matrix_t<tuple_type, nrows, ncolumns>>;
         };
-
     }
 
     template <typename ...Rows>
-    using matrix = typename detail::matrix_type<Rows...>::type;
+    using matrix = typename decltype(
+        detail::make_matrix_type(hana::make_tuple(std::declval<Rows>()...))
+    )::type;
 
 } } // namespace boost::units_blas
 

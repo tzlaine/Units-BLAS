@@ -1032,14 +1032,11 @@ namespace boost { namespace units_blas {
                matrix_t<Tuple, Rows, Columns> & rhs)
     {
         using std::swap;
-        hana::fold.left(
-            detail::tuple_access::all(lhs),
-            hana::size_t<0>,
-            [&](auto i, auto & x) {
-                swap(hana::at(detail::tuple_access::get<i.value>(rhs), i), x);
-                return hana::succ(i);
-            }
-        );
+        auto& lhs_data = detail::tuple_access::all(lhs);
+        auto& rhs_data = detail::tuple_access::all(rhs);
+        hana::size(lhs_data).times.with_index([&](auto i) {
+            swap(rhs_data[i], lhs_data[i]);
+        });
 #if 0
         using matrix_type = matrix_t<Tuple, Rows, Columns>;
         detail::iterate_simple<matrix_type::num_elements>(
@@ -1059,7 +1056,7 @@ namespace boost { namespace units_blas {
     auto dot (matrix_t<Tuple1, Rows, Columns> lhs,
               matrix_t<Tuple2, Rows, Columns> rhs,
               typename std::enable_if<
-                  Columns == 1 && 1 < Rows || Rows == 1 && 1 < Columns
+                  (Columns == 1 && 1 < Rows) || (Rows == 1 && 1 < Columns)
               >::type* = 0)
     {
         return detail::tuple_dot(detail::tuple_access::all(lhs),
@@ -1077,7 +1074,7 @@ namespace boost { namespace units_blas {
               std::size_t Rows,
               std::size_t Columns,
               typename Enable = typename std::enable_if<
-                  Columns == 1 && 1 < Rows || Rows == 1 && 1 < Columns
+                  (Columns == 1 && 1 < Rows) || (Rows == 1 && 1 < Columns)
               >::type>
     auto operator* (matrix_t<Tuple1, Rows, Columns> lhs,
                     matrix_t<Tuple2, Rows, Columns> rhs) -> decltype(dot(lhs, rhs))
@@ -1098,7 +1095,7 @@ namespace boost { namespace units_blas {
     auto cross (matrix_t<Tuple1, Rows, Columns> lhs,
                 matrix_t<Tuple2, Rows, Columns> rhs,
                 typename std::enable_if<
-                    Columns == 3 && Rows == 1 || Rows == 3 && Columns == 1
+                    (Columns == 3 && Rows == 1) || (Rows == 3 && Columns == 1)
                 >::type* = 0)
     {
         auto l = detail::tuple_access::all(lhs);
@@ -1128,7 +1125,7 @@ namespace boost { namespace units_blas {
               std::size_t Rows,
               std::size_t Columns,
               typename Enable = typename std::enable_if<
-                  Columns == 3 && Rows == 1 || Rows == 3 && Columns == 1
+                  (Columns == 3 && Rows == 1) || (Rows == 3 && Columns == 1)
               >::type>
     auto operator^ (matrix_t<Tuple1, Rows, Columns> lhs,
                     matrix_t<Tuple2, Rows, Columns> rhs) -> decltype(cross(lhs, rhs))
